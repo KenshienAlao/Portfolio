@@ -1,7 +1,7 @@
 export default function Navigation() {
-    return (
-        <div>
-            <h1>Navigation</h1>
-        </div>
-    );
+  return (
+    <div className="border border-red-500">
+      <h1>Navigation</h1>
+    </div>
+  );
 }
