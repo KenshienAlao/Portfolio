@@ -40,7 +40,7 @@ export default function Navigation() {
             KEN<span className="text-accent">SHIEN.</span>
           </div>
 
-          {/* Desktop Menu */}
+          {/* menu */}
           <div className="hidden items-center gap-8 sm:flex">
             <ul className="flex items-center gap-8">
               {menu.map((item) => (
@@ -57,7 +57,7 @@ export default function Navigation() {
             </ul>
           </div>
 
-          {/* Mobile Menu Toggle */}
+          {/* mobile menu toggle */}
           <motion.button
             whileTap={{ scale: 0.9 }}
             className="text-foreground relative z-110 flex cursor-pointer sm:hidden"
@@ -80,7 +80,7 @@ export default function Navigation() {
         </div>
       </div>
 
-      {/* Mobile Menu Portal */}
+      {/* mobile menu portal */}
       <AnimatePresence>
         {open &&
           createPortal(
