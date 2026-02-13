@@ -1,37 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --color-accent: var(--color-accent);
-  --color-accent-soft: var(--color-accent-soft);
-  --color-glass: var(--color-glass);
-  --color-glass-border: var(--color-glass-border);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-glass: var(--glass);
+  --color-glass-border: var(--glass-border);
+
+  --font-header: "Raleway";
+  --font-body: "Open Sans";
 }
 
 :root {
   --background: #ffffff;
-  --color-foreground: #171717;
-  --color-accent: #3b82f6;
-  --color-accent-soft: rgba(59, 130, 246, 0.1);
-  --color-glass: rgba(255, 255, 255, 0.7);
-  --color-glass-border: rgba(0, 0, 0, 0.05);
+  --foreground: #171717;
+  --accent: #3b82f6;
+  --accent-soft: rgba(59, 130, 246, 0.1);
+  --glass: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.05);
 }
 
 .dark {
   --background: #0f172a;
-  --color-foreground: #f1f5f9;
-  --color-accent: #3b82f6;
-  --color-accent-soft: rgba(59, 130, 246, 0.2);
-  --color-glass: rgba(15, 23, 42, 0.7);
-  --color-glass-border: rgba(255, 255, 255, 0.1);
+  --foreground: #f1f5f9;
+  --accent: #3b82f6;
+  --accent-soft: rgba(59, 130, 246, 0.2);
+  --glass: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 body {
   background: var(--background);
-  color: var(--color-foreground);
+  color: var(--foreground);
+
   transition:
     background 0.5s ease,
     color 0.5s ease,
-    --color-accent 0.5s ease;
+    --color-accent 0.5s ease,
+    --color-accent-soft 0.5s ease,
+    --color-glass 0.5s ease,
+    --color-glass-border 0.5s ease;
+}
+
+/* scroll animation */
+html {
+  scroll-behavior: smooth;
 }
 
 /* hide scrollbar */
