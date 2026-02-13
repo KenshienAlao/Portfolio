@@ -1,7 +1,7 @@
 export default function Projects() {
   return (
-    <div>
+    <section id="projects" className="h-dvh">
       <h1>Projects</h1>
-    </div>
+    </section>
   );
 }
