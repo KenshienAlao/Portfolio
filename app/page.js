@@ -1,23 +1,50 @@
 "use client";
 
-import Theme from "./components/theme/page";
-import Navigation from "./components/Navigation/page";
-import Home from "./components/Home/page";
-import About from "./components/About/page";
-import Skills from "./components/Skills/page";
-import Projects from "./components/Projects/page";
-import Contact from "./components/Contact/page";
-import Footer from "./components/Footer/page";
-import useLoading from "./hooks/loading";
+// next
+import dynamic from "next/dynamic";
+
+// components
+const Navigation = dynamic(() => import("@/app/components/Navigation/page"), {
+  loading: () => null,
+});
+const Home = dynamic(() => import("@/app/components/Home/page"), {
+  loading: () => null,
+});
+const About = dynamic(() => import("@/app/components/About/page"), {
+  loading: () => null,
+});
+const Skills = dynamic(() => import("@/app/components/Skills/page"), {
+  loading: () => null,
+});
+const Projects = dynamic(() => import("@/app/components/Projects/page"), {
+  loading: () => null,
+});
+const Contact = dynamic(() => import("@/app/components/Contact/page"), {
+  loading: () => null,
+});
+const Footer = dynamic(() => import("@/app/components/Footer/page"), {
+  loading: () => null ,
+});
+
+// ui
+import { ThemeToggle } from "@/app/components/ui/themeToggle";
+
+// hooks
+import { useLoading } from "@/app/hooks/useLoading";
+import { useScrollSpy } from "@/app/hooks/useScrollSpy";
+import { useScrollToSaved } from "@/app/hooks/useScrollToSaved";
 
 export default function Portfolio() {
-  const { loading } = useLoading();
+  const loading = useLoading();
+  const active = useScrollSpy();
+  useScrollToSaved(loading);
+
   return (
     <>
-      <Theme />
+      <ThemeToggle />
       {loading ? null : (
         <div className="bg-background min-h-screen transition-colors duration-500">
-          <Navigation />
+          <Navigation active={active} />
           <main>
             <Home />
             <About />
