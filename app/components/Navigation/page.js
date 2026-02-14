@@ -12,6 +12,9 @@ import { useScrollToSection } from "@/app/hooks/useScrollToSection";
 // utils
 import { menu } from "@/app/utils/navigationMenu";
 
+// ui
+import { MenuIcon } from "@/app/components/ui/elements";
+
 export default function Navigation({ active }) {
   const scrolled = useHandleScroll();
   const scrollToSection = useScrollToSection();
@@ -31,24 +34,24 @@ export default function Navigation({ active }) {
               initial={{ y: -40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className={`bg-glass border-glass-border flex items-center justify-between rounded-2xl border px-6 py-3 shadow-lg backdrop-blur-md transition-all duration-500 ${
+              className={`bg-glass border-glass-border flex items-center justify-between rounded-2xl border px-[clamp(1rem,0.6087rem+1.7391vw,2rem)] py-3 shadow-lg backdrop-blur-md transition-all duration-500 ${
                 scrolled ? "shadow-xl" : "shadow-none"
               }`}
             >
               {/* logo */}
-              <div className="text-foreground cursor-pointer text-2xl font-black tracking-tighter transition-all duration-500 hover:scale-110">
+              <div className="text-foreground cursor-pointer text-[clamp(0.75rem,0.3098rem+1.9565vw,1.875rem)] font-black tracking-tighter transition-all duration-500">
                 KEN<span className="text-accent">SHIEN</span>
               </div>
 
               {/* desktop menu */}
-              <div className="hidden items-center gap-8 sm:flex">
-                <ul className="flex items-center gap-8">
+              <div className="hidden items-center sm:flex">
+                <ul className="flex items-center gap-[clamp(1rem,0.6087rem+1.7391vw,2rem)]">
                   {menu.map((item) => {
                     return (
                       <li key={item.name} className="group relative">
                         <button
                           onClick={() => scrollToSection(item.id)}
-                          className={`text-sm font-bold tracking-wide transition-colors ${
+                          className={`text-[clamp(0.75rem,0.5543rem+0.8696vw,1.25rem)] font-bold tracking-wide transition-colors ${
                             active === item.name
                               ? "text-accent"
                               : "text-foreground/70 group-hover:text-foreground"
@@ -76,18 +79,7 @@ export default function Navigation({ active }) {
                 className="text-foreground relative z-110 flex cursor-pointer sm:hidden"
                 onClick={() => setOpen(!open)}
               >
-                <svg
-                  height="28"
-                  viewBox="0 -960 960 960"
-                  width="28"
-                  fill="currentColor"
-                >
-                  {open ? (
-                    <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                  ) : (
-                    <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
-                  )}
-                </svg>
+                <MenuIcon />
               </motion.button>
             </div>
           </AnimatePresence>
@@ -125,9 +117,9 @@ export default function Navigation({ active }) {
                       onClick={() => setOpen(false)}
                     >
                       <button
-                        onClick={() => scrollToSection(id)}
+                        onClick={() => scrollToSection(item.id)}
                         className={`text-3xl font-black tracking-tight transition-colors ${
-                          active === id
+                          active === item.id
                             ? "text-accent"
                             : "text-foreground hover:text-accent"
                         }`}
