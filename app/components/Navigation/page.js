@@ -1,5 +1,8 @@
 "use client";
 
+// optimize
+import dynamic from "next/dynamic";
+
 // lib
 import { AnimatePresence, motion } from "framer-motion";
 import { createPortal } from "react-dom";
@@ -14,6 +17,12 @@ import { menu } from "@/app/utils/navigationMenu";
 
 // ui
 import { MenuIcon } from "@/app/components/ui/elements";
+
+// components
+const MobileNavigation = dynamic(
+  () => import("@/app/components/Navigation/mobile"),
+  { loading: () => null },
+);
 
 export default function Navigation({ active }) {
   const scrolled = useHandleScroll();
@@ -51,10 +60,10 @@ export default function Navigation({ active }) {
                       <li key={item.name} className="group relative">
                         <button
                           onClick={() => scrollToSection(item.id)}
-                          className={`text-[clamp(0.75rem,0.5543rem+0.8696vw,1.25rem)] font-bold tracking-wide transition-colors ${
-                            active === item.name
+                          className={`hover:text-accent text-[clamp(0.75rem,0.5543rem+0.8696vw,1.25rem)] font-bold tracking-wide transition-colors ${
+                            active === item.id
                               ? "text-accent"
-                              : "text-foreground/70 group-hover:text-foreground"
+                              : "group-hover:text-foreground"
                           }`}
                         >
                           {item.name}
@@ -62,9 +71,9 @@ export default function Navigation({ active }) {
 
                         <span
                           className={`bg-accent absolute -bottom-1 left-0 h-0.5 transition-all duration-500 ${
-                            active === item.name
+                            active === item.id
                               ? "w-full"
-                              : "w-0 group-hover:w-full"
+                              : "group-hover:bg-foreground w-0 group-hover:w-full"
                           }`}
                         />
                       </li>
@@ -100,37 +109,11 @@ export default function Navigation({ active }) {
               onClick={() => setOpen(false)}
             />
 
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-glass border-glass-border w-full max-w-sm rounded-[2.5rem] border p-12 shadow-2xl"
-            >
-              <ul className="flex flex-col items-center gap-8">
-                {menu.map((item, i) => {
-                  return (
-                    <motion.li
-                      key={item.name}
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: i * 0.1 }}
-                      onClick={() => setOpen(false)}
-                    >
-                      <button
-                        onClick={() => scrollToSection(item.id)}
-                        className={`text-3xl font-black tracking-tight transition-colors ${
-                          active === item.id
-                            ? "text-accent"
-                            : "text-foreground hover:text-accent"
-                        }`}
-                      >
-                        {item.name}
-                      </button>
-                    </motion.li>
-                  );
-                })}
-              </ul>
-            </motion.div>
+            <MobileNavigation
+              menu={menu}
+              scrollToSection={scrollToSection}
+              active={active}
+            />
           </motion.div>,
           document.body,
         )}

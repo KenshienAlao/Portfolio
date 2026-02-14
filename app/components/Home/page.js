@@ -1,15 +1,51 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { containerVariants, itemVariants } from "../ui/animation";
+// optimize
+import dynamic from "next/dynamic";
+
+// lib
 import Image from "next/image";
 
+// hooks
+import { useTheme } from "@/app/context/ThemeContext";
+
+// ui
+import { motion } from "framer-motion";
+const BlueOrbIcon = dynamic(
+  () => import("@/app/components/ui/elements").then((mod) => mod.BlueOrbIcon),
+  { loading: () => null },
+);
+const GreenOrbIcon = dynamic(
+  () => import("@/app/components/ui/elements").then((mod) => mod.GreenOrbIcon),
+  { loading: () => null },
+);
+
+const SpinningFrame = dynamic(
+  () => import("@/app/components/ui/elements").then((mod) => mod.SpinningFrame),
+  { loading: () => null },
+);
+
+// components
+import {
+  containerVariants,
+  itemVariants,
+  floatingVariants,
+} from "@/app/components/ui/animation";
+
 export default function Home() {
+  const { change } = useTheme();
+
   return (
     <section id="home" className="relative min-h-dvh w-full overflow-hidden">
-      <div className="pointer-events-none absolute -top-24 -left-24 size-96 rounded-full bg-green-500/5 blur-3xl" />
-      <div className="pointer-events-none absolute -right-24 bottom-0 size-96 rounded-full bg-blue-500/5 blur-3xl" />
+      {/* overlay */}
+      {change ? (
+        <>
+          <GreenOrbIcon left={20} top={200} />
+          <BlueOrbIcon right={20} bottom={100} />
+        </>
+      ) : null}
 
+      {/* content */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -57,21 +93,27 @@ export default function Home() {
         {/* profile section */}
         <motion.div
           variants={containerVariants}
-          initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-          animate={{ opacity: 1, scale: 1, rotate: 3 }}
-          transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
+          initial="hidden"
+          animate="visible"
           className="relative mt-16 md:mt-0"
         >
-          <div className="relative size-64 overflow-hidden rounded-2xl border-4 border-white bg-gray-100 shadow-2xl transition-all duration-500 hover:rotate-0 md:size-80">
+          <motion.div
+            variants={floatingVariants}
+            initial="smoothHidden"
+            animate={["smoothVisible", "smoothFloating"]}
+            className="relative size-64 rounded-2xl border-4 border-white bg-gray-100 shadow-2xl transition-all duration-500 md:size-80"
+          >
             <Image
               src="/profile/me.png"
               alt="Kenshien"
-              className="h-full w-full object-cover"
+              className="size-full rounded-2xl object-cover"
+              priority
               width={500}
               height={500}
             />
-          </div>
-          <div className="absolute -inset-4 -z-10 rounded-2xl border-2 border-green-500/20 md:rotate-6" />
+            {/* overlay*/}
+            <SpinningFrame />
+          </motion.div>
         </motion.div>
       </motion.div>
     </section>

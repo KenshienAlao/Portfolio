@@ -1,6 +1,6 @@
 "use client";
 
-// next
+// optimize
 import dynamic from "next/dynamic";
 
 // components
@@ -23,7 +23,7 @@ const Contact = dynamic(() => import("@/app/components/Contact/page"), {
   loading: () => null,
 });
 const Footer = dynamic(() => import("@/app/components/Footer/page"), {
-  loading: () => null ,
+  loading: () => null,
 });
 
 // ui
@@ -41,9 +41,9 @@ export default function Portfolio() {
 
   return (
     <>
-      <ThemeToggle />
       {loading ? null : (
         <div className="bg-background min-h-screen transition-colors duration-500">
+          <ThemeToggle />
           <Navigation active={active} />
           <main>
             <Home />
