@@ -27,37 +27,36 @@ const Footer = dynamic(() => import("@/app/components/Footer/page"), {
 });
 
 // ui
-import { ThemeToggle } from "@/app/components/ui/themeToggle";
+const ThemeToggle = dynamic(
+  () => import("@/app/components/ui/themeToggle").then((ui) => ui.ThemeToggle),
+  { loading: () => null },
+);
 
 // hooks
-import { useLoading } from "@/app/hooks/useLoading";
 import { useScrollSpy } from "@/app/hooks/useScrollSpy";
 import { useScrollToSaved } from "@/app/hooks/useScrollToSaved";
 
 export default function Portfolio() {
-  const loading = useLoading();
   const active = useScrollSpy();
-  useScrollToSaved(loading);
+  useScrollToSaved();
 
   return (
     <>
-      {loading ? null : (
-        <div className="bg-background min-h-screen transition-colors duration-500">
-          <ThemeToggle />
-          <Navigation active={active} />
-          <main>
-            <Home />
-            <About />
-            <Skills />
-            <Projects />
-            <Contact />
-          </main>
+      <div className="bg-background min-h-screen transition-colors duration-500">
+        <ThemeToggle />
+        <Navigation active={active} />
+        <main>
+          <Home />
+          <About />
+          <Skills />
+          <Projects />
+          <Contact />
+        </main>
 
-          <footer>
-            <Footer />
-          </footer>
-        </div>
-      )}
+        <footer>
+          <Footer />
+        </footer>
+      </div>
     </>
   );
 }

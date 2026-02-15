@@ -3,7 +3,13 @@
 // lib
 import { motion } from "framer-motion";
 
-export default function MobileNavigation({ menu, scrollToSection, active }) {
+// context
+import { useMounted } from "@/app/context/MountedContext";
+
+export function MobileNavigation({ menu, scrollToSection, active, setOpen }) {
+  const mounted = useMounted();
+
+  if (!mounted) return null;
   return (
     <motion.div
       initial={{ scale: 0.9, opacity: 0 }}

@@ -6,23 +6,26 @@ import dynamic from "next/dynamic";
 // lib
 import Image from "next/image";
 
+// context
+import { useMounted } from "@/app/context/MountedContext";
+
 // hooks
 import { useTheme } from "@/app/context/ThemeContext";
 
 // ui
 import { motion } from "framer-motion";
 const BlueOrbIcon = dynamic(
-  () => import("@/app/components/ui/elements").then((mod) => mod.BlueOrbIcon),
-  { loading: () => null },
+  () => import("@/app/components/ui/orbs").then((ui) => ui.BlueOrbIcon),
+  { loading: () => null, ssr: false },
 );
 const GreenOrbIcon = dynamic(
-  () => import("@/app/components/ui/elements").then((mod) => mod.GreenOrbIcon),
-  { loading: () => null },
+  () => import("@/app/components/ui/orbs").then((ui) => ui.GreenOrbIcon),
+  { loading: () => null, ssr: false },
 );
 
 const SpinningFrame = dynamic(
-  () => import("@/app/components/ui/elements").then((mod) => mod.SpinningFrame),
-  { loading: () => null },
+  () => import("@/app/components/ui/frame").then((ui) => ui.SpinningFrame),
+  { loading: () => null, ssr: false },
 );
 
 // components
@@ -30,11 +33,13 @@ import {
   containerVariants,
   itemVariants,
   floatingVariants,
-} from "@/app/components/ui/animation";
+} from "@/app/utils/animation";
 
 export default function Home() {
+  const mounted = useMounted();
   const { change } = useTheme();
 
+  if (!mounted) return null;
   return (
     <section id="home" className="relative min-h-dvh w-full overflow-hidden">
       {/* overlay */}

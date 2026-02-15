@@ -3,6 +3,9 @@
 // optimize
 import dynamic from "next/dynamic";
 
+// context
+import { useMounted } from "@/app/context/MountedContext";
+
 // lib
 import { AnimatePresence, motion } from "framer-motion";
 import { createPortal } from "react-dom";
@@ -12,23 +15,28 @@ import { useOpen } from "@/app/hooks/useOpenMenuNavigation";
 import { useHandleScroll } from "@/app/hooks/useHandleScroll";
 import { useScrollToSection } from "@/app/hooks/useScrollToSection";
 
-// utils
-import { menu } from "@/app/utils/navigationMenu";
+// data
+import { menu } from "@/app/data/navigationMenu";
 
 // ui
-import { MenuIcon } from "@/app/components/ui/elements";
+import { MenuIcon } from "@/app/components/ui/icons";
 
 // components
 const MobileNavigation = dynamic(
-  () => import("@/app/components/Navigation/mobile"),
-  { loading: () => null },
+  () =>
+    import("@/app/components/Navigation/mobile").then(
+      (ui) => ui.MobileNavigation,
+    ),
+  { loading: () => null, ssr: false },
 );
 
 export default function Navigation({ active }) {
+  const mounted = useMounted();
   const scrolled = useHandleScroll();
   const scrollToSection = useScrollToSection();
   const { open, setOpen } = useOpen();
 
+  if (!mounted) return null;
   return (
     <>
       <motion.nav
@@ -113,6 +121,7 @@ export default function Navigation({ active }) {
               menu={menu}
               scrollToSection={scrollToSection}
               active={active}
+              setOpen={setOpen}
             />
           </motion.div>,
           document.body,

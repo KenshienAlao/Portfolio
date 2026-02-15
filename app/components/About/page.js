@@ -2,7 +2,7 @@
 
 // ui
 import { motion } from "framer-motion";
-import { containerVariants } from "@/app/components/ui/animation";
+import { containerVariants } from "@/app/utils/animation";
 
 export default function About() {
   return (

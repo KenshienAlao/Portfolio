@@ -1,25 +1,21 @@
-// optimize
-import dynamic from "next/dynamic";
-
 // ui
-const SunIcon = dynamic(() =>
-  import("@/app/components/ui/elements").then((mod) => mod.SunIcon),
-);
-const MoonIcon = dynamic(() =>
-  import("@/app/components/ui/elements").then((mod) => mod.MoonIcon),
-);
+import { SunIcon, MoonIcon } from "@/app/components/ui/icons";
 
-import { containerVariants, itemVariants } from "@/app/components/ui/animation";
+// utils
+import { containerVariants } from "@/app/utils/animation";
 
 // lib
 import { motion } from "framer-motion";
 
-// hooks
+// context
 import { useTheme } from "@/app/context/ThemeContext";
+import { useMounted } from "@/app/context/MountedContext";
 
 export function ThemeToggle() {
+  const mounted = useMounted();
   const { change, setChange } = useTheme();
 
+  if (!mounted) return null;
   return (
     <motion.div
       className="fixed right-8 bottom-8 z-60"
@@ -44,10 +40,8 @@ export function ThemeToggle() {
 
         {/* Buttons */}
         <div className="relative z-10 flex items-center">
-          <motion.button
+          <button
             onClick={() => setChange(false)}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
             className={`flex size-12 cursor-pointer items-center justify-center rounded-full transition-all duration-500 ${
               !change
                 ? "text-amber-400 drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
@@ -55,12 +49,10 @@ export function ThemeToggle() {
             }`}
           >
             <SunIcon />
-          </motion.button>
+          </button>
 
-          <motion.button
+          <button
             onClick={() => setChange(true)}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
             className={`flex size-12 cursor-pointer items-center justify-center rounded-full transition-all duration-500 ${
               change
                 ? "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
@@ -68,7 +60,7 @@ export function ThemeToggle() {
             }`}
           >
             <MoonIcon />
-          </motion.button>
+          </button>
         </div>
       </div>
     </motion.div>
