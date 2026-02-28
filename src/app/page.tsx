@@ -9,6 +9,7 @@ import { Skills } from "@/app/components/Skills";
 import { Projects } from "@/app/components/Projects";
 import { Contact } from "@/app/components/Contact";
 import { NavbarMobile } from "@/app/components/NavbarMobile";
+import { ThemeToggle } from "./components/ui/themeToggle";
 
 /**
  * @param activeSection - active section
@@ -45,6 +46,7 @@ export default function Home() {
         {activeSection === "Projects" && <Projects />}
         {activeSection === "Contact" && <Contact />}
       </main>
+      <ThemeToggle /> 
     </div>
   );
 }
