@@ -1,33 +1,35 @@
 "use client";
-import { useContext } from "react";
 import { Menu } from "lucide-react";
-import { MenuContext } from "@/context/menuContext";
-import type { Section } from "@/app/page";
-import { TABS } from "@/app/page";
+import { TABS, type Section } from "@/app/page";
+
+/**
+ * @param {function} setActiveSection - set active section
+ * @param {function} handleMenu - handle menu
+ * @param {string} activeSection - active section
+ * @returns {TSX.Element} navbar
+ */
 
 interface NavbarProps {
+  setActiveSection: (tab: Section) => void;
+  handleMenu: () => void;
   activeSection: Section;
-  setActiveSection: (i: Section) => void;
 }
 
-export function Navbar({ activeSection, setActiveSection }: NavbarProps) {
-  const { handleMenu } = useContext(MenuContext);
-
+export function Navbar({ setActiveSection, handleMenu, activeSection }: NavbarProps) {
   return (
     <nav className="sticky inset-0 top-0 z-50">
       <div className="flex justify-between bg-blue-300 p-2">
         <div className="mx-2 size-full">
           {/* desktop navbar */}
           <div className="hidden justify-center md:flex md:gap-4">
-            {TABS.map((i) => (
+            {TABS.map((tab) => (
               <button
-                key={i}
-                onClick={() => setActiveSection(i)}
-                className={`transition-opacity hover:opacity-50 ${
-                  activeSection === i ? "font-bold" : ""
-                }`}
+                key={tab}
+                onClick={() => setActiveSection(tab)}
+                className={`transition-opacity hover:opacity-50 ${activeSection === tab ? "font-bold" : ""
+                  }`}
               >
-                {i}
+                {tab}
               </button>
             ))}
           </div>

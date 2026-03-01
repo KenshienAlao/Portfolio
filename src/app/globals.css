@@ -29,5 +29,60 @@ nav {
 section {
   width: 100%;
   height: 100%;
-  margin: 0  auto;
+  margin: 0 auto;
+  user-select: none;
+}
+
+.section-container {
+  display: flex;
+  flex-direction: column;
+  margin-inline: auto;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  text-align: center;
+}
+
+.section-child {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Buttons */
+
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:disabled {
+  background-color: #142b5c;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
+  cursor: not-allowed;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+/* Links */
+
+.link-primary {
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.link-primary:hover {
+  color: #1d4ed8;
 }

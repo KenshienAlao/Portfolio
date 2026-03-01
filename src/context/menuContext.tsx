@@ -1,6 +1,12 @@
 "use client";
 import { createContext } from "react";
 import { useMenuHandle } from "@/hooks/useMenuHandle";
+import { useMounted } from "@/hooks/useMounteed";
+
+/**
+ * @returns {boolean} - Whether the menu is open
+ * @returns {function} - Function to handle the menu
+ */
 
 export const MenuContext = createContext({
   isOpen: false,
