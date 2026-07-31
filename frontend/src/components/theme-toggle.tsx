@@ -36,9 +36,9 @@ function ThemeTogglerButton({ className }: { className?: string }) {
       {mounted && (
         <div>
           {resolvedTheme === "dark" ? (
-            <Sun className="h-4 w-4 text-yellow-400" />
+            <Sun className="h-4 w-4 text-accent" />
           ) : (
-            <Moon className="h-4 w-4 text-blue-500" />
+            <Moon className="h-4 w-4 text-accent" />
           )}
         </div>
       )}

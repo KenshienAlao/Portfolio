@@ -24,12 +24,7 @@ export function Navigation({
   mobileMenuOpen,
   setMobileMenuOpen,
 }: NavProps) {
-  const [scrolled, setScrolled] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.scrollY > 10;
-    }
-    return false;
-  });
+  const [scrolled, setScrolled] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
 
@@ -37,10 +32,13 @@ export function Navigation({
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
+
+    handleScroll(); // Sync after mount
+
     window.addEventListener("scroll", handleScroll, { passive: true });
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
     return () => {
@@ -79,12 +77,23 @@ export function Navigation({
         <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
           <nav
             className={cn(
-              "relative flex items-center justify-end rounded-2xl border px-3 py-2 md:justify-between",
+              "relative flex items-center justify-between rounded-2xl border px-3 py-2",
               scrolled
                 ? "border-border/20 bg-background/80 shadow-lg shadow-black/4 backdrop-blur-2xl dark:shadow-black/15"
                 : "border-border/10 bg-surface/40 shadow-sm backdrop-blur-xl",
             )}
           >
+            <button
+              type="button"
+              onClick={() => go(NAV_PAGES.LINKS.HOME)}
+              className="flex items-center gap-2 pl-1 font-mono text-sm font-bold tracking-tight text-text-primary"
+              aria-label="Go home"
+            >
+              <span className="text-accent">$</span>
+              <span>kenshie</span>
+              <span className="text-accent">_</span>
+            </button>
+
             <div ref={navRef} className="relative hidden items-center md:flex">
               <div
                 ref={indicatorRef}

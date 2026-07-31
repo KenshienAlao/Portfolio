@@ -10,6 +10,7 @@ import { Projects } from "@/views/projects";
 import { Setup } from "@/views/setup";
 import { Contact } from "@/views/contact";
 import Skills from "@/views/skills";
+import { Education } from "@/views/education";
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
@@ -20,6 +21,7 @@ export default function Home() {
     [NAV_PAGES.LINKS.HOME]: <Hero changePage={setCurrentPage} />,
     [NAV_PAGES.LINKS.ABOUT]: <About />,
     [NAV_PAGES.LINKS.PROJECTS]: <Projects />,
+    [NAV_PAGES.LINKS.EDUCATION]: <Education />,
     [NAV_PAGES.LINKS.SKILLS]: <Skills />,
     [NAV_PAGES.LINKS.SETUP]: <Setup />,
     [NAV_PAGES.LINKS.CONTACT]: <Contact />,

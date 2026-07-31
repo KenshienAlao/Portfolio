@@ -1,38 +1,59 @@
 import { Button } from "@/components/ui/button";
 import { NAV_PAGES } from "@/config/navigation.config";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Code2, Zap, Layers, Accessibility } from "lucide-react";
+
+const CAPABILITIES = [
+  { icon: Code2, label: "Develop" },
+  { icon: Layers, label: "Design" },
+  { icon: Zap, label: "Optimize" },
+  { icon: Accessibility, label: "Accessible" },
+];
 
 export function Hero({ changePage }: { changePage: (page: string) => void }) {
   return (
     <section
       id="hero"
-      className="relative min-h-[calc(100vh-73px)] flex items-center justify-center overflow-hidden bg-background"
+      className="relative flex min-h-[calc(100vh-73px)] items-center overflow-hidden bg-background"
     >
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-accent/5 blur-[60px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full bg-accent/5 blur-[60px] pointer-events-none" />
+      <div className="absolute inset-0 bg-grid opacity-60" aria-hidden="true" />
+      <div
+        className="glow-accent pointer-events-none absolute -top-24 left-1/2 h-105 w-105 -translate-x-1/2 opacity-70"
+        aria-hidden="true"
+      />
 
-      <div className="container relative z-10 px-4 mx-auto">
-        <div className="mx-auto max-w-3xl text-center space-y-6">
-          <div className="space-y-3">
-            <p className="text-xs font-bold uppercase tracking-widest text-accent">
-              Web Developer
-            </p>
-            <h1 className="text-5xl font-extrabold tracking-tight text-text-primary md:text-7xl">
-              Kenshie Alao
-            </h1>
-          </div>
-
-          <p className="text-base text-text-secondary max-w-xl mx-auto leading-relaxed md:text-lg">
-            I help small and medium businesses establish a strong online
-            presence through modern, professional websites that attract
-            customers and drive measurable results.
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="mx-auto max-w-3xl">
+          <p className="slide-up flex items-center gap-2 font-mono text-xs text-accent sm:text-sm">
+            <span className="text-text-secondary">~/kenshien</span>
+            <span className="text-text-secondary">$</span>
+            <span>whoami</span>
           </p>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center pt-2">
+          <h1 className="slide-up stagger-1 mt-4 text-5xl font-extrabold leading-[0.95] tracking-tight text-text-primary text-balance sm:text-6xl md:text-7xl">
+            Kenshien
+            <br />
+            <span className="text-accent">Alao</span>
+          </h1>
+
+          <p className="slide-up stagger-2 mt-5 font-mono text-sm text-text-secondary sm:text-base">
+            Web Developer | Helping Businesses Grow Online
+          </p>
+
+          <p className="slide-up stagger-3 mt-6 max-w-xl text-base leading-relaxed text-text-secondary md:text-lg text-pretty">
+            I help businesses grow their online presence by building modern web
+            applications and high-converting landing pages that are fast,
+            responsive, and designed to turn visitors into customers.
+          </p>
+
+          <p className="slide-up stagger-4 mt-6 font-mono text-sm text-accent">
+            <span className="caret">&gt; building for the web</span>
+          </p>
+
+          <div className="slide-up stagger-5 mt-8 flex flex-col gap-3 sm:flex-row">
             <Button
               onClick={() => changePage(NAV_PAGES.LINKS.PROJECTS)}
               size="lg"
-              className="w-full rounded-full bg-accent px-8 text-white hover:bg-accent/90 active:scale-95 sm:w-auto"
+              className="w-full rounded-full bg-accent px-8 font-semibold text-on-accent hover:bg-accent/90 active:scale-95 sm:w-auto"
             >
               View Projects
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -41,10 +62,21 @@ export function Hero({ changePage }: { changePage: (page: string) => void }) {
               onClick={() => changePage(NAV_PAGES.LINKS.CONTACT)}
               size="lg"
               variant="outline"
-              className="w-full rounded-full border-border bg-transparent px-8 text-text-primary hover:bg-surface active:scale-95 sm:w-auto"
+              className="w-full rounded-full border-border bg-transparent px-8 font-semibold text-text-primary hover:border-accent/50 hover:bg-surface active:scale-95 sm:w-auto"
             >
               Get in Touch
             </Button>
+          </div>
+
+          <div className="slide-up stagger-6 mt-12 flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-border/60 pt-6">
+            {CAPABILITIES.map(({ icon: Icon, label }) => (
+              <div key={label} className="flex items-center gap-2">
+                <Icon className="h-4 w-4 text-accent" />
+                <span className="font-mono text-[11px] uppercase tracking-widest text-text-secondary">
+                  {label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
