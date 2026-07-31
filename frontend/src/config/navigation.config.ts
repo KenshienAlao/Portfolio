@@ -1,4 +1,4 @@
-import { Home, User, Folder, Mail, MonitorCog } from "lucide-react";
+import { Home, User, Folder, Mail, MonitorCog, GraduationCap } from "lucide-react";
 import { FaCog } from "react-icons/fa";
 
 export const NAV_PAGES = {
@@ -6,6 +6,7 @@ export const NAV_PAGES = {
     HOME: "Home",
     ABOUT: "About",
     PROJECTS: "Projects",
+    EDUCATION: "Education",
     SKILLS: "Skills",
     SETUP: "Setup",
     CONTACT: "Contact",
@@ -14,6 +15,7 @@ export const NAV_PAGES = {
     HOME: Home,
     ABOUT: User,
     PROJECTS: Folder,
+    EDUCATION: GraduationCap,
     SKILLS: FaCog,
     SETUP: MonitorCog,
     CONTACT: Mail,

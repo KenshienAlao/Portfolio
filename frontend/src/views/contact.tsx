@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Mail, ExternalLink, MessageSquare } from "lucide-react";
+import { ExternalLink, Download } from "lucide-react";
 import { CONTACT_LINKS } from "@/config/contanct";
+import { ContactForm } from "@/components/contact-form";
 
 export function Contact() {
   return (
@@ -24,8 +25,25 @@ export function Contact() {
             </p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 items-stretch">
+          <div className="grid gap-4 md:grid-cols-2 items-start">
             <div className="flex flex-col gap-3">
+              <a
+                href="mailto:kenshienworkacc@gmail.com"
+                className="flex items-center gap-4 rounded-xl border border-border bg-surface p-4 hover:border-border/60"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                  <ExternalLink className="h-4 w-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-text-secondary mb-0.5">
+                    Email
+                  </p>
+                  <p className="text-sm font-semibold text-text-primary truncate">
+                    kenshienworkacc@gmail.com
+                  </p>
+                </div>
+              </a>
+
               {CONTACT_LINKS.map((link) => {
                 const Icon = link.icon;
                 return (
@@ -51,35 +69,21 @@ export function Contact() {
                   </a>
                 );
               })}
-            </div>
 
-            <div className="flex flex-col justify-center items-center rounded-xl border border-border bg-surface p-8 text-center">
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 text-accent">
-                <MessageSquare className="h-5 w-5" />
-              </div>
-              <h3 className="mb-2 text-lg font-bold text-text-primary tracking-tight">
-                Available for Opportunities
-              </h3>
-              <p className="mb-7 text-sm text-text-secondary leading-relaxed max-w-sm">
-                I&apos;m currently looking for freelance projects, full-time
-                roles, and exciting collaborations. Let&apos;s build something
-                amazing together.
-              </p>
               <Button
                 asChild
                 size="lg"
-                className="w-full rounded-lg bg-accent text-white hover:bg-accent/90 active:scale-95 gap-2"
+                variant="outline"
+                className="w-full rounded-xl border-border text-text-primary hover:bg-surface active:scale-95 gap-2"
               >
-                <a
-                  href="mailto:kenshienworkacc@gmail.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Mail className="h-4 w-4" />
-                  Send me an Email
+                <a href="/resume.pdf" download>
+                  <Download className="h-4 w-4" />
+                  Download Resume
                 </a>
               </Button>
             </div>
+
+            <ContactForm />
           </div>
         </div>
       </div>

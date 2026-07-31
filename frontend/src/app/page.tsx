@@ -7,6 +7,7 @@ import { NAV_PAGES } from "@/config/navigation.config";
 import { Hero } from "@/views/home";
 import { About } from "@/views/about";
 import { Projects } from "@/views/projects";
+import { Education } from "@/views/education";
 import { Setup } from "@/views/setup";
 import { Contact } from "@/views/contact";
 import Skills from "@/views/skills";
@@ -20,6 +21,7 @@ export default function Home() {
     [NAV_PAGES.LINKS.HOME]: <Hero changePage={setCurrentPage} />,
     [NAV_PAGES.LINKS.ABOUT]: <About />,
     [NAV_PAGES.LINKS.PROJECTS]: <Projects />,
+    [NAV_PAGES.LINKS.EDUCATION]: <Education />,
     [NAV_PAGES.LINKS.SKILLS]: <Skills />,
     [NAV_PAGES.LINKS.SETUP]: <Setup />,
     [NAV_PAGES.LINKS.CONTACT]: <Contact />,
