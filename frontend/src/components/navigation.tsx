@@ -90,7 +90,7 @@ export function Navigation({
               aria-label="Go home"
             >
               <span className="text-accent">$</span>
-              <span>kenshie</span>
+              <span>kenshien</span>
               <span className="text-accent">_</span>
             </button>
 
