@@ -3,6 +3,7 @@ import { ExternalLink, Download, Mail } from "lucide-react";
 import { CONTACT_LINKS } from "@/config/contanct";
 import { SectionHeader } from "@/components/section-header";
 import { ContactForm } from "@/components/contact-form";
+import Link from "next/link";
 
 export function Contact() {
   return (
@@ -72,10 +73,10 @@ export function Contact() {
               variant="outline"
               className="w-full gap-2 rounded-2xl border-border text-text-primary hover:border-accent/50 hover:bg-surface active:scale-95"
             >
-              <a href="/resume.pdf" download>
+              <Link href="/resume.pdf" download>
                 <Download className="h-4 w-4" />
                 Download Resume
-              </a>
+              </Link>
             </Button>
           </div>
 

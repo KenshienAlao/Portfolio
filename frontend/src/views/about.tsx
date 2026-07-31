@@ -32,7 +32,7 @@ export function About() {
               </div>
               <div className="space-y-5 text-base leading-relaxed text-text-secondary">
                 <p>
-                  I'm a web developer passionate about building modern web
+                  I&apos;m a web developer passionate about building modern web
                   applications.
                 </p>
 

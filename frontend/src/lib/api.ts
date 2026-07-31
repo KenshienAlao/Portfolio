@@ -44,7 +44,7 @@ api.interceptors.response.use(
         return api(req);
       } catch {
         if (typeof window !== "undefined") {
-          window.location.href = `${ROUTES.AUTH.SIGNIN}?clear_session=true`;
+          window.location.href = `${ROUTES.AUTH.LOGIN}?clear_session=true`;
           return;
         }
 
