@@ -30,18 +30,18 @@ export function ContactForm() {
   };
 
   const fieldClass =
-    "w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/60 outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20";
+    "w-full rounded-lg border border-border bg-background px-4 py-2.5 font-mono text-sm text-text-primary placeholder:text-text-secondary/60 outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20";
+
+  const labelClass =
+    "font-mono text-[11px] uppercase tracking-widest text-text-secondary";
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-6"
+      className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-6"
     >
       <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor="name"
-          className="text-[11px] font-bold uppercase tracking-widest text-text-secondary"
-        >
+        <label htmlFor="name" className={labelClass}>
           Name
         </label>
         <input
@@ -57,10 +57,7 @@ export function ContactForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor="email"
-          className="text-[11px] font-bold uppercase tracking-widest text-text-secondary"
-        >
+        <label htmlFor="email" className={labelClass}>
           Email
         </label>
         <input
@@ -76,10 +73,7 @@ export function ContactForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor="message"
-          className="text-[11px] font-bold uppercase tracking-widest text-text-secondary"
-        >
+        <label htmlFor="message" className={labelClass}>
           Message
         </label>
         <textarea
@@ -97,7 +91,7 @@ export function ContactForm() {
       <Button
         type="submit"
         size="lg"
-        className="w-full rounded-lg bg-accent text-white hover:bg-accent/90 active:scale-95 gap-2"
+        className="w-full gap-2 rounded-lg bg-accent font-semibold text-on-accent hover:bg-accent/90 active:scale-95"
       >
         {sent ? (
           <>

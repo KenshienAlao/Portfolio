@@ -4,6 +4,7 @@ import { SETUP_ITEMS } from "@/config/setup";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { SectionHeader } from "@/components/section-header";
 
 export function Setup() {
   return (
@@ -11,21 +12,17 @@ export function Setup() {
       id="setup"
       className="relative py-24 bg-background overflow-hidden md:py-32"
     >
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-accent/5 blur-[60px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full bg-accent/5 blur-[60px] pointer-events-none" />
+      <div className="absolute inset-0 bg-grid opacity-40" aria-hidden="true" />
 
       <div className="container relative z-10 mx-auto px-4 max-w-4xl">
-        <div className="space-y-16">
-          <div className="text-center">
-            <h2 className="text-4xl font-extrabold tracking-tight text-text-primary md:text-5xl">
-              Setup
-            </h2>
-            <div className="mt-4 h-1.5 w-12 bg-accent mx-auto rounded-full" />
-            <p className="mt-6 text-lg text-text-secondary max-w-md mx-auto leading-relaxed">
-              The tools I use for development, design, and productivity.
-            </p>
-          </div>
+        <SectionHeader
+          path="~/setup"
+          command="cat .config"
+          title="Setup"
+          description="The tools I use for development, design, and productivity."
+        />
 
+        <div className="mt-14">
           <div className="grid gap-3 sm:grid-cols-2">
             {SETUP_ITEMS.map((item) => {
               const values = Array.isArray(item.value)
@@ -44,11 +41,11 @@ export function Setup() {
               return (
                 <div
                   key={item.category}
-                  className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5"
+                  className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-accent/40"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex flex-col gap-3 min-w-0">
-                      <p className="text-[11px] font-bold uppercase tracking-widest text-text-secondary">
+                      <p className="font-mono text-[11px] uppercase tracking-widest text-text-secondary">
                         {item.category}
                       </p>
 
@@ -90,7 +87,7 @@ export function Setup() {
                         <Button
                           asChild
                           size="sm"
-                          className="self-start rounded-lg bg-accent text-white hover:bg-accent/90 shadow-sm shadow-accent/10"
+                          className="self-start rounded-lg bg-accent text-on-accent hover:bg-accent/90 shadow-sm shadow-accent/10"
                         >
                           <a
                             href={item.subDownload}

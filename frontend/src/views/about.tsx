@@ -1,67 +1,97 @@
 import { HIGHLIGHTS } from "@/config/highlights";
+import { SectionHeader } from "@/components/section-header";
+
+const STACK = [
+  "React",
+  "Next.js",
+  "TypeScript",
+  "Spring Boot",
+  "PostgreSQL",
+];
 
 export function About() {
   return (
     <section
       id="about"
-      className="relative py-24 bg-background overflow-hidden md:py-32"
+      className="relative overflow-hidden bg-background py-24 md:py-32"
     >
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-accent/5 blur-[60px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full bg-accent/5 blur-[60px] pointer-events-none" />
+      <div className="absolute inset-0 bg-grid opacity-40" aria-hidden="true" />
 
-      <div className="container relative z-10 mx-auto px-4 max-w-5xl">
-        <div className="space-y-16">
-          <div className="text-center">
-            <h2 className="text-4xl font-extrabold tracking-tight text-text-primary md:text-5xl">
-              About Me
-            </h2>
-            <div className="mt-4 h-1.5 w-12 bg-accent mx-auto rounded-full" />
+      <div className="container relative z-10 mx-auto max-w-5xl px-4">
+        <SectionHeader
+          path="~/about"
+          command="cat about.md"
+          title="About Me"
+          description="A developer who cares about clean interfaces, reliable backends, and software that solves real problems."
+        />
+
+        <div className="mt-14 grid gap-6 lg:grid-cols-5">
+          <div className="lg:col-span-3">
+            <div className="rounded-2xl border border-border bg-surface p-6 md:p-8">
+              <div className="mb-6 flex items-center gap-1.5">
+                <span className="h-3 w-3 rounded-full bg-destructive/70" />
+                <span className="h-3 w-3 rounded-full bg-accent/40" />
+                <span className="h-3 w-3 rounded-full bg-accent/70" />
+                <span className="ml-3 font-mono text-xs text-text-secondary">
+                  about.md
+                </span>
+              </div>
+
+              <div className="space-y-5 text-base leading-relaxed text-text-secondary">
+                <p>
+                  I&apos;m a developer focused on building modern web
+                  applications, business websites, and landing pages that are
+                  fast, scalable, and easy to maintain.
+                </p>
+                <p>
+                  I enjoy crafting clean user interfaces backed by reliable
+                  systems, and I believe great software should be simple to use,
+                  perform well, and genuinely help the people using it.
+                </p>
+              </div>
+
+              <div className="mt-8">
+                <p className="mb-3 font-mono text-[11px] uppercase tracking-widest text-text-secondary">
+                  core stack
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {STACK.map((tech) => (
+                    <span
+                      key={tech}
+                      className="rounded-md border border-border bg-background px-3 py-1 font-mono text-xs font-medium text-text-primary"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="mx-auto max-w-3xl space-y-10">
-            <div className="space-y-5 text-base leading-relaxed text-text-secondary md:text-lg">
-              <p>
-                I&apos;m a developer focused on building modern web
-                applications, business websites, and landing pages that are
-                fast, scalable, and easy to maintain.
-              </p>
-              <p>
-                My main stack includes{" "}
-                <strong className="font-semibold text-text-primary">
-                  React, Next.js, TypeScript, Spring Boot, and PostgreSQL
-                </strong>
-                . I enjoy creating clean user interfaces and reliable backend
-                systems.
-              </p>
-              <p>
-                I believe great software should be simple to use, perform well,
-                and solve real problems for both businesses and users.
-              </p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-3">
-              {HIGHLIGHTS.STATS.map(({ label, value }, i) => {
-                const Icon = HIGHLIGHTS.ICONS[i];
-                return (
-                  <div
-                    key={label}
-                    className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-surface p-6 text-center"
-                  >
-                    {Icon && (
-                      <div className="rounded-lg bg-accent/10 p-2.5 text-accent">
-                        <Icon className="h-5 w-5" />
-                      </div>
-                    )}
-                    <div className="text-3xl font-extrabold text-text-primary">
+          <div className="grid gap-4 sm:grid-cols-3 lg:col-span-2 lg:grid-cols-1">
+            {HIGHLIGHTS.STATS.map(({ label, value }, i) => {
+              const Icon = HIGHLIGHTS.ICONS[i];
+              return (
+                <div
+                  key={label}
+                  className="flex items-center gap-4 rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-accent/40"
+                >
+                  {Icon && (
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                  )}
+                  <div>
+                    <div className="text-2xl font-extrabold text-text-primary">
                       {value}
                     </div>
-                    <p className="text-[11px] font-bold uppercase tracking-widest text-text-secondary">
+                    <p className="font-mono text-[11px] uppercase tracking-widest text-text-secondary">
                       {label}
                     </p>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

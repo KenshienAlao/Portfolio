@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -42,100 +42,106 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-heading: var(--font-sans);
-  --font-sans: var(--font-sans);
+  --font-heading: "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --color-surface: var(--surface);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 :root {
-  --background: #f7f3ed;
+  --background: #f6f8f7;
   --surface: #ffffff;
-  --text-primary: #3d342b;
-  --text-secondary: #7a6e61;
-  --border: #e8dfd5;
-  --accent: #b08968;
+  --text-primary: #0c1512;
+  --text-secondary: #55635e;
+  --border: #e2e8e5;
+  --accent: #0d9668;
+  --on-accent: #ffffff;
 
-  --primary: #b08968;
+  --primary: #0d9668;
   --primary-foreground: #ffffff;
-  --secondary: #f0eadf;
-  --secondary-foreground: #3d342b;
-  --muted: #f0eadf;
-  --muted-foreground: #7a6e61;
-  --accent-color: #b08968;
+  --secondary: #eef2f0;
+  --secondary-foreground: #0c1512;
+  --muted: #eef2f0;
+  --muted-foreground: #55635e;
+  --accent-color: #0d9668;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --card: #ffffff;
-  --card-foreground: #3d342b;
+  --card-foreground: #0c1512;
   --popover: #ffffff;
-  --popover-foreground: #3d342b;
-  --input: #f7f3ed;
-  --ring: #b08968;
-  --border-color: #e8dfd5;
+  --popover-foreground: #0c1512;
+  --input: #f6f8f7;
+  --ring: #0d9668;
+  --border-color: #e2e8e5;
 
   --sidebar: #ffffff;
-  --sidebar-foreground: #3d342b;
-  --sidebar-primary: #b08968;
+  --sidebar-foreground: #0c1512;
+  --sidebar-primary: #0d9668;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f7f3ed;
-  --sidebar-accent-foreground: #3d342b;
-  --sidebar-border: #e8dfd5;
-  --sidebar-ring: #b08968;
+  --sidebar-accent: #f6f8f7;
+  --sidebar-accent-foreground: #0c1512;
+  --sidebar-border: #e2e8e5;
+  --sidebar-ring: #0d9668;
 
-  --chart-1: #b08968;
-  --chart-2: #c4a484;
-  --chart-3: #ddc1a6;
-  --chart-4: #e8d0b3;
-  --chart-5: #eaddcf;
+  --chart-1: #0d9668;
+  --chart-2: #34d399;
+  --chart-3: #6ee7b7;
+  --chart-4: #a7f3d0;
+  --chart-5: #d1fae5;
 
   --radius: 0.625rem;
-  --foreground: #3d342b;
+  --foreground: #0c1512;
 }
 
 .dark {
-  --background: #121212;
-  --surface: #1e1e1e;
-  --text-primary: #e0e0e0;
-  --text-secondary: #9e9e9e;
-  --border: #2e2e2e;
-  --accent: #c4a484;
+  --background: #080b0a;
+  --surface: #101614;
+  --text-primary: #e8efec;
+  --text-secondary: #869089;
+  --border: #1c2521;
+  --accent: #3ecf8e;
+  --on-accent: #052014;
 
-  --primary: #c4a484;
-  --primary-foreground: #121212;
-  --secondary: #1e1e1e;
-  --secondary-foreground: #e0e0e0;
-  --muted: #1e1e1e;
-  --muted-foreground: #9e9e9e;
-  --accent-color: #c4a484;
-  --accent-foreground: #121212;
-  --destructive: #ef4444;
-  --destructive-foreground: #121212;
-  --card: #1e1e1e;
-  --card-foreground: #e0e0e0;
-  --popover: #1e1e1e;
-  --popover-foreground: #e0e0e0;
-  --input: #2e2e2e;
-  --ring: #c4a484;
-  --border-color: #2e2e2e;
+  --primary: #3ecf8e;
+  --primary-foreground: #052014;
+  --secondary: #101614;
+  --secondary-foreground: #e8efec;
+  --muted: #101614;
+  --muted-foreground: #869089;
+  --accent-color: #3ecf8e;
+  --accent-foreground: #052014;
+  --destructive: #f87171;
+  --destructive-foreground: #052014;
+  --card: #101614;
+  --card-foreground: #e8efec;
+  --popover: #101614;
+  --popover-foreground: #e8efec;
+  --input: #1c2521;
+  --ring: #3ecf8e;
+  --border-color: #1c2521;
 
-  --sidebar: #1e1e1e;
-  --sidebar-foreground: #e0e0e0;
-  --sidebar-primary: #c4a484;
-  --sidebar-primary-foreground: #121212;
-  --sidebar-accent: #2e2e2e;
-  --sidebar-accent-foreground: #e0e0e0;
-  --sidebar-border: #2e2e2e;
-  --sidebar-ring: #c4a484;
+  --sidebar: #101614;
+  --sidebar-foreground: #e8efec;
+  --sidebar-primary: #3ecf8e;
+  --sidebar-primary-foreground: #052014;
+  --sidebar-accent: #1c2521;
+  --sidebar-accent-foreground: #e8efec;
+  --sidebar-border: #1c2521;
+  --sidebar-ring: #3ecf8e;
 
-  --chart-1: #c4a484;
-  --chart-2: #b08968;
-  --chart-3: #ddc1a6;
-  --chart-4: #e8d0b3;
-  --chart-5: #eaddcf;
+  --chart-1: #3ecf8e;
+  --chart-2: #34d399;
+  --chart-3: #10b981;
+  --chart-4: #059669;
+  --chart-5: #065f46;
 
-  --foreground: #e0e0e0;
+  --foreground: #e8efec;
 }
 
 @layer base {
@@ -357,4 +363,72 @@
 
 .text-accent {
   color: var(--accent);
+}
+
+.text-on-accent {
+  color: var(--on-accent);
+}
+
+.bg-on-accent {
+  background-color: var(--on-accent);
+}
+
+/* Subtle dotted grid backdrop for the developer aesthetic */
+.bg-grid {
+  background-image: radial-gradient(
+    var(--border) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(
+    ellipse at center,
+    black 0%,
+    transparent 78%
+  );
+  mask-image: radial-gradient(ellipse at center, black 0%, transparent 78%);
+}
+
+/* Faint accent glow used behind hero / section headers */
+.glow-accent {
+  background: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--accent) 26%, transparent) 0%,
+    transparent 70%
+  );
+}
+
+/* Smooth color transition when toggling themes */
+.theme-transition,
+.theme-transition * {
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    color 0.4s ease !important;
+}
+
+/* Blinking terminal caret */
+.caret::after {
+  content: "";
+  display: inline-block;
+  width: 0.55ch;
+  height: 1.05em;
+  margin-left: 0.15em;
+  vertical-align: -0.15em;
+  background-color: var(--accent);
+  animation: blink 1.1s step-end infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.font-mono {
+  font-family: var(--font-mono);
 }
