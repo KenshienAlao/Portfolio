@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ThemeTogglerButton } from "./theme-toggle";
+import { ROUTES } from "@/config/routes";
 
 type NavProps = {
   currentPath: string;
@@ -33,7 +34,7 @@ export function Navigation({
       setScrolled(window.scrollY > 10);
     };
 
-    handleScroll(); // Sync after mount
+    handleScroll();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
 
@@ -83,16 +84,15 @@ export function Navigation({
                 : "border-border/10 bg-surface/40 shadow-sm backdrop-blur-xl",
             )}
           >
-            <button
-              type="button"
-              onClick={() => go(NAV_PAGES.LINKS.HOME)}
+            <Link
+              href={ROUTES.AUTH.LOGIN}
               className="flex items-center gap-2 pl-1 font-mono text-sm font-bold tracking-tight text-text-primary"
-              aria-label="Go home"
+              aria-label="Login"
             >
               <span className="text-accent">$</span>
               <span>kenshien</span>
               <span className="text-accent">_</span>
-            </button>
+            </Link>
 
             <div ref={navRef} className="relative hidden items-center md:flex">
               <div
@@ -109,13 +109,10 @@ export function Navigation({
                 const Icon = NAV_PAGES.ICONS[key];
                 const active = currentPath === page.toLowerCase();
                 return (
-                  <Link
+                  <button
+                    type="button"
                     key={page}
-                    href={`#${page.toLowerCase()}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      go(page);
-                    }}
+                    onClick={() => go(page)}
                     className={cn(
                       "group relative z-10 flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-semibold tracking-wide",
                       "rounded-xl",
@@ -147,7 +144,7 @@ export function Navigation({
                           : "opacity-0 scale-x-0",
                       )}
                     />
-                  </Link>
+                  </button>
                 );
               })}
             </div>
