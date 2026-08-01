@@ -1,3 +1,44 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true # prevent unknown field error
+  config:
+    import: optional:file:.env[.properties]
   application:
-    name: backend
+    name: portfolio
+
+  datasource:
+    url: ${DB_URL}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 4
+      data-source-properties:
+        sslmode: require
+        prepareThreshold: 0 # for avoid "prepared statement "S_3" already exists" error
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update # none, update, create, create-drop this is for creating a table autoomatically or not
+    show-sql: true
+
+server:
+  port: ${SERVER_PORT:6532}
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-expiration: 900000
+  refresh-expiration: 604800000
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS}
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_NAME}
+  api-key: ${CLOUDINAY_KEY}
+  api-secret: ${CLOUDINARY_SECRET}
