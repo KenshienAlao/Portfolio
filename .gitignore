@@ -78,3 +78,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# private
+backend/src/main/java/com/portfolio/backend/admin/
