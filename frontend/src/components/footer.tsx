@@ -1,4 +1,5 @@
 import { CONTACT_LINKS } from "@/config/contanct";
+import Link from "next/link";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -13,13 +14,13 @@ export function Footer() {
               kenshien
             </span>
             <span className="text-text-secondary/60">
-              —| Developer &amp; Student
+              | Developer &amp; Student
             </span>
           </div>
 
           <div className="flex items-center gap-1">
             {CONTACT_LINKS.map(({ value, href, icon: Icon }) => (
-              <a
+              <Link
                 key={`footer-${value}`}
                 href={href}
                 target="_blank"
@@ -28,7 +29,7 @@ export function Footer() {
                 aria-label={value}
               >
                 <Icon className="h-4 w-4" />
-              </a>
+              </Link>
             ))}
           </div>
 
