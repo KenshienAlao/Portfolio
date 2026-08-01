@@ -69,12 +69,14 @@ export default function Skills() {
                           src={skill.image.light}
                           alt={skill.name}
                           fill
+                          sizes="32px"
                           className="absolute inset-0 object-contain dark:opacity-0"
                         />
                         <Image
                           src={skill.image.dark}
                           alt={skill.name}
                           fill
+                          sizes="32px"
                           className="absolute inset-0 object-contain opacity-0 dark:opacity-100"
                         />
                       </div>
