@@ -1,15 +1,33 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { Eye, EyeOff, Key, Lock } from "lucide-react";
+import { AlertCircle, Eye, EyeOff, Key, Lock } from "lucide-react";
+import z, { ZodError } from "zod";
+
+const validate = z.object({
+  code: z.string().min(1, "Code is required").trim(),
+  password: z.string().min(1, "Password is required").trim(),
+});
 
 export function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isErrorValidate, setIsErrorValidate] = useState<ZodError | null>(null);
+
+  const error = isErrorValidate?.issues[0];
+  const codeError = error?.path[0] === "code" ? error : undefined;
+  const passwordError = error?.path[0] === "password" ? error : undefined;
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    console.log(data);
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+    const result = validate.safeParse(data);
+
+    if (!result.success) {
+      setIsErrorValidate(result.error);
+      return;
+    }
+    setIsErrorValidate(null);
+    console.log(result.data);
   };
 
   return (
@@ -61,12 +79,26 @@ export function Login() {
                   aria-hidden="true"
                 />
                 <input
-                  id="code"
                   type="text"
+                  name="code"
+                  id="code"
                   placeholder="enter code here"
-                  className="w-full rounded-md border border-border bg-background py-2.5 pl-10 pr-3 text-sm text-text-primary outline-none transition-colors placeholder:text-text-secondary/60 focus:border-accent focus:ring-2 focus:ring-accent/30"
+                  aria-invalid={codeError ? "true" : "false"}
+                  className={`w-full rounded-md border bg-background py-2.5 pl-10 pr-3 text-sm text-text-primary outline-none transition-colors placeholder:text-text-secondary/60 focus:ring-2 ${
+                    codeError
+                      ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30"
+                      : "border-border focus:border-accent focus:ring-accent/30"
+                  }`}
                 />
               </div>
+              {codeError && (
+                <p
+                  role="alert"
+                  className="mt-1.5 font-mono text-xs text-destructive"
+                >
+                  {codeError.message}
+                </p>
+              )}
             </div>
             <div>
               <div className="mb-2 flex items-center justify-between">
@@ -83,10 +115,16 @@ export function Login() {
                   aria-hidden="true"
                 />
                 <input
-                  id="password"
                   type={showPassword ? "text" : "password"}
+                  name="password"
+                  id="password"
                   placeholder="••••••••"
-                  className="w-full rounded-md border border-border bg-background py-2.5 pl-10 pr-10 text-sm text-text-primary outline-none transition-colors placeholder:text-text-secondary/60 focus:border-accent focus:ring-2 focus:ring-accent/30"
+                  aria-invalid={passwordError ? "true" : "false"}
+                  className={`w-full rounded-md border bg-background py-2.5 pl-10 pr-10 text-sm text-text-primary outline-none transition-colors placeholder:text-text-secondary/60 focus:ring-2 ${
+                    passwordError
+                      ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30"
+                      : "border-border focus:border-accent focus:ring-accent/30"
+                  }`}
                 />
                 <button
                   type="button"
@@ -101,10 +139,32 @@ export function Login() {
                   )}
                 </button>
               </div>
+              {passwordError && (
+                <p
+                  role="alert"
+                  className="mt-1.5 font-mono text-xs text-destructive"
+                >
+                  {passwordError.message}
+                </p>
+              )}
             </div>
+
+            {error && !codeError && !passwordError && (
+              <div
+                role="alert"
+                className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2.5 font-mono text-xs text-destructive"
+              >
+                <AlertCircle
+                  className="mt-0.5 h-3.5 w-3.5 shrink-0"
+                  aria-hidden="true"
+                />
+                <span>{error.message}</span>
+              </div>
+            )}
+
             <button
               type="submit"
-              className="flex w-full items-center justify-center gsap-2 rounded-md bg-primary py-2.5 font-mono text-xs font-semibold uppercase tracking-widest text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
+              className="flex w-full items-center justify-center gap-2 rounded-md bg-primary py-2.5 font-mono text-xs font-semibold uppercase tracking-widest text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
             >
               log in
             </button>
