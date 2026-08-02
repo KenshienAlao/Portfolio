@@ -55,13 +55,13 @@ public class SecurityConfig {
                             }
                         }
 
-                        var refreshToken = WebUtils.getCookie(request, "refresh_token");
+                        var refreshToken = WebUtils.getCookie(request, "portfolio-refresh-cookie");
                         if (refreshToken != null) {
                             try {
                                 var email = jwtTokenConfig.extractEmail(refreshToken.getValue());
                                 authenticate(email);
                                 response.addHeader(
-                                        HttpHeaders.SET_COOKIE, ResponseCookie.from("access_token",
+                                        HttpHeaders.SET_COOKIE, ResponseCookie.from("portfolio-access-cookie",
                                                 jwtTokenConfig.generateAccessToken(email))
                                                 .httpOnly(true)
                                                 .secure(true)
