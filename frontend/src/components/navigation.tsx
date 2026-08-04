@@ -25,10 +25,7 @@ export function Navigation({
   mobileMenuOpen,
   setMobileMenuOpen,
 }: NavProps) {
-  const [scrolled, setScrolled] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.scrollY > 10;
-  });
+  const [scrolled, setScrolled] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
 
