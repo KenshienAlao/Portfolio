@@ -12,22 +12,18 @@ export interface Project {
   demo: string | null;
 }
 
+interface props {
+  queryKey: string[];
+  queryFn: () => Promise<ApiReponse<Project[]>>;
+}
+
 const projectKey = ["project"];
 
-export function useProjectPublic() {
+//#region query
+function useProject({ queryKey, queryFn }: props) {
   return useQuery<ApiReponse<Project[]>, Error, Project[]>({
-    queryKey: [...projectKey, "public"],
-    queryFn: projectService.getPublic,
-    select: (res) => res.data! ?? [],
-    retry: 1,
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
-  });
-}
-export function useProject() {
-  return useQuery<ApiReponse<Project[]>, Error, Project[]>({
-    queryKey: [...projectKey, "admin"],
-    queryFn: projectService.getAdmin,
+    queryKey,
+    queryFn,
     select: (res) => res.data! ?? [],
     retry: 1,
     refetchOnWindowFocus: false,
@@ -35,6 +31,22 @@ export function useProject() {
   });
 }
 
+export function useProjectPublic() {
+  return useProject({
+    queryKey: [...projectKey, "public"],
+    queryFn: projectService.getPublic,
+  });
+}
+export function useProjectAdmin() {
+  return useProject({
+    queryKey: [...projectKey, "admin"],
+    queryFn: projectService.getAdmin,
+  });
+}
+
+//#endregion
+
+//#region mutation
 export const useDeleteProjectById = () => {
   const queryClient = useQueryClient();
 
@@ -183,3 +195,5 @@ export const useEditProject = () => {
     },
   });
 };
+
+//#endregion
