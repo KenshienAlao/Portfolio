@@ -14,9 +14,19 @@ export interface Project {
 
 const projectKey = ["project"];
 
+export function useProjectPublic() {
+  return useQuery<ApiReponse<Project[]>, Error, Project[]>({
+    queryKey: [...projectKey, "public"],
+    queryFn: projectService.getPublic,
+    select: (res) => res.data! ?? [],
+    retry: 1,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 5,
+  });
+}
 export function useProject() {
   return useQuery<ApiReponse<Project[]>, Error, Project[]>({
-    queryKey: projectKey,
+    queryKey: [...projectKey, "admin"],
     queryFn: projectService.getAdmin,
     select: (res) => res.data! ?? [],
     retry: 1,
@@ -32,25 +42,30 @@ export const useDeleteProjectById = () => {
     mutationFn: projectService.deleteProjectById,
 
     onMutate: async (deletedId: number) => {
-      await queryClient.cancelQueries({ queryKey: projectKey });
+      await queryClient.cancelQueries({ queryKey: [...projectKey, "admin"] });
 
-      const prevData =
-        queryClient.getQueryData<ApiReponse<Project[]>>(projectKey);
+      const prevData = queryClient.getQueryData<ApiReponse<Project[]>>([
+        ...projectKey,
+        "admin",
+      ]);
 
-      queryClient.setQueryData<ApiReponse<Project[]>>(projectKey, (old) => {
-        if (!old || !old.data) return old;
-        return {
-          ...old,
-          data: old.data.filter((p) => p.id !== deletedId),
-        };
-      });
+      queryClient.setQueryData<ApiReponse<Project[]>>(
+        [...projectKey, "admin"],
+        (old) => {
+          if (!old || !old.data) return old;
+          return {
+            ...old,
+            data: old.data.filter((p) => p.id !== deletedId),
+          };
+        },
+      );
 
       return { prevData };
     },
 
     onError: (_err, _id, context) => {
       if (context?.prevData) {
-        queryClient.setQueryData(projectKey, context.prevData);
+        queryClient.setQueryData([...projectKey, "admin"], context.prevData);
       }
     },
 
@@ -67,10 +82,12 @@ export const useAddProject = () => {
     mutationFn: projectService.addProject,
 
     onMutate: async (formData: FormData) => {
-      await queryClient.cancelQueries({ queryKey: projectKey });
+      await queryClient.cancelQueries({ queryKey: [...projectKey, "admin"] });
 
-      const prevData =
-        queryClient.getQueryData<ApiReponse<Project[]>>(projectKey);
+      const prevData = queryClient.getQueryData<ApiReponse<Project[]>>([
+        ...projectKey,
+        "admin",
+      ]);
 
       const tagsRaw = formData.get("tags") as string;
 
@@ -84,20 +101,23 @@ export const useAddProject = () => {
         demo: (formData.get("demo") as string) || null,
       };
 
-      queryClient.setQueryData<ApiReponse<Project[]>>(projectKey, (old) => {
-        if (!old || !old.data) return old;
-        return {
-          ...old,
-          data: [...old.data, tempProject],
-        };
-      });
+      queryClient.setQueryData<ApiReponse<Project[]>>(
+        [...projectKey, "admin"],
+        (old) => {
+          if (!old || !old.data) return old;
+          return {
+            ...old,
+            data: [...old.data, tempProject],
+          };
+        },
+      );
 
       return { prevData };
     },
 
     onError: (_err, _data, context) => {
       if (context?.prevData) {
-        queryClient.setQueryData(projectKey, context.prevData);
+        queryClient.setQueryData([...projectKey, "admin"], context.prevData);
       }
     },
 
@@ -113,10 +133,12 @@ export const useEditProject = () => {
   return useMutation({
     mutationFn: projectService.editProject,
     onMutate: async ({ id, data }: { id: number; data: FormData }) => {
-      await queryClient.cancelQueries({ queryKey: projectKey });
+      await queryClient.cancelQueries({ queryKey: [...projectKey, "admin"] });
 
-      const prevData =
-        queryClient.getQueryData<ApiReponse<Project[]>>(projectKey);
+      const prevData = queryClient.getQueryData<ApiReponse<Project[]>>([
+        ...projectKey,
+        "admin",
+      ]);
 
       const tagsRaw = data.get("tags") as string;
       const imageFile = data.get("image");
@@ -136,20 +158,23 @@ export const useEditProject = () => {
         demo: data.get("demo") as string,
       };
 
-      queryClient.setQueryData<ApiReponse<Project[]>>(projectKey, (old) => {
-        if (!old || !old.data) return old;
-        return {
-          ...old,
-          data: old.data.map((p) => (p.id === id ? tempProjecEdit : p)),
-        };
-      });
+      queryClient.setQueryData<ApiReponse<Project[]>>(
+        [...projectKey, "admin"],
+        (old) => {
+          if (!old || !old.data) return old;
+          return {
+            ...old,
+            data: old.data.map((p) => (p.id === id ? tempProjecEdit : p)),
+          };
+        },
+      );
 
       return { prevData };
     },
 
     onError: (_err, _data, context) => {
       if (context?.prevData) {
-        queryClient.setQueryData(projectKey, context.prevData);
+        queryClient.setQueryData([...projectKey, "admin"], context.prevData);
       }
     },
 
