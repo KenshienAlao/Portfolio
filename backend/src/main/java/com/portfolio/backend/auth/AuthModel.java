@@ -1,8 +1,11 @@
 package com.portfolio.backend.auth;
 
 
+import com.portfolio.backend.project.ProjectModel;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -15,6 +18,9 @@ public class AuthModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectModel> projects;
 
     @Column(unique = true, nullable = false)
     private String code;

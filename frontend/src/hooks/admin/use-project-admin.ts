@@ -1,0 +1,160 @@
+import { ApiReponse } from "@/lib/ApiResponse";
+import { projectService } from "@/service/project.service";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+export interface Project {
+  id: number;
+  title: string;
+  image: string;
+  description: string;
+  tags: string[];
+  github: string;
+  demo: string | null;
+}
+
+const projectKey = ["project"];
+
+export function useProject() {
+  return useQuery<ApiReponse<Project[]>, Error, Project[]>({
+    queryKey: projectKey,
+    queryFn: projectService.getAdmin,
+    select: (res) => res.data! ?? [],
+    retry: 1,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+export const useDeleteProjectById = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: projectService.deleteProjectById,
+
+    onMutate: async (deletedId: number) => {
+      await queryClient.cancelQueries({ queryKey: projectKey });
+
+      const prevData =
+        queryClient.getQueryData<ApiReponse<Project[]>>(projectKey);
+
+      queryClient.setQueryData<ApiReponse<Project[]>>(projectKey, (old) => {
+        if (!old || !old.data) return old;
+        return {
+          ...old,
+          data: old.data.filter((p) => p.id !== deletedId),
+        };
+      });
+
+      return { prevData };
+    },
+
+    onError: (_err, _id, context) => {
+      if (context?.prevData) {
+        queryClient.setQueryData(projectKey, context.prevData);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: projectKey });
+    },
+  });
+};
+
+export const useAddProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: projectService.addProject,
+
+    onMutate: async (formData: FormData) => {
+      await queryClient.cancelQueries({ queryKey: projectKey });
+
+      const prevData =
+        queryClient.getQueryData<ApiReponse<Project[]>>(projectKey);
+
+      const tagsRaw = formData.get("tags") as string;
+
+      const tempProject: Project = {
+        id: -Date.now(),
+        title: (formData.get("title") as string) ?? "Untitled",
+        image: URL.createObjectURL(formData.get("image") as Blob) || "",
+        description: (formData.get("description") as string) ?? "",
+        tags: tagsRaw ? tagsRaw.split(",").map((t) => t.trim()) : [],
+        github: (formData.get("github") as string) ?? "",
+        demo: (formData.get("demo") as string) || null,
+      };
+
+      queryClient.setQueryData<ApiReponse<Project[]>>(projectKey, (old) => {
+        if (!old || !old.data) return old;
+        return {
+          ...old,
+          data: [...old.data, tempProject],
+        };
+      });
+
+      return { prevData };
+    },
+
+    onError: (_err, _data, context) => {
+      if (context?.prevData) {
+        queryClient.setQueryData(projectKey, context.prevData);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: projectKey });
+    },
+  });
+};
+
+export const useEditProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: projectService.editProject,
+    onMutate: async ({ id, data }: { id: number; data: FormData }) => {
+      await queryClient.cancelQueries({ queryKey: projectKey });
+
+      const prevData =
+        queryClient.getQueryData<ApiReponse<Project[]>>(projectKey);
+
+      const tagsRaw = data.get("tags") as string;
+      const imageFile = data.get("image");
+
+      const existProject = prevData?.data?.find((p) => p.id === id);
+
+      const tempProjecEdit: Project = {
+        id,
+        title: data.get("title") as string,
+        image:
+          imageFile instanceof File && imageFile.size > 0
+            ? URL.createObjectURL(imageFile)
+            : existProject?.image || "",
+        description: data.get("description") as string,
+        tags: tagsRaw.split(",").map((t) => t.trim()),
+        github: data.get("github") as string,
+        demo: data.get("demo") as string,
+      };
+
+      queryClient.setQueryData<ApiReponse<Project[]>>(projectKey, (old) => {
+        if (!old || !old.data) return old;
+        return {
+          ...old,
+          data: old.data.map((p) => (p.id === id ? tempProjecEdit : p)),
+        };
+      });
+
+      return { prevData };
+    },
+
+    onError: (_err, _data, context) => {
+      if (context?.prevData) {
+        queryClient.setQueryData(projectKey, context.prevData);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: projectKey });
+    },
+  });
+};

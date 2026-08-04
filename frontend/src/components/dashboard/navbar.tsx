@@ -22,12 +22,12 @@ export function Navbar({ activeTab, setActiveTab }: props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const NAV_ITEMS = [
-    { id: "overview", label: "Overview", icon: Summary },
+    // { id: "overview", label: "Overview", icon: Summary },
     { id: "projects", label: "Projects", icon: Layers },
-    { id: "education", label: "Education", icon: GraduationCap },
-    { id: "skills", label: "Skills", icon: Wrench },
-    { id: "setup", label: "Setup", icon: Terminal },
-    { id: "messages", label: "Messages", icon: Inbox },
+    // { id: "education", label: "Education", icon: GraduationCap },
+    // { id: "skills", label: "Skills", icon: Wrench },
+    // { id: "setup", label: "Setup", icon: Terminal },
+    // { id: "messages", label: "Messages", icon: Inbox },
   ] as const;
 
   const [isMobileCollapsed, setIsMobileCollapsed] = useState(false);
