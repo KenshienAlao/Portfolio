@@ -43,6 +43,9 @@ dependencies {
     implementation("com.bucket4j:bucket4j-core:8.10.1")
     implementation("com.github.ben-manes.caffeine:caffeine")
 
+    // Cloudinary
+    implementation("com.cloudinary:cloudinary-http5:2.0.0")
+
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
