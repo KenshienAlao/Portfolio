@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { PROJECTS } from "@/config/projects";
 import { ArrowUpRight } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 import Image from "next/image";

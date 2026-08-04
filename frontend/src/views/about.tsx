@@ -1,9 +1,29 @@
 import { SectionHeader } from "@/components/section-header";
-import { HIGHLIGHTS } from "@/config/highlights";
+import { useProjectPublic } from "@/hooks/admin/use-project-admin";
+import { Astroid, FolderBookmark, Layers } from "lucide-react";
 
 const STACK = ["React", "Next.js", "TypeScript", "Spring Boot", "PostgreSQL"];
 
 export function About() {
+  const { data: projects } = useProjectPublic();
+
+  const HIGHLIGHTS = {
+    STATS: [
+      {
+        label: "Years of Experience",
+        value: `${Math.max(1, new Date().getFullYear() - 2024)}+`,
+      },
+      {
+        label: "Projects Completed",
+        value: projects?.length ?? (
+          <div className="h-7 w-8 animate-pulse rounded-md bg-muted-foreground/15" />
+        ),
+      },
+      { label: "Tech Stack Focus", value: "NextJS" },
+    ],
+    ICONS: [Astroid, FolderBookmark, Layers],
+  } as const;
+
   return (
     <section
       id="about"
