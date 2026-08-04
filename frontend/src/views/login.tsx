@@ -1,24 +1,38 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { AlertCircle, Eye, EyeOff, Key, Lock } from "lucide-react";
+import { AlertCircle, Eye, EyeOff, Key, Loader2, Lock } from "lucide-react";
 import z, { ZodError } from "zod";
+import { useLoginMutation } from "@/hooks/use-auth";
 
 const validate = z.object({
   code: z.string().min(1, "Code is required").trim(),
   password: z.string().min(1, "Password is required").trim(),
 });
 
+export type TLogin = z.infer<typeof validate>;
+
 export function Login() {
+  const {
+    mutate: login,
+    isPending: isLoadingLogin,
+    error: errorLogin,
+  } = useLoginMutation();
   const [showPassword, setShowPassword] = useState(false);
   const [isErrorValidate, setIsErrorValidate] = useState<ZodError | null>(null);
 
-  const error = isErrorValidate?.issues[0];
-  const codeError = error?.path[0] === "code" ? error : undefined;
-  const passwordError = error?.path[0] === "password" ? error : undefined;
+  const error = isErrorValidate?.issues[0] || errorLogin;
+  const codeError =
+    error && "path" in error && error.path[0] === "code" ? error : undefined;
+  const passwordError =
+    error && "path" in error && error.path[0] === "password"
+      ? error
+      : undefined;
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isLoadingLogin) return;
+
     const data = Object.fromEntries(new FormData(e.currentTarget));
     const result = validate.safeParse(data);
 
@@ -27,7 +41,7 @@ export function Login() {
       return;
     }
     setIsErrorValidate(null);
-    console.log(result.data);
+    login(result.data);
   };
 
   return (
@@ -83,8 +97,9 @@ export function Login() {
                   name="code"
                   id="code"
                   placeholder="enter code here"
+                  disabled={isLoadingLogin}
                   aria-invalid={codeError ? "true" : "false"}
-                  className={`w-full rounded-md border bg-background py-2.5 pl-10 pr-3 text-sm text-text-primary outline-none transition-colors placeholder:text-text-secondary/60 focus:ring-2 ${
+                  className={`w-full rounded-md border bg-background py-2.5 pl-10 pr-3 text-sm text-text-primary outline-none transition-colors placeholder:text-text-secondary/60 focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60 ${
                     codeError
                       ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30"
                       : "border-border focus:border-accent focus:ring-accent/30"
@@ -119,8 +134,9 @@ export function Login() {
                   name="password"
                   id="password"
                   placeholder="••••••••"
+                  disabled={isLoadingLogin}
                   aria-invalid={passwordError ? "true" : "false"}
-                  className={`w-full rounded-md border bg-background py-2.5 pl-10 pr-10 text-sm text-text-primary outline-none transition-colors placeholder:text-text-secondary/60 focus:ring-2 ${
+                  className={`w-full rounded-md border bg-background py-2.5 pl-10 pr-10 text-sm text-text-primary outline-none transition-colors placeholder:text-text-secondary/60 focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60 ${
                     passwordError
                       ? "border-destructive/60 focus:border-destructive focus:ring-destructive/30"
                       : "border-border focus:border-accent focus:ring-accent/30"
@@ -129,8 +145,9 @@ export function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
+                  disabled={isLoadingLogin}
                   aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -164,9 +181,20 @@ export function Login() {
 
             <button
               type="submit"
+              disabled={isLoadingLogin}
               className="flex w-full items-center justify-center gap-2 rounded-md bg-primary py-2.5 font-mono text-xs font-semibold uppercase tracking-widest text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              log in
+              {isLoadingLogin ? (
+                <>
+                  <Loader2
+                    className="h-4 w-4 animate-spin"
+                    aria-hidden="true"
+                  />
+                  logging in...
+                </>
+              ) : (
+                "log in"
+              )}
             </button>
           </form>
         </div>
