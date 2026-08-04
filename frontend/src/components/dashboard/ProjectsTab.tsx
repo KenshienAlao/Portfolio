@@ -16,7 +16,7 @@ import {
   useDeleteProjectById,
   useProject,
 } from "@/hooks/admin/use-project-admin";
-import { ProjectSkeleton } from "./skeleton/project-skeleton";
+import { DashboardProjectCardSkeleton } from "../ui/skeleton";
 
 const MAX_VISIBLE_TAGS = 3;
 
@@ -84,7 +84,7 @@ export function ProjectsTab() {
       ) : loadingProject ? (
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <ProjectSkeleton key={i} />
+            <DashboardProjectCardSkeleton key={i} />
           ))}
         </div>
       ) : !hasProjects ? (
