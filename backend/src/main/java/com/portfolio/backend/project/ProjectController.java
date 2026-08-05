@@ -1,12 +1,14 @@
 package com.portfolio.backend.project;
 
 import com.portfolio.backend.common.ApiResponse;
-import jakarta.validation.Valid;
+import com.portfolio.backend.common.validation.OnCreate;
+import com.portfolio.backend.common.validation.OnUpdate;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,13 +41,13 @@ public class ProjectController {
 
     @CacheEvict(value = {"projects_admin", "projects_public"}, allEntries = true)
     @PostMapping(value = "/admin/add-project", consumes = "multipart/form-data")
-    public ResponseEntity<ApiResponse<ProjectDto.response>> addProject(@Valid @ModelAttribute ProjectDto entity) {
+    public ResponseEntity<ApiResponse<ProjectDto.response>> addProject(@Validated(OnCreate.class) @ModelAttribute ProjectDto entity) {
         return ResponseEntity.ok(ApiResponse.success("Success", projectService.addProject(entity)));
     }
 
     @CacheEvict(value = {"projects_admin", "projects_public"}, allEntries = true)
     @PatchMapping(value = "/admin/edit-project/{projectId}", consumes = "multipart/form-data")
-    public ResponseEntity<ApiResponse<ProjectDto.response>> editProject( @PathVariable Integer projectId, @Valid @ModelAttribute ProjectDto entity) {
+    public ResponseEntity<ApiResponse<ProjectDto.response>> editProject( @PathVariable Integer projectId, @Validated(OnUpdate.class) @ModelAttribute ProjectDto entity) {
         return ResponseEntity.ok(ApiResponse.success("Success", projectService.editProject(projectId, entity)));
     }
  }

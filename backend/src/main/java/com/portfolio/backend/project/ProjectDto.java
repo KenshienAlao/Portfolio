@@ -1,5 +1,7 @@
 package com.portfolio.backend.project;
 
+import com.portfolio.backend.common.validation.OnCreate;
+import com.portfolio.backend.common.validation.OnUpdate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -9,12 +11,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public record ProjectDto(
-                @Size(min = 1, max = 32) @NotBlank(message = "Title is Required") String title,
-                @NotNull(message = "Image is Required") MultipartFile image,
-                @NotBlank(message = "Description is Required") String description,
-                @NotEmpty(message = "Tags is Required") List<String> tags,
-                @Size(min = 1, max = 255) @NotBlank(message = "Github Link is Required") String github,
-                @Size(max = 255) String demo) {
+                @Size(groups = {
+                                OnCreate.class,
+                                OnUpdate.class }, min = 1, max = 32) @NotBlank(groups = OnCreate.class, message = "Title is Required") String title,
+                @NotNull(groups = OnCreate.class, message = "Image is Required") MultipartFile image,
+                @Size(groups = { OnCreate.class,
+                                OnUpdate.class }, min = 1, max = 255) @NotBlank(groups = OnCreate.class, message = "Description is Required") String description,
+                @NotEmpty(groups = OnCreate.class, message = "Tags is Required") List<String> tags,
+                @Size(groups = { OnCreate.class,
+                                OnUpdate.class }, min = 1, max = 255) @NotBlank(groups = OnCreate.class, message = "Github Link is Required") String github,
+                @Size(groups = { OnCreate.class, OnUpdate.class }, max = 255) String demo) {
         public record response(
                         Long id,
                         String title,
