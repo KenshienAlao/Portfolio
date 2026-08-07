@@ -16,7 +16,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 public class ProjectService {
-w
     private final ProjectRepository projectRepository;
     private final AuthRepository authRepository;
     private final CloudinaryService cloudinaryService;
