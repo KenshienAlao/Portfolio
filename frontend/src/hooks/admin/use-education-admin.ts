@@ -139,4 +139,54 @@ export const useDeleteEducationById = () => {
   });
 };
 
+export const useEditEducation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: number; data: FormData }) =>
+      educationService.editEducationById(id, data),
+    onMutate: async ({ id, data }: { id: number; data: FormData }) => {
+      await queryClient.cancelQueries({ queryKey: [...educationKey, "admin"] });
+
+      const prevData = queryClient.getQueryData<ApiReponse<Education[]>>([
+        ...educationKey,
+        "admin",
+      ]);
+
+      const tempEducationEdit: Education = {
+        id,
+        school: data.get("school") as string,
+        degree: data.get("degree") as string,
+        yearStart: data.get("yearStart") as string,
+        yearEnd: data.get("yearEnd") as string,
+        description: data.get("description") as string,
+        location: data.get("location") as string,
+      };
+
+      queryClient.setQueryData<ApiReponse<Education[]>>(
+        [...educationKey, "admin"],
+        (old) => {
+          if (!old || !old.data) return old;
+          return {
+            ...old,
+            data: old.data.map((e) => (e.id === id ? tempEducationEdit : e)),
+          };
+        },
+      );
+
+      return { prevData };
+    },
+
+    onError: (_err, _data, context) => {
+      if (context?.prevData) {
+        queryClient.setQueryData([...educationKey, "admin"], context.prevData);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: educationKey });
+    },
+  });
+};
+
 //#endregion

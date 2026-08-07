@@ -96,9 +96,6 @@ export function ProjectsTab() {
             <h3 className="font-mono text-sm font-bold text-text-primary">
               No projects yet
             </h3>
-            <p className="text-xs text-text-secondary max-w-xs">
-              Add your first project to see it show up here.
-            </p>
           </div>
           <button
             onClick={() => setProjectForm({})}

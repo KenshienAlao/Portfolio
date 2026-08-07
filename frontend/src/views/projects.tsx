@@ -24,89 +24,100 @@ export function Projects() {
           description="Selected work showcasing full-stack development, UI design, and problem solving."
         />
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {projectIsPending
-            ? Array.from({ length: 6 }).map((_, idx) => (
-                <ProjectCardSkeleton key={idx} />
-              ))
-            : projects?.map(
-                (
-                  { id, title, description, image, tags, github, demo },
-                  idx,
-                ) => (
-                  <article
-                    key={`${id}-${title}-${idx}`}
-                    className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface hover:border-accent/40"
-                  >
-                    <div className="relative aspect-video overflow-hidden border-b border-border">
-                      <Image
-                        src={image}
-                        alt={title}
-                        width={500}
-                        height={500}
-                        priority
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-
-                    <div className="flex flex-1 flex-col gap-3 p-5">
-                      <h3 className="font-mono text-base font-bold text-text-primary">
-                        {title}
-                      </h3>
-
-                      <p className="line-clamp-2 text-sm leading-relaxed text-text-secondary">
-                        {description}
-                      </p>
-
-                      <div className="flex flex-wrap gap-1.5">
-                        {tags.map((tag, idx) => (
-                          <span
-                            key={`${title}-${idx}-${tag}`}
-                            className="rounded-md bg-accent/10 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-accent"
-                          >
-                            {tag}
-                          </span>
-                        ))}
+        {(!projects || projects.length === 0) && !projectIsPending ? (
+          <div className="mt-14 flex flex-col items-center justify-center py-12 text-center rounded-2xl border border-dashed border-border bg-surface/50">
+            <h3 className="font-mono text-base font-bold text-text-primary">
+              No projects available
+            </h3>
+            <p className="mt-1 text-sm text-text-secondary">
+              Check back later for updates to this section.
+            </p>
+          </div>
+        ) : (
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {projectIsPending
+              ? Array.from({ length: 6 }).map((_, idx) => (
+                  <ProjectCardSkeleton key={idx} />
+                ))
+              : projects?.map(
+                  (
+                    { id, title, description, image, tags, github, demo },
+                    idx,
+                  ) => (
+                    <article
+                      key={`${id}-${title}-${idx}`}
+                      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface hover:border-accent/40"
+                    >
+                      <div className="relative aspect-video overflow-hidden border-b border-border">
+                        <Image
+                          src={image}
+                          alt={title}
+                          width={500}
+                          height={500}
+                          priority
+                          className="h-full w-full object-cover"
+                        />
                       </div>
 
-                      <div className="mt-auto flex gap-2 pt-2">
-                        <Button
-                          asChild
-                          size="sm"
-                          variant="outline"
-                          className="rounded-lg border-border text-text-primary hover:border-accent/50 hover:bg-background"
-                        >
-                          <a
-                            href={github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="gap-2"
-                          >
-                            <FaGithub className="h-4 w-4" /> Code
-                          </a>
-                        </Button>
-                        {demo && (
+                      <div className="flex flex-1 flex-col gap-3 p-5">
+                        <h3 className="font-mono text-base font-bold text-text-primary">
+                          {title}
+                        </h3>
+
+                        <p className="line-clamp-2 text-sm leading-relaxed text-text-secondary">
+                          {description}
+                        </p>
+
+                        <div className="flex flex-wrap gap-1.5">
+                          {tags.map((tag, idx) => (
+                            <span
+                              key={`${title}-${idx}-${tag}`}
+                              className="rounded-md bg-accent/10 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-accent"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+
+                        <div className="mt-auto flex gap-2 pt-2">
                           <Button
                             asChild
                             size="sm"
-                            className="rounded-lg bg-accent text-on-accent hover:bg-accent/90"
+                            variant="outline"
+                            className="rounded-lg border-border text-text-primary hover:border-accent/50 hover:bg-background"
                           >
                             <a
-                              href={demo}
+                              href={github}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="gap-1.5"
+                              className="gap-2"
                             >
-                              Demo <ArrowUpRight className="h-4 w-4" />
+                              <FaGithub className="h-4 w-4" /> Code
                             </a>
                           </Button>
-                        )}
+                          {demo && (
+                            <Button
+                              asChild
+                              size="sm"
+                              className="rounded-lg bg-accent text-on-accent hover:bg-accent/90"
+                            >
+                              <a
+                                href={demo}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="gap-1.5"
+                              >
+                                Demo <ArrowUpRight className="h-4 w-4" />
+                              </a>
+                            </Button>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </article>
-                ),
-              )}
-        </div>
+                    </article>
+                  ),
+                )}
+          </div>
+        )}
       </div>
     </section>
   );

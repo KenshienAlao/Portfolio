@@ -78,3 +78,28 @@ export const DashboardProjectCardSkeleton = () => {
     </article>
   );
 };
+
+export const DashboardEducationCardSkeleton = () => {
+  return (
+    <div
+      className="rounded-xl border border-border bg-surface p-5 flex flex-col md:flex-row justify-between gap-4 animate-pulse"
+      aria-hidden="true"
+    >
+      <div className="space-y-3 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="h-4 w-1/3 rounded bg-muted-foreground/15" />
+          <div className="h-5 w-24 rounded-md bg-muted-foreground/15" />
+        </div>
+        <div className="h-3 w-1/4 rounded bg-muted-foreground/15" />
+        <div className="space-y-2 pt-1">
+          <div className="h-3 w-full rounded bg-muted-foreground/15 max-w-3xl" />
+          <div className="h-3 w-5/6 rounded bg-muted-foreground/15 max-w-3xl" />
+        </div>
+      </div>
+      <div className="flex md:flex-col gap-2 items-end justify-start shrink-0">
+        <div className="h-8 w-20 rounded-lg bg-muted-foreground/15" />
+        <div className="h-8 w-24 rounded-lg bg-muted-foreground/15" />
+      </div>
+    </div>
+  );
+};

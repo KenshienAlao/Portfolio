@@ -1,18 +1,21 @@
 "use client";
 
-import { Save } from "lucide-react";
-
+import { AlertCircle, Loader2, Save } from "lucide-react";
 import { BaseModal } from "./BaseModal";
-import { Education, useAddEducation } from "@/hooks/admin/use-education-admin";
+import {
+  Education,
+  useAddEducation,
+  useEditEducation,
+} from "@/hooks/admin/use-education-admin";
 import { FormEvent, useState } from "react";
 import z, { ZodError } from "zod";
-import { parseYears, YEARS } from "@/lib/year";
+import { YEARS } from "@/lib/year";
 
 const educationFormSchema = z.object({
   school: z.string().min(1, "School is required"),
   degree: z.string().min(1, "Degree is required"),
-  year_start: z.string().min(1, "Year start is required"),
-  year_end: z.string().min(1, "Year end is required"),
+  yearStart: z.string().min(1, "Start year is required"),
+  yearEnd: z.string().min(1, "End year is required"),
   description: z.string().min(1, "Description is required"),
   location: z.string().url("Invalid URL").min(1, "Location is required"),
 });
@@ -28,24 +31,75 @@ export function EducationModal({
   education,
   setEducationForm,
 }: EducationModalProps) {
-  const {} = useAddEducation;
+  const {
+    mutate: addEducation,
+    isPending: isLoadingAdd,
+    error: errorAdd,
+  } = useAddEducation();
+
+  const {
+    mutate: editEducation,
+    isPending: isLoadingEdit,
+    error: errorEdit,
+  } = useEditEducation();
+
+  const [validateError, setValidateError] = useState<ZodError | null>(null);
+
+  const error = validateError?.issues[0] || errorAdd || errorEdit;
+  const schoolError =
+    error && "path" in error && error.path[0] === "school" ? error : undefined;
+  const degreeError =
+    error && "path" in error && error.path[0] === "degree" ? error : undefined;
+  const yearStartError =
+    error && "path" in error && error.path[0] === "yearStart"
+      ? error
+      : undefined;
+  const yearEndError =
+    error && "path" in error && error.path[0] === "yearEnd" ? error : undefined;
+  const descriptionError =
+    error && "path" in error && error.path[0] === "description"
+      ? error
+      : undefined;
+  const locationError =
+    error && "path" in error && error.path[0] === "location"
+      ? error
+      : undefined;
+
+  const hasFieldError = Boolean(
+    schoolError ||
+    degreeError ||
+    yearStartError ||
+    yearEndError ||
+    descriptionError ||
+    locationError,
+  );
 
   const isEdit =
     educationForm.id && education.some((e) => e.id === educationForm.id);
-  2;
-  const [validateError, setValidateError] = useState<ZodError | null>(null);
+
   const handleSubmitEducation = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isLoadingAdd || isLoadingEdit) return;
 
     const formData = new FormData(e.currentTarget);
     const dataToValidate = Object.fromEntries(formData.entries());
     const result = educationFormSchema.safeParse(dataToValidate);
+
     if (!result.success) {
       setValidateError(result.error);
       return;
     }
 
-    console.log(result.data);
+    setValidateError(null);
+
+    if (isEdit && educationForm.id !== undefined) {
+      formData.append("id", String(educationForm.id));
+      editEducation({ id: educationForm.id, data: formData });
+    } else {
+      addEducation(formData);
+    }
+
+    setEducationForm(null);
   };
 
   return (
@@ -61,32 +115,60 @@ export function EducationModal({
         className="space-y-3 font-mono text-xs text-text-primary"
       >
         <div className="space-y-1">
-          <label className="text-text-secondary block">
+          <label className="block text-text-secondary">
             School / Institution
           </label>
           <input
-            required
             name="school"
             defaultValue={educationForm.school}
-            className="w-full rounded-md border border-border bg-background px-3 py-2 outline-none focus:border-accent"
+            disabled={isLoadingAdd || isLoadingEdit}
+            aria-invalid={schoolError ? "true" : "false"}
+            className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
+              schoolError
+                ? "border-destructive/60 focus:border-destructive"
+                : "border-border focus:border-accent"
+            }`}
           />
+          {schoolError && (
+            <p role="alert" className="text-destructive">
+              {schoolError.message}
+            </p>
+          )}
         </div>
+
         <div className="space-y-1">
-          <label className="text-text-secondary block">Degree / Course</label>
+          <label className="block text-text-secondary">Degree / Course</label>
           <input
-            required
             name="degree"
             defaultValue={educationForm.degree}
-            className="w-full rounded-md border border-border bg-background px-3 py-2 outline-none focus:border-accent"
+            disabled={isLoadingAdd || isLoadingEdit}
+            aria-invalid={degreeError ? "true" : "false"}
+            className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
+              degreeError
+                ? "border-destructive/60 focus:border-destructive"
+                : "border-border focus:border-accent"
+            }`}
           />
+          {degreeError && (
+            <p role="alert" className="text-destructive">
+              {degreeError.message}
+            </p>
+          )}
         </div>
+
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
-            <label className="text-text-secondary block">Start Year</label>
+            <label className="block text-text-secondary">Start Year</label>
             <select
-              required
               name="yearStart"
-              className="w-full rounded-md border border-border bg-background px-3 py-2 outline-none focus:border-accent"
+              defaultValue={educationForm.yearStart || ""}
+              disabled={isLoadingAdd || isLoadingEdit}
+              aria-invalid={yearStartError ? "true" : "false"}
+              className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
+                yearStartError
+                  ? "border-destructive/60 focus:border-destructive"
+                  : "border-border focus:border-accent"
+              }`}
             >
               <option value="" disabled>
                 Select year
@@ -97,13 +179,24 @@ export function EducationModal({
                 </option>
               ))}
             </select>
+            {yearStartError && (
+              <p role="alert" className="text-destructive">
+                {yearStartError.message}
+              </p>
+            )}
           </div>
           <div className="space-y-1">
-            <label className="text-text-secondary block">End Year</label>
+            <label className="block text-text-secondary">End Year</label>
             <select
-              required
               name="yearEnd"
-              className="w-full rounded-md border border-border bg-background px-3 py-2 outline-none focus:border-accent"
+              defaultValue={educationForm.yearEnd || "Present"}
+              disabled={isLoadingAdd || isLoadingEdit}
+              aria-invalid={yearEndError ? "true" : "false"}
+              className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
+                yearEndError
+                  ? "border-destructive/60 focus:border-destructive"
+                  : "border-border focus:border-accent"
+              }`}
             >
               <option value="Present">Present</option>
               {YEARS.map((y) => (
@@ -112,20 +205,37 @@ export function EducationModal({
                 </option>
               ))}
             </select>
+            {yearEndError && (
+              <p role="alert" className="text-destructive">
+                {yearEndError.message}
+              </p>
+            )}
           </div>
         </div>
+
         <div className="space-y-1">
-          <label className="text-text-secondary block">Description</label>
+          <label className="block text-text-secondary">Description</label>
           <textarea
-            required
             name="description"
             rows={3}
             defaultValue={educationForm.description}
-            className="w-full rounded-md border border-border bg-background px-3 py-2 outline-none focus:border-accent"
+            disabled={isLoadingAdd || isLoadingEdit}
+            aria-invalid={descriptionError ? "true" : "false"}
+            className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
+              descriptionError
+                ? "border-destructive/60 focus:border-destructive"
+                : "border-border focus:border-accent"
+            }`}
           />
+          {descriptionError && (
+            <p role="alert" className="text-destructive">
+              {descriptionError.message}
+            </p>
+          )}
         </div>
+
         <div className="space-y-1">
-          <label className="text-text-secondary block">
+          <label className="block text-text-secondary">
             Google Maps Location Link
           </label>
           <input
@@ -133,14 +243,53 @@ export function EducationModal({
             name="location"
             defaultValue={educationForm.location}
             placeholder="https://maps.app.goo.gl/..."
-            className="w-full rounded-md border border-border bg-background px-3 py-2 outline-none focus:border-accent"
+            disabled={isLoadingAdd || isLoadingEdit}
+            aria-invalid={locationError ? "true" : "false"}
+            className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
+              locationError
+                ? "border-destructive/60 focus:border-destructive"
+                : "border-border focus:border-accent"
+            }`}
           />
+          {locationError && (
+            <p role="alert" className="text-destructive">
+              {locationError.message}
+            </p>
+          )}
         </div>
+
+        {error && !hasFieldError && (
+          <div
+            role="alert"
+            className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-destructive"
+          >
+            <AlertCircle
+              className="mt-0.5 h-3.5 w-3.5 shrink-0"
+              aria-hidden="true"
+            />
+            <span>{error.message}</span>
+          </div>
+        )}
+
         <button
           type="submit"
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-2.5 font-semibold text-on-accent hover:opacity-90"
+          disabled={isLoadingAdd || isLoadingEdit}
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-2.5 font-semibold text-on-accent hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          <Save className="h-4 w-4" /> Save Education
+          {isLoadingAdd || isLoadingEdit ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              Saving...
+            </>
+          ) : isEdit ? (
+            <>
+              <Save className="h-4 w-4" /> Save changes
+            </>
+          ) : (
+            <>
+              <Save className="h-4 w-4" /> Save Education
+            </>
+          )}
         </button>
       </form>
     </BaseModal>

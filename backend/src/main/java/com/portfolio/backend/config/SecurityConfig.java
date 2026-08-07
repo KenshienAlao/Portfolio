@@ -87,6 +87,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/projects").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/education").permitAll()
                         .anyRequest().fullyAuthenticated());
 
         return http.build();

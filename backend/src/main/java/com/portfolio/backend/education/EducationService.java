@@ -77,20 +77,15 @@ public class EducationService {
                 var code = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
                 var userCode = authRepository.findByCode(code)
                                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-                System.out.println("pass user code");
                 var education = educationRepository.findByUserAndId(userCode, educationId)
                                 .orElseThrow(() -> new IllegalArgumentException("Education not found"));
-                System.out.println("pass education");
                 Optional.ofNullable(entity.school()).ifPresent(education::setSchool);
                 Optional.ofNullable(entity.degree()).ifPresent(education::setDegree);
                 Optional.ofNullable(entity.yearStart()).ifPresent(education::setYearStart);
                 Optional.ofNullable(entity.yearEnd()).ifPresent(education::setYearEnd);
                 Optional.ofNullable(entity.description()).ifPresent(education::setDescription);
                 Optional.ofNullable(entity.location()).ifPresent(education::setLocation);
-                System.out.println("Optional");
-
                 var result = educationRepository.save(education);
-
                 return new EducationDto.response(
                                 result.getId(),
                                 result.getSchool(),

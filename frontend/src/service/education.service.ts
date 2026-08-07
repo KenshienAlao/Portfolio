@@ -14,7 +14,8 @@ export const educationService = {
   },
 
   addEducation: async (data: FormData): Promise<ApiReponse<Education>> => {
-    const res = await api.post("/api/education/admin/add-education", data);
+    const payload = Object.fromEntries(data.entries());
+    const res = await api.post("/api/education/admin/add-education", payload);
     return res.data;
   },
 
@@ -29,9 +30,10 @@ export const educationService = {
     educationId: number,
     data: FormData,
   ): Promise<ApiReponse<Education>> => {
+    const { id, ...payload } = Object.fromEntries(data.entries());
     const res = await api.patch(
       `/api/education/admin/edit-education/${educationId}`,
-      data,
+      payload,
     );
     return res.data;
   },
