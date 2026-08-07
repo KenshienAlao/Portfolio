@@ -3,9 +3,20 @@ import { SectionHeader } from "@/components/section-header";
 import Link from "next/link";
 import { useEducationPublic } from "@/hooks/admin/use-education-admin";
 import { EducationCardSkeleton } from "@/components/ui/skeleton";
+import { useMemo } from "react";
 
 export function Education() {
   const { data: education, isPending } = useEducationPublic();
+
+  const sortedEducation = useMemo(() => {
+    if (!education) return [];
+    return [...education].sort((a, b) => {
+      const getYearValue = (y: string) => (y === "Present" ? 9999 : parseInt(y) || 0);
+      const endDiff = getYearValue(b.yearEnd) - getYearValue(a.yearEnd);
+      if (endDiff !== 0) return endDiff;
+      return getYearValue(b.yearStart) - getYearValue(a.yearStart);
+    });
+  }, [education]);
 
   return (
     <section
@@ -22,7 +33,7 @@ export function Education() {
           description="My academic journey and the milestones that shaped my path in technology."
         />
 
-        {(!education || education.length === 0) && !isPending ? (
+        {(!sortedEducation || sortedEducation.length === 0) && !isPending ? (
           <div className="mt-14 flex flex-col items-center justify-center py-12 text-center rounded-2xl border border-dashed border-border bg-surface/50">
             <h3 className="font-mono text-base font-bold text-text-primary">
               No education history
@@ -37,7 +48,7 @@ export function Education() {
               ? Array.from({ length: 3 }).map((_, idx) => (
                   <EducationCardSkeleton key={idx} />
                 ))
-              : education?.map((item) => (
+              : sortedEducation?.map((item) => (
                   <li
                     key={`${item.id}-${item.school}`}
                     className="relative pl-8"

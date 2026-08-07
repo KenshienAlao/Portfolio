@@ -18,6 +18,7 @@ import {
   useEducationAdmin,
 } from "@/hooks/admin/use-education-admin";
 import { DashboardEducationCardSkeleton } from "../ui/skeleton";
+import { useMemo } from "react";
 
 export function EducationTab() {
   const {
@@ -26,6 +27,16 @@ export function EducationTab() {
     error: educationError,
     refetch: refetchEducation,
   } = useEducationAdmin();
+
+  const sortedEducation = useMemo(() => {
+    if (!education) return [];
+    return [...education].sort((a, b) => {
+      const getYearValue = (y: string) => (y === "Present" ? 9999 : parseInt(y) || 0);
+      const endDiff = getYearValue(b.yearEnd) - getYearValue(a.yearEnd);
+      if (endDiff !== 0) return endDiff;
+      return getYearValue(b.yearStart) - getYearValue(a.yearStart);
+    });
+  }, [education]);
 
   const {
     mutate: deleteEducation,
@@ -38,17 +49,17 @@ export function EducationTab() {
   );
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
-  const hasEducation = (education?.length ?? 0) > 0;
+  const hasEducation = (sortedEducation?.length ?? 0) > 0;
 
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="mt-1 flex items-center gap-2 text-lg font-bold text-text-primary">
-            {education?.length !== 1 ? "Totals" : "Total"}
+            {sortedEducation?.length !== 1 ? "Totals" : "Total"}
             {hasEducation && (
               <span className="font-mono text-xs font-normal text-text-secondary">
-                ({education?.length})
+                ({sortedEducation?.length})
               </span>
             )}
           </h2>
@@ -107,7 +118,7 @@ export function EducationTab() {
         </div>
       ) : (
         <div className="space-y-4">
-          {education?.map((item) => {
+          {sortedEducation?.map((item) => {
             const isPendingCreate = item.id < 0;
             const isDeletingThis =
               isDeletingEducation && deletingEducationId === item.id;
