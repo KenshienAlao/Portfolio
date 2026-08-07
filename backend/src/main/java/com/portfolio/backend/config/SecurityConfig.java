@@ -1,4 +1,5 @@
 package com.portfolio.backend.config;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -86,8 +87,8 @@ public class SecurityConfig {
                 }, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/projects").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/education").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/project").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/education").permitAll()
                         .anyRequest().fullyAuthenticated());
 
         return http.build();
