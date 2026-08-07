@@ -1,12 +1,4 @@
-export interface EducationItem {
-  school: string;
-  degree: string;
-  years: string;
-  description: string;
-  location: string;
-}
-
-export const EDUCATION: EducationItem[] = [
+export const EDUCATION = [
   {
     school: "Colegio de Montalban",
     degree: "Bachelor of Science in Information Technology (BSIT)",

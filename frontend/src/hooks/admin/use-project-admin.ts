@@ -143,7 +143,8 @@ export const useEditProject = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: projectService.editProject,
+    mutationFn: ({ id, data }: { id: number; data: FormData }) =>
+      projectService.editProject(id, data),
     onMutate: async ({ id, data }: { id: number; data: FormData }) => {
       await queryClient.cancelQueries({ queryKey: [...projectKey, "admin"] });
 

@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 public class ProjectService {
-
+w
     private final ProjectRepository projectRepository;
     private final AuthRepository authRepository;
     private final CloudinaryService cloudinaryService;
@@ -26,7 +26,17 @@ public class ProjectService {
         var userCode = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
         return projectRepository.findAllByUserCode(userCode)
                 .stream()
-                .map(p ->  new ProjectDto.response(p.getId(),p.getTitle(), p.getImage(), p.getDescription(), p.getTags(), p.getGithub(), p.getDemo()))
+                .map(p -> new ProjectDto.response(p.getId(), p.getTitle(), p.getImage(), p.getDescription(),
+                        p.getTags(), p.getGithub(), p.getDemo()))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProjectDto.response> getPublicProjects() {
+        return projectRepository.findAll()
+                .stream()
+                .map(p -> new ProjectDto.response(p.getId(), p.getTitle(), p.getImage(), p.getDescription(),
+                        p.getTags(), p.getGithub(), p.getDemo()))
                 .toList();
     }
 
@@ -35,7 +45,8 @@ public class ProjectService {
 
         var user = authRepository.findByCode(code).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        var image = projectRepository.findByUserAndId(user, projectId).orElseThrow(() -> new IllegalArgumentException("Image not found"));
+        var image = projectRepository.findByUserAndId(user, projectId)
+                .orElseThrow(() -> new IllegalArgumentException("Image not found"));
 
         if (!projectRepository.existsByUserAndId(user, projectId)) {
             throw new IllegalArgumentException("Project not found");
@@ -76,7 +87,8 @@ public class ProjectService {
     public ProjectDto.response editProject(Integer projectId, ProjectDto entity) {
         var code = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
         var user = authRepository.findByCode(code).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        var project = projectRepository.findByUserAndId(user, projectId).orElseThrow(() -> new IllegalArgumentException("Project not found"));
+        var project = projectRepository.findByUserAndId(user, projectId)
+                .orElseThrow(() -> new IllegalArgumentException("Project not found"));
 
         Optional.ofNullable(entity.title()).ifPresent(project::setTitle);
         if (entity.image() != null && !entity.image().isEmpty()) {
@@ -98,8 +110,7 @@ public class ProjectService {
                 result.getDescription(),
                 result.getTags(),
                 result.getGithub(),
-                result.getDemo()
-        );
+                result.getDemo());
     }
 
 }

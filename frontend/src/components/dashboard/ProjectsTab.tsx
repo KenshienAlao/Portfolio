@@ -14,7 +14,7 @@ import { ProjectModal } from "@/components/dashboard/modals/ProjectModal";
 import {
   Project,
   useDeleteProjectById,
-  useProject,
+  useProjectAdmin,
 } from "@/hooks/admin/use-project-admin";
 import { DashboardProjectCardSkeleton } from "../ui/skeleton";
 
@@ -26,7 +26,7 @@ export function ProjectsTab() {
     isPending: loadingProject,
     error: projectError,
     refetch: refetchProjects,
-  } = useProject();
+  } = useProjectAdmin();
 
   const {
     mutate: deleteProject,

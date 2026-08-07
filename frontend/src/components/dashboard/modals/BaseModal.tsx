@@ -17,7 +17,7 @@ export function BaseModal({
   maxWidth = "max-w-lg",
 }: BaseModalProps) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-20 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div
         className={`w-full ${maxWidth} rounded-2xl border border-border bg-surface p-6 shadow-2xl relative space-y-4`}
       >

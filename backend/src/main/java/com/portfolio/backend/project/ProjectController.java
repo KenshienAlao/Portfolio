@@ -23,7 +23,7 @@ public class ProjectController {
     @Cacheable("projects_public")
     @GetMapping
     public ResponseEntity<ApiResponse<List<ProjectDto.response>>> getProjects() {
-        return ResponseEntity.ok(ApiResponse.success("Success", projectService.getProjects()));
+        return ResponseEntity.ok(ApiResponse.success("Success", projectService.getPublicProjects()));
     }
 
     @Cacheable("projects_admin")

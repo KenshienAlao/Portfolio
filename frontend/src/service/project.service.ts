@@ -15,13 +15,10 @@ export const projectService = {
     const res = await api.post("/api/project/admin/add-project", data);
     return res.data;
   },
-  editProject: async ({
-    id,
-    data,
-  }: {
-    id: number;
-    data: FormData;
-  }): Promise<ApiReponse<Project>> => {
+  editProject: async (
+    id: number,
+    data: FormData,
+  ): Promise<ApiReponse<Project>> => {
     const res = await api.patch(`/api/project/admin/edit-project/${id}`, data);
     return res.data;
   },

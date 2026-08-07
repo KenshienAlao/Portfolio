@@ -24,7 +24,7 @@ export function Navbar({ activeTab, setActiveTab }: props) {
   const NAV_ITEMS = [
     // { id: "overview", label: "Overview", icon: Summary },
     { id: "projects", label: "Projects", icon: Layers },
-    // { id: "education", label: "Education", icon: GraduationCap },
+    { id: "education", label: "Education", icon: GraduationCap },
     // { id: "skills", label: "Skills", icon: Wrench },
     // { id: "setup", label: "Setup", icon: Terminal },
     // { id: "messages", label: "Messages", icon: Inbox },
@@ -35,7 +35,7 @@ export function Navbar({ activeTab, setActiveTab }: props) {
   return (
     <>
       <aside
-        className={`hidden md:flex border-r border-border bg-surface/50 backdrop-blur-xl flex-col p-4 sticky top-0 h-screen z-50 transition-all duration-300 ease-in-out ${
+        className={`hidden md:flex border-r border-border bg-surface/50 backdrop-blur-xl flex-col p-4 sticky top-0 h-screen z-10 transition-all duration-300 ease-in-out ${
           isCollapsed ? "w-20" : "w-64"
         }`}
       >

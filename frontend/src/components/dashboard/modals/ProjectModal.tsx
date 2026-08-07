@@ -54,7 +54,6 @@ interface Project {
 interface ProjectModalProps {
   projectForm: Partial<Project>;
   projects: Project[];
-  setProjects?: (projects: Project[]) => void;
   setProjectForm: (project: Partial<Project> | null) => void;
 }
 

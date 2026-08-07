@@ -25,6 +25,31 @@ export const ProjectCardSkeleton = () => {
   );
 };
 
+export const EducationCardSkeleton = () => {
+  return (
+    <li
+      className="relative animate-pulse pl-8"
+      aria-hidden="true"
+    >
+      <div className="absolute -left-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-surface">
+        <div className="h-3.5 w-3.5 rounded-full bg-muted-foreground/15" />
+      </div>
+
+      <div className="rounded-2xl border border-border bg-surface p-5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="h-4 w-2/3 rounded bg-muted-foreground/15" />
+          <div className="h-5 w-24 shrink-0 rounded-md bg-muted-foreground/15" />
+        </div>
+        <div className="mt-2 h-3.5 w-2/5 rounded bg-muted-foreground/15" />
+        <div className="mt-4 space-y-2">
+          <div className="h-3 w-full rounded bg-muted-foreground/15" />
+          <div className="h-3 w-4/5 rounded bg-muted-foreground/15" />
+        </div>
+      </div>
+    </li>
+  );
+};
+
 export const DashboardProjectCardSkeleton = () => {
   return (
     <article
