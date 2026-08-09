@@ -15,19 +15,20 @@ export interface Project {
 interface props {
   queryKey: string[];
   queryFn: () => Promise<ApiReponse<Project[]>>;
+  staleTime?: number;
 }
 
 const projectKey = ["project"];
 
 //#region query
-function useProject({ queryKey, queryFn }: props) {
+function useProject({ queryKey, queryFn, staleTime = 1000 * 60 * 5 }: props) {
   return useQuery<ApiReponse<Project[]>, Error, Project[]>({
     queryKey,
     queryFn,
     select: (res) => res.data! ?? [],
     retry: 1,
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
+    staleTime,
   });
 }
 
@@ -35,6 +36,7 @@ export function useProjectPublic() {
   return useProject({
     queryKey: [...projectKey, "public"],
     queryFn: projectService.getPublic,
+    staleTime: Infinity,
   });
 }
 export function useProjectAdmin() {

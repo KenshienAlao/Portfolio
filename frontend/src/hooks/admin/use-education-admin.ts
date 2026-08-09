@@ -17,18 +17,19 @@ export interface Education {
 interface propsQuery {
   queryFn: () => Promise<ApiReponse<Education[]>>;
   queryKey: string[];
+  staleTime?: number;
 }
 
 //#region query
 
-function useEducation({ queryKey, queryFn }: propsQuery) {
+function useEducation({ queryKey, queryFn, staleTime = 1000 * 60 * 5 }: propsQuery) {
   return useQuery<ApiReponse<Education[]>, Error, Education[]>({
     queryKey,
     queryFn,
     select: (res) => res.data! ?? [],
     retry: 1,
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
+    staleTime,
   });
 }
 
@@ -36,6 +37,7 @@ export const useEducationPublic = () => {
   return useEducation({
     queryKey: [...educationKey, "public"],
     queryFn: educationService.getPublic,
+    staleTime: Infinity,
   });
 };
 

@@ -14,7 +14,7 @@ export default async function Page() {
 
   const prefetchOptions = {
     next: { revalidate: 3600 },
-    signal: AbortSignal.timeout(10_000),
+    signal: AbortSignal.timeout(55_000),
   };
 
   await Promise.allSettled([
