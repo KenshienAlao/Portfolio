@@ -2,19 +2,3 @@ packages:
   - "."
 allowBuilds:
   sharp: true
-ignoredBuiltDependencies:
-  - sharp
-  - unrs-resolver
-minimumReleaseAge: 10080 # 7 days
-trustPolicy: no-downgrade
-overrides:
-  undici-types: "5.26.5"
-  eslint-import-resolver-typescript: "3.9.1"
-  semver: "7.6.3"
-pnpm:
-  audit: true
-  packageManager:
-    blockExoticSubdeps: true
-  trustPolicy: no-downgrade
-minimumReleaseAgeExclude:
-  - shadcn@4.13.0
