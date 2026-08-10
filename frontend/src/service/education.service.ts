@@ -1,8 +1,6 @@
 import { Education } from "@/hooks/admin/use-education-admin";
 import api from "@/lib/api";
 import { ApiReponse } from "@/lib/ApiResponse";
-import { number } from "zod";
-
 export const educationService = {
   getPublic: async (): Promise<ApiReponse<Education[]>> => {
     const res = await api.get("/api/education");
@@ -30,7 +28,8 @@ export const educationService = {
     educationId: number,
     data: FormData,
   ): Promise<ApiReponse<Education>> => {
-    const { id, ...payload } = Object.fromEntries(data.entries());
+    data.delete("id");
+    const payload = Object.fromEntries(data.entries());
     const res = await api.patch(
       `/api/education/admin/edit-education/${educationId}`,
       payload,

@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, ImagePlus, Loader2, Save, X } from "lucide-react";
+import { AlertCircle, ImagePlus, Loader2, Save } from "lucide-react";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 
 import { BaseModal } from "./BaseModal";

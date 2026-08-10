@@ -18,7 +18,6 @@ import {
   useEducationAdmin,
 } from "@/hooks/admin/use-education-admin";
 import { DashboardEducationCardSkeleton } from "../ui/skeleton";
-import { useMemo } from "react";
 
 export function EducationTab() {
   const {

@@ -1,5 +1,4 @@
 import { API_ROUTES } from "@/config/api-routes";
-import { ROUTES } from "@/config/routes";
 import axios, { AxiosError } from "axios";
 
 export class SessionExpiredError extends Error {
