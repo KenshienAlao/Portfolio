@@ -28,15 +28,16 @@ export function EducationTab() {
     refetch: refetchEducation,
   } = useEducationAdmin();
 
-  const sortedEducation = useMemo(() => {
+  const sortedEducation = (() => {
     if (!education) return [];
     return [...education].sort((a, b) => {
-      const getYearValue = (y: string) => (y === "Present" ? 9999 : parseInt(y) || 0);
+      const getYearValue = (y: string) =>
+        y === "Present" ? 9999 : parseInt(y) || 0;
       const endDiff = getYearValue(b.yearEnd) - getYearValue(a.yearEnd);
       if (endDiff !== 0) return endDiff;
       return getYearValue(b.yearStart) - getYearValue(a.yearStart);
     });
-  }, [education]);
+  })();
 
   const {
     mutate: deleteEducation,
