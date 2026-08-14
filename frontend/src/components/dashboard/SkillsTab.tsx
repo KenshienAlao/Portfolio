@@ -55,6 +55,7 @@ export function SkillsTab() {
           </h2>
         </div>
         <button
+          type="button"
           onClick={() => setSkillForm({})}
           className="flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-on-accent hover:opacity-90 font-mono transition-opacity"
         >
@@ -76,6 +77,7 @@ export function SkillsTab() {
             </p>
           </div>
           <button
+            type="button"
             onClick={() => refetchSkills()}
             className="mt-2 flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 font-mono text-xs font-semibold text-text-primary transition-colors hover:border-accent/40"
           >
@@ -99,6 +101,7 @@ export function SkillsTab() {
             </h3>
           </div>
           <button
+            type="button"
             onClick={() => setSkillForm({})}
             className="mt-2 flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 font-mono text-xs font-semibold text-on-accent transition-opacity hover:opacity-90"
           >
@@ -186,6 +189,7 @@ export function SkillsTab() {
                             </span>
                             <div className="flex gap-1">
                               <button
+                                type="button"
                                 onClick={() => {
                                   deleteSkill(skill.id);
                                   setConfirmDeleteId(null);
@@ -195,6 +199,7 @@ export function SkillsTab() {
                                 Yes
                               </button>
                               <button
+                                type="button"
                                 onClick={() => setConfirmDeleteId(null)}
                                 className="rounded-md border border-border px-2 py-1 font-mono text-[10px] text-text-secondary transition-colors hover:text-text-primary"
                               >
@@ -205,6 +210,7 @@ export function SkillsTab() {
                         ) : (
                           <>
                             <button
+                              type="button"
                               onClick={() => setSkillForm(skill)}
                               disabled={actionsDisabled}
                               className="p-1 hover:bg-background rounded text-text-secondary hover:text-accent transition-colors disabled:cursor-not-allowed disabled:opacity-50"
@@ -212,6 +218,7 @@ export function SkillsTab() {
                               <Edit3 className="h-3.5 w-3.5" />
                             </button>
                             <button
+                              type="button"
                               onClick={() => setConfirmDeleteId(skill.id)}
                               disabled={actionsDisabled}
                               className="p-1 hover:bg-destructive/10 rounded text-text-secondary hover:text-destructive transition-colors disabled:cursor-not-allowed disabled:opacity-50"

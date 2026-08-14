@@ -81,6 +81,7 @@ export function Projects() {
 
                         <div className="mt-auto flex gap-2 pt-2">
                           <Button
+                            type="button"
                             asChild
                             size="sm"
                             variant="outline"
@@ -97,6 +98,7 @@ export function Projects() {
                           </Button>
                           {demo && (
                             <Button
+                              type="button"
                               asChild
                               size="sm"
                               className="rounded-lg bg-accent text-on-accent hover:bg-accent/90"

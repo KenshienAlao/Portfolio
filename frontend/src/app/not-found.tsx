@@ -23,6 +23,7 @@ export default function NotFound() {
 
         <div className="pt-8">
           <Button
+            type="button"
             asChild
             size="lg"
             className="rounded-full bg-accent text-white"

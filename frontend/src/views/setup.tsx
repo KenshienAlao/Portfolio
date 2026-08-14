@@ -120,6 +120,7 @@ export function Setup() {
                             .filter((tool) => tool.subValue && tool.subDownload)
                             .map((tool) => (
                               <Button
+                                type="button"
                                 key={tool.id}
                                 asChild
                                 size="sm"

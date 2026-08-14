@@ -1,12 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { AlertCircle, CheckCircle2, Circle, Inbox, Loader2, Trash2 } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Circle,
+  Inbox,
+  Loader2,
+  Trash2,
+} from "lucide-react";
 import {
   useDeleteMessageById,
   useMessagesAdmin,
   useToggleMessageRead,
 } from "@/hooks/admin/use-message-admin";
+
+function formatDate(isoString: string) {
+  try {
+    const date = new Date(isoString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return isoString;
+  }
+}
 
 export function MessagesTab() {
   const {
@@ -28,22 +50,6 @@ export function MessagesTab() {
 
   const hasMessages = (messages?.length ?? 0) > 0;
   const unreadCount = messages?.filter((m) => !m.isRead).length ?? 0;
-
-  const formatDate = (isoString: string) => {
-    try {
-      const date = new Date(isoString);
-      return date.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } catch {
-      return isoString;
-    }
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -51,7 +57,8 @@ export function MessagesTab() {
           Inbox
           {hasMessages && (
             <span className="font-mono text-xs font-normal text-text-secondary">
-              ({messages?.length} total{unreadCount > 0 ? `, ${unreadCount} unread` : ""})
+              ({messages?.length} total
+              {unreadCount > 0 ? `, ${unreadCount} unread` : ""})
             </span>
           )}
         </h2>
@@ -67,10 +74,12 @@ export function MessagesTab() {
               Couldn&apos;t load messages
             </h3>
             <p className="max-w-xs text-xs text-text-secondary">
-              {messagesError.message || "Something went wrong. Please try again."}
+              {messagesError.message ||
+                "Something went wrong. Please try again."}
             </p>
           </div>
           <button
+            type="button"
             onClick={() => refetchMessages()}
             className="mt-2 flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 font-mono text-xs font-semibold text-text-primary transition-colors hover:border-accent/40"
           >
@@ -114,6 +123,7 @@ export function MessagesTab() {
                 <div className="flex flex-wrap items-start justify-between gap-2 border-b border-border pb-3">
                   <div className="flex items-start gap-2.5">
                     <button
+                      type="button"
                       onClick={() => toggleRead(msg.id)}
                       title={msg.isRead ? "Mark as unread" : "Mark as read"}
                       className="mt-0.5 text-text-secondary hover:text-accent transition-colors"
@@ -152,6 +162,7 @@ export function MessagesTab() {
                     {isConfirmingDelete ? (
                       <div className="flex items-center gap-1">
                         <button
+                          type="button"
                           onClick={() => {
                             deleteMessage(msg.id);
                             setConfirmDeleteId(null);
@@ -161,6 +172,7 @@ export function MessagesTab() {
                           Yes
                         </button>
                         <button
+                          type="button"
                           onClick={() => setConfirmDeleteId(null)}
                           className="rounded-md border border-border px-2 py-1 font-mono text-[10px] text-text-secondary transition-colors hover:text-text-primary"
                         >
@@ -169,6 +181,7 @@ export function MessagesTab() {
                       </div>
                     ) : (
                       <button
+                        type="button"
                         onClick={() => setConfirmDeleteId(msg.id)}
                         disabled={isDeletingThis}
                         className="p-1.5 hover:bg-destructive/10 rounded-md text-text-secondary hover:text-destructive transition-colors disabled:cursor-not-allowed disabled:opacity-50"

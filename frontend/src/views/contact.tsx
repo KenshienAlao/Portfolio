@@ -68,6 +68,7 @@ export function Contact() {
             })}
 
             <Button
+              type="button"
               asChild
               size="lg"
               variant="outline"

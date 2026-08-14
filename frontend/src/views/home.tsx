@@ -51,6 +51,7 @@ export function Hero({ changePage }: { changePage: (page: string) => void }) {
 
           <div className="slide-up stagger-5 mt-8 flex flex-col gap-3 sm:flex-row">
             <Button
+              type="button"
               onClick={() => changePage(NAV_PAGES.LINKS.PROJECTS)}
               size="lg"
               className="w-full rounded-full bg-accent px-8 font-semibold text-on-accent hover:bg-accent/90 active:scale-95 sm:w-auto"
@@ -59,6 +60,7 @@ export function Hero({ changePage }: { changePage: (page: string) => void }) {
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Button
+              type="button"
               onClick={() => changePage(NAV_PAGES.LINKS.CONTACT)}
               size="lg"
               variant="outline"

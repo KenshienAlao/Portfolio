@@ -1,3 +1,4 @@
+import { cache } from "react";
 import {
   HydrationBoundary,
   QueryClient,
@@ -8,6 +9,17 @@ import { ClientPage } from "./client-page";
 export const revalidate = 3600;
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6532";
+
+const getQueryClient = cache(
+  () =>
+    new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 60 * 1000,
+        },
+      },
+    }),
+);
 
 async function fetchWithFallback<T>(url: string, timeoutMs = 4000): Promise<T> {
   try {
@@ -39,13 +51,7 @@ async function fetchWithFallback<T>(url: string, timeoutMs = 4000): Promise<T> {
 }
 
 export default async function Page() {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 60 * 1000,
-      },
-    },
-  });
+  const queryClient = getQueryClient();
 
   const results = await Promise.allSettled([
     queryClient.prefetchQuery({

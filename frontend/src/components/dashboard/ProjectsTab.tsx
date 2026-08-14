@@ -53,6 +53,7 @@ export function ProjectsTab() {
           </h2>
         </div>
         <button
+          type="button"
           onClick={() => setProjectForm({})}
           className="flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-on-accent hover:opacity-90 font-mono transition-opacity"
         >
@@ -75,6 +76,7 @@ export function ProjectsTab() {
             </p>
           </div>
           <button
+            type="button"
             onClick={() => refetchProjects()}
             className="mt-2 flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 font-mono text-xs font-semibold text-text-primary hover:border-accent/40 transition-colors"
           >
@@ -98,6 +100,7 @@ export function ProjectsTab() {
             </h3>
           </div>
           <button
+            type="button"
             onClick={() => setProjectForm({})}
             className="mt-2 flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-on-accent hover:opacity-90 font-mono transition-opacity"
           >
@@ -155,6 +158,7 @@ export function ProjectsTab() {
                       {isConfirmingDelete ? (
                         <>
                           <button
+                            type="button"
                             onClick={() => {
                               deleteProject(project.id);
                               setConfirmDeleteId(null);
@@ -164,6 +168,7 @@ export function ProjectsTab() {
                             Confirm
                           </button>
                           <button
+                            type="button"
                             onClick={() => setConfirmDeleteId(null)}
                             className="rounded-md border border-border px-2 py-1 font-mono text-[10px] text-text-secondary hover:text-text-primary transition-colors"
                           >
@@ -173,6 +178,7 @@ export function ProjectsTab() {
                       ) : (
                         <>
                           <button
+                            type="button"
                             onClick={() => setProjectForm(project)}
                             disabled={actionsDisabled}
                             aria-label="Edit project"
@@ -181,6 +187,7 @@ export function ProjectsTab() {
                             <Edit3 className="h-3.5 w-3.5" />
                           </button>
                           <button
+                            type="button"
                             onClick={() => setConfirmDeleteId(project.id)}
                             disabled={actionsDisabled}
                             aria-label="Delete project"

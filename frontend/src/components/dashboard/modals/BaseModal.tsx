@@ -22,6 +22,7 @@ export function BaseModal({
         className={`w-full ${maxWidth} rounded-2xl border border-border bg-surface p-6 shadow-2xl relative space-y-4`}
       >
         <button
+          type="button"
           onClick={onClose}
           className="absolute right-4 top-4 text-text-secondary hover:text-text-primary transition-colors"
           aria-label="Close modal"

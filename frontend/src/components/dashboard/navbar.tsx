@@ -21,7 +21,7 @@ export function Navbar({ activeTab, setActiveTab }: props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const NAV_ITEMS = [
-    // { id: "overview", label: "Overview", icon: Summary },
+    { id: "overview", label: "Overview", icon: LayoutDashboard },
     { id: "projects", label: "Projects", icon: Layers },
     { id: "education", label: "Education", icon: GraduationCap },
     { id: "skills", label: "Skills", icon: Wrench },
@@ -47,6 +47,7 @@ export function Navbar({ activeTab, setActiveTab }: props) {
             </div>
           )}
           <button
+            type="button"
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="p-1.5 rounded-lg border border-border/40 bg-surface/30 text-text-secondary hover:bg-surface hover:text-text-primary transition-colors hidden md:block"
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -65,6 +66,7 @@ export function Navbar({ activeTab, setActiveTab }: props) {
             const isActive = activeTab === item.id;
             return (
               <button
+                type="button"
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
                 className={`flex w-full items-center rounded-lg py-2.5 text-sm font-medium transition-all ${
@@ -104,6 +106,7 @@ export function Navbar({ activeTab, setActiveTab }: props) {
         }`}
       >
         <button
+          type="button"
           onClick={() => setIsMobileCollapsed(true)}
           className={`absolute top-0 right-4 border-t border-x border-border bg-surface/95 backdrop-blur-2xl px-3 py-1 rounded-t-lg text-text-secondary hover:text-text-primary flex items-center justify-center gap-1 font-mono text-[10px] transition-all duration-300 ${
             isMobileCollapsed
@@ -121,6 +124,7 @@ export function Navbar({ activeTab, setActiveTab }: props) {
           const isActive = activeTab === item.id;
           return (
             <button
+              type="button"
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               className={`flex flex-col items-center justify-center p-2 rounded-lg text-[10px] relative transition-colors ${
@@ -135,6 +139,7 @@ export function Navbar({ activeTab, setActiveTab }: props) {
       </nav>
 
       <button
+        type="button"
         onClick={() => setIsMobileCollapsed(false)}
         className={`md:hidden fixed bottom-4 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-border bg-surface/90 text-accent shadow-lg backdrop-blur-md transition-all duration-300 ${
           isMobileCollapsed

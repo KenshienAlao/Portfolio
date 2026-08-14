@@ -80,6 +80,7 @@ export function SetupTab() {
 
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={() => setCategoryForm({})}
             className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-text-primary transition-colors hover:border-accent/50 hover:bg-surface"
           >
@@ -87,6 +88,7 @@ export function SetupTab() {
           </button>
 
           <button
+            type="button"
             onClick={() => {
               if (!hasCategories) {
                 setCategoryForm({});
@@ -116,6 +118,7 @@ export function SetupTab() {
             </p>
           </div>
           <button
+            type="button"
             onClick={() => refetchSetup()}
             className="mt-2 rounded-lg border border-border bg-surface px-4 py-2 text-xs font-medium text-text-primary transition-colors hover:bg-background"
           >
@@ -148,6 +151,7 @@ export function SetupTab() {
             </p>
           </div>
           <button
+            type="button"
             onClick={() => setCategoryForm({})}
             className="mt-2 flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-on-accent transition-opacity hover:opacity-90"
           >
@@ -198,6 +202,7 @@ export function SetupTab() {
 
                   <div className="flex items-center gap-1.5 shrink-0">
                     <button
+                      type="button"
                       onClick={() => setItemForm({ categoryId: cat.id })}
                       disabled={isPendingCategory}
                       className="flex items-center gap-1 rounded-md border border-border bg-background px-2.5 py-1 text-[11px] font-medium text-text-primary transition-colors hover:border-accent/50 hover:bg-accent/10 disabled:opacity-50"
@@ -207,6 +212,7 @@ export function SetupTab() {
                     </button>
 
                     <button
+                      type="button"
                       onClick={() => setCategoryForm(cat)}
                       disabled={isDeletingThisCategory || isPendingCategory}
                       className="rounded-md border border-border bg-background p-1.5 text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-50"
@@ -218,6 +224,7 @@ export function SetupTab() {
                     {isConfirmingDeleteCategory ? (
                       <div className="flex items-center gap-1">
                         <button
+                          type="button"
                           onClick={() => {
                             deleteCategory(cat.id);
                             setConfirmDeleteCategoryId(null);
@@ -227,6 +234,7 @@ export function SetupTab() {
                           Confirm
                         </button>
                         <button
+                          type="button"
                           onClick={() => setConfirmDeleteCategoryId(null)}
                           className="rounded-md border border-border bg-background px-2 py-1 text-[10px] text-text-secondary transition-colors hover:text-text-primary"
                         >
@@ -235,6 +243,7 @@ export function SetupTab() {
                       </div>
                     ) : (
                       <button
+                        type="button"
                         onClick={() => setConfirmDeleteCategoryId(cat.id)}
                         disabled={isDeletingThisCategory || isPendingCategory}
                         className="rounded-md border border-border bg-background p-1.5 text-text-secondary transition-colors hover:border-destructive hover:text-destructive disabled:opacity-50"
@@ -251,6 +260,7 @@ export function SetupTab() {
                     <div className="flex items-center justify-between rounded-xl border border-dashed border-border/70 bg-background/50 p-4 text-xs text-text-secondary">
                       <span>No items in this category yet.</span>
                       <button
+                        type="button"
                         onClick={() => setItemForm({ categoryId: cat.id })}
                         className="flex items-center gap-1 font-semibold text-accent hover:underline"
                       >
@@ -338,6 +348,7 @@ export function SetupTab() {
                                 ) : (
                                   <>
                                     <button
+                                      type="button"
                                       onClick={() =>
                                         setItemForm({
                                           ...item,
@@ -354,6 +365,7 @@ export function SetupTab() {
                                     {isConfirmingDeleteItem ? (
                                       <div className="flex items-center gap-0.5">
                                         <button
+                                          type="button"
                                           onClick={() => {
                                             deleteItem(item.id);
                                             setConfirmDeleteItemId(null);
@@ -363,6 +375,7 @@ export function SetupTab() {
                                           Del
                                         </button>
                                         <button
+                                          type="button"
                                           onClick={() =>
                                             setConfirmDeleteItemId(null)
                                           }
@@ -373,6 +386,7 @@ export function SetupTab() {
                                       </div>
                                     ) : (
                                       <button
+                                        type="button"
                                         onClick={() =>
                                           setConfirmDeleteItemId(item.id)
                                         }

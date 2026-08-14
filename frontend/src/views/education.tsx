@@ -9,7 +9,7 @@ export function Education() {
 
   const sortedEducation = (() => {
     if (!education) return [];
-    return [...education].sort((a, b) => {
+    return education.toSorted((a, b) => {
       const getYearValue = (y: string) =>
         y === "Present" ? 9999 : parseInt(y) || 0;
       const endDiff = getYearValue(b.yearEnd) - getYearValue(a.yearEnd);
