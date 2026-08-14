@@ -27,10 +27,7 @@ export const ProjectCardSkeleton = () => {
 
 export const EducationCardSkeleton = () => {
   return (
-    <li
-      className="relative animate-pulse pl-8"
-      aria-hidden="true"
-    >
+    <li className="relative animate-pulse pl-8" aria-hidden="true">
       <div className="absolute -left-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-surface">
         <div className="h-3.5 w-3.5 rounded-full bg-muted-foreground/15" />
       </div>
@@ -128,6 +125,35 @@ export const DashboardSkillCategorySkeleton = () => {
           </div>
         ))}
       </div>
+    </div>
+  );
+};
+
+export const SetupCardSkeleton = () => {
+  return (
+    <div
+      className="flex flex-col justify-between gap-4 rounded-2xl border border-border bg-surface p-5 animate-pulse"
+      aria-hidden="true"
+    >
+      <div className="flex flex-col gap-3">
+        <div className="h-3 w-28 rounded bg-muted-foreground/15" />
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <div className="flex items-center gap-1.5">
+            <div className="h-5 w-5 rounded-md bg-muted-foreground/15" />
+            <div className="h-4 w-20 rounded bg-muted-foreground/15" />
+          </div>
+          <div className="h-4 w-1 rounded bg-muted-foreground/15" />
+          <div className="flex items-center gap-1.5">
+            <div className="h-5 w-5 rounded-md bg-muted-foreground/15" />
+            <div className="h-4 w-24 rounded bg-muted-foreground/15" />
+          </div>
+        </div>
+        <div className="space-y-1.5 pt-1">
+          <div className="h-3.5 w-full rounded bg-muted-foreground/15" />
+          <div className="h-3.5 w-4/5 rounded bg-muted-foreground/15" />
+        </div>
+      </div>
+      <div className="h-7 w-32 rounded-lg bg-muted-foreground/15" />
     </div>
   );
 };
