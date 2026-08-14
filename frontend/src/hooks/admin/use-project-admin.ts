@@ -1,16 +1,8 @@
 import { ApiReponse } from "@/lib/ApiResponse";
-import { projectService } from "@/service/project.service";
+import { projectService, type Project } from "@/service/project.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export interface Project {
-  id: number;
-  title: string;
-  image: string;
-  description: string;
-  tags: string[];
-  github: string;
-  demo: string | null;
-}
+export type { Project };
 
 interface props {
   queryKey: string[];
@@ -20,7 +12,6 @@ interface props {
 
 const projectKey = ["project"];
 
-//#region query
 function useProject({ queryKey, queryFn, staleTime = 1000 * 60 * 5 }: props) {
   return useQuery<ApiReponse<Project[]>, Error, Project[]>({
     queryKey,
@@ -46,9 +37,6 @@ export function useProjectAdmin() {
   });
 }
 
-//#endregion
-
-//#region mutation
 export const useDeleteProjectById = () => {
   const queryClient = useQueryClient();
 
@@ -105,10 +93,15 @@ export const useAddProject = () => {
 
       const tagsRaw = formData.get("tags") as string;
 
+      const imageField = formData.get("image");
+
       const tempProject: Project = {
         id: -Date.now(),
         title: (formData.get("title") as string) ?? "Untitled",
-        image: URL.createObjectURL(formData.get("image") as Blob) || "",
+        image:
+          imageField instanceof File && imageField.size > 0
+            ? URL.createObjectURL(imageField)
+            : "",
         description: (formData.get("description") as string) ?? "",
         tags: tagsRaw ? tagsRaw.split(",").map((t) => t.trim()) : [],
         github: (formData.get("github") as string) ?? "",
@@ -198,5 +191,3 @@ export const useEditProject = () => {
     },
   });
 };
-
-//#endregion

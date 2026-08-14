@@ -2,7 +2,6 @@ package com.portfolio.backend.project;
 
 import com.portfolio.backend.common.ApiResponse;
 import com.portfolio.backend.common.validation.OnCreate;
-import com.portfolio.backend.common.validation.OnUpdate;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -47,7 +46,7 @@ public class ProjectController {
 
     @CacheEvict(value = {"projects_admin", "projects_public"}, allEntries = true)
     @PatchMapping(value = "/admin/edit-project/{projectId}", consumes = "multipart/form-data")
-    public ResponseEntity<ApiResponse<ProjectDto.response>> editProject( @PathVariable Integer projectId, @Validated(OnUpdate.class) @ModelAttribute ProjectDto entity) {
+    public ResponseEntity<ApiResponse<ProjectDto.response>> editProject( @PathVariable Integer projectId, @Validated(OnCreate.class) @ModelAttribute ProjectDto entity) {
         return ResponseEntity.ok(ApiResponse.success("Success", projectService.editProject(projectId, entity)));
     }
  }

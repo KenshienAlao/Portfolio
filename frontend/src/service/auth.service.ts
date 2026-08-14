@@ -1,6 +1,10 @@
 import api from "@/lib/api";
 import { ApiReponse } from "@/lib/ApiResponse";
-import { TLogin } from "@/views/login";
+
+export interface TLogin {
+  code: string;
+  password: string;
+}
 
 export const AuthService = {
   login: async (data: TLogin): Promise<ApiReponse> => {

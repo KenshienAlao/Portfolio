@@ -3,6 +3,8 @@ package com.portfolio.backend.auth;
 
 import com.portfolio.backend.education.EducationModel;
 import com.portfolio.backend.project.ProjectModel;
+import com.portfolio.backend.setup.SetupModel;
+import com.portfolio.backend.skills.SkillModel;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +27,12 @@ public class AuthModel {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EducationModel> educations;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SkillModel> skills;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SetupModel> setups;
 
     @Column(unique = true, nullable = false)
     private String code;

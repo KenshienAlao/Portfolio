@@ -38,7 +38,6 @@ public class ProjectService {
                         p.getTags(), p.getGithub(), p.getDemo()))
                 .toList();
     }
-
     public void deleteProject(Integer projectId) {
         var code = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
 

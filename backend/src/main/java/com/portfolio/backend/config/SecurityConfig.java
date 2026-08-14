@@ -89,6 +89,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/project").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/education").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/skill").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/setup").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/message").permitAll()
                         .anyRequest().fullyAuthenticated());
 
         return http.build();

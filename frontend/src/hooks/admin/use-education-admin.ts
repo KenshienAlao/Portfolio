@@ -1,18 +1,10 @@
 import { ApiReponse } from "@/lib/ApiResponse";
-import { educationService } from "@/service/education.service";
+import { educationService, type Education } from "@/service/education.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const educationKey = ["education"];
 
-export interface Education {
-  id: number;
-  school: string;
-  degree: string;
-  yearStart: string;
-  yearEnd: string;
-  description: string;
-  location: string;
-}
+export type { Education };
 
 interface propsQuery {
   queryFn: () => Promise<ApiReponse<Education[]>>;
@@ -20,7 +12,6 @@ interface propsQuery {
   staleTime?: number;
 }
 
-//#region query
 
 function useEducation({ queryKey, queryFn, staleTime = 1000 * 60 * 5 }: propsQuery) {
   return useQuery<ApiReponse<Education[]>, Error, Education[]>({
@@ -48,9 +39,7 @@ export const useEducationAdmin = () => {
   });
 };
 
-//#endregion
 
-//#region mutation
 export const useAddEducation = () => {
   const queryClient = useQueryClient();
 
@@ -191,4 +180,4 @@ export const useEditEducation = () => {
   });
 };
 
-//#endregion
+

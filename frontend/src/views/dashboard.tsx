@@ -5,19 +5,15 @@ import { ThemeTogglerButton } from "@/components/theme-toggle";
 import { Orb } from "@/components/ui/orb";
 import { Navbar } from "@/components/dashboard/navbar";
 
-// import { OverviewTab } from "@/components/dashboard/OverviewTab";
 import { ProjectsTab } from "@/components/dashboard/ProjectsTab";
 import { EducationTab } from "@/components/dashboard/EducationTab";
-// import { SkillsTab } from "@/components/dashboard/SkillsTab";
-// import { SetupTab } from "@/components/dashboard/SetupTab";
-// import { MessagesTab } from "@/components/dashboard/MessagesTab";
+import { SkillsTab } from "@/components/dashboard/SkillsTab";
+import { SetupTab } from "@/components/dashboard/SetupTab";
+import { MessagesTab } from "@/components/dashboard/MessagesTab";
 
 export type Tab =
   // | "overview"
-  "projects" | "education";
-// | "skills"
-// | "setup"
-// | "messages";
+  "projects" | "education" | "skills" | "setup" | "messages";
 
 export function DashboardView() {
   const [activeTab, setActiveTab] = useState<Tab>("projects");
@@ -26,9 +22,9 @@ export function DashboardView() {
     // overview: <OverviewTab setActiveTab={setActiveTab} />,
     projects: <ProjectsTab />,
     education: <EducationTab />,
-    // skills: <SkillsTab />,
-    // setup: <SetupTab />,
-    // messages: <MessagesTab />,
+    skills: <SkillsTab />,
+    setup: <SetupTab />,
+    messages: <MessagesTab />,
   };
 
   return (

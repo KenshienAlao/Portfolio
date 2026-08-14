@@ -1,14 +1,13 @@
 import { useState } from "react";
 import {
   GraduationCap,
-  Inbox,
   Layers,
   LayoutDashboard,
-  Terminal,
   Wrench,
   ChevronLeft,
   ChevronRight,
-  Summary,
+  Terminal,
+  Inbox,
 } from "lucide-react";
 import { ThemeTogglerButton } from "../theme-toggle";
 import { Tab } from "@/views/dashboard";
@@ -25,9 +24,9 @@ export function Navbar({ activeTab, setActiveTab }: props) {
     // { id: "overview", label: "Overview", icon: Summary },
     { id: "projects", label: "Projects", icon: Layers },
     { id: "education", label: "Education", icon: GraduationCap },
-    // { id: "skills", label: "Skills", icon: Wrench },
-    // { id: "setup", label: "Setup", icon: Terminal },
-    // { id: "messages", label: "Messages", icon: Inbox },
+    { id: "skills", label: "Skills", icon: Wrench },
+    { id: "setup", label: "Setup", icon: Terminal },
+    { id: "messages", label: "Messages", icon: Inbox },
   ] as const;
 
   const [isMobileCollapsed, setIsMobileCollapsed] = useState(false);

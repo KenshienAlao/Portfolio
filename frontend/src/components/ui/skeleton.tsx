@@ -103,3 +103,31 @@ export const DashboardEducationCardSkeleton = () => {
     </div>
   );
 };
+
+export const DashboardSkillCategorySkeleton = () => {
+  return (
+    <div
+      className="rounded-xl border border-border bg-surface p-6 space-y-4 animate-pulse"
+      aria-hidden="true"
+    >
+      <div className="h-4 w-1/4 rounded bg-muted-foreground/15 border-b border-border pb-2" />
+      <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div
+            key={i}
+            className="flex items-center justify-between p-3 rounded-lg border border-border/60 bg-background/50"
+          >
+            <div className="space-y-1.5 flex-1">
+              <div className="h-3 w-2/3 rounded bg-muted-foreground/15" />
+              <div className="h-2.5 w-1/3 rounded bg-muted-foreground/15" />
+            </div>
+            <div className="flex gap-1 shrink-0">
+              <div className="h-6 w-6 rounded bg-muted-foreground/15" />
+              <div className="h-6 w-6 rounded bg-muted-foreground/15" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};

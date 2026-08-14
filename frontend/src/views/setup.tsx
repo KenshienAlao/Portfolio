@@ -1,12 +1,17 @@
 "use client";
 
-import { SETUP_ITEMS } from "@/config/setup";
+import { type Setup } from "@/service/setup.service";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/section-header";
+import { useSetupPublic } from "@/hooks/admin/use-setup-admin";
 
 export function Setup() {
+  const { data: setups } = useSetupPublic();
+
+  const items = setups ?? [];
+
   return (
     <section
       id="setup"
@@ -24,19 +29,9 @@ export function Setup() {
 
         <div className="mt-14">
           <div className="grid gap-3 sm:grid-cols-2">
-            {SETUP_ITEMS.map((item) => {
-              const values = Array.isArray(item.value)
-                ? item.value
-                : [item.value];
-              const downloads = Array.isArray(item.download)
-                ? item.download
-                : [item.download];
-              const lightImages = Array.isArray(item.image.light)
-                ? item.image.light
-                : [item.image.light];
-              const darkImages = Array.isArray(item.image.dark)
-                ? item.image.dark
-                : [item.image.dark];
+            {items.map((item: Setup) => {
+              const values = item.values ?? [];
+              const downloads = item.downloads ?? [];
 
               return (
                 <div
@@ -50,7 +45,7 @@ export function Setup() {
                       </p>
 
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                        {values.map((v, i) => (
+                        {values.map((v: string, i: number) => (
                           <span
                             key={v}
                             className="inline-flex items-center gap-1"
@@ -101,29 +96,34 @@ export function Setup() {
                     </div>
 
                     <div className="flex items-center gap-1.5 shrink-0">
-                      {lightImages.map((src, idx) => (
-                        <div
-                          key={`${src}-${idx}`}
-                          className="relative h-10 w-10 rounded-lg border border-border bg-background flex items-center justify-center p-2"
-                        >
+                      {item.imageLight && (
+                        <div className="relative h-10 w-10 rounded-lg border border-border bg-background flex items-center justify-center p-2">
                           <Image
-                            src={src}
+                            src={item.imageLight}
                             alt="Tool icon"
                             width={24}
                             height={24}
+                            unoptimized={
+                              item.imageLight.startsWith("http") ||
+                              item.imageLight.startsWith("blob:")
+                            }
                             className="absolute inset-0 m-auto h-5 w-5 object-contain dark:opacity-0"
                           />
-                          {darkImages[idx] && (
+                          {item.imageDark && (
                             <Image
-                              src={darkImages[idx]}
+                              src={item.imageDark}
                               alt="Tool icon"
                               width={24}
                               height={24}
+                              unoptimized={
+                                item.imageDark.startsWith("http") ||
+                                item.imageDark.startsWith("blob:")
+                              }
                               className="absolute inset-0 m-auto h-5 w-5 object-contain opacity-0 dark:opacity-100"
                             />
                           )}
                         </div>
-                      ))}
+                      )}
                     </div>
                   </div>
                 </div>

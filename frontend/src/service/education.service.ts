@@ -1,6 +1,16 @@
-import { Education } from "@/hooks/admin/use-education-admin";
 import api from "@/lib/api";
 import { ApiReponse } from "@/lib/ApiResponse";
+
+export interface Education {
+  id: number;
+  school: string;
+  degree: string;
+  yearStart: string;
+  yearEnd: string;
+  description: string;
+  location: string;
+}
+
 export const educationService = {
   getPublic: async (): Promise<ApiReponse<Education[]>> => {
     const res = await api.get("/api/education");

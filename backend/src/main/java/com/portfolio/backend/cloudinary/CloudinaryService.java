@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -17,38 +18,12 @@ public class CloudinaryService {
     private static final long MAX_SIZE = 5 * 1024 * 1024;
     private static final String UPLOAD_MARKER = "/upload/";
 
-
     private final Cloudinary cloudinary;
 
-    public String userAvatar(MultipartFile file, Long userId) {
-        if (file.getSize() > MAX_SIZE) {
-            throw new IllegalArgumentException("Avatar must be under 5MB");
-        }
-
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            throw new IllegalArgumentException("Avatar must be an image");
-        }
-
-        String publicId = "avatar_" + userId;
-
-        try {
-            Map<?, ?> result = cloudinary.uploader().upload(
-                    file.getBytes(),
-                    ObjectUtils.asMap(
-                            "public_id", publicId,
-                            "folder", "users",
-                            "overwrite", true,
-                            "invalidate", true,
-                            "resource_type", "image"));
-
-            return (String) result.get("secure_url");
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to upload image", e);
-        }
-    }
-
     public String projectImage(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Image is required");
+        }
         if (file.getSize() > MAX_SIZE) {
             throw new IllegalArgumentException("Image must be under 5MB");
         }
@@ -58,7 +33,7 @@ public class CloudinaryService {
             throw new IllegalArgumentException("File must be an image");
         }
 
-        String publicId = "project_" + java.util.UUID.randomUUID().toString();
+        String publicId = "project_" + UUID.randomUUID();
 
         try {
             Map<?, ?> result = cloudinary.uploader().upload(
@@ -75,7 +50,128 @@ public class CloudinaryService {
         }
     }
 
-    public String imageRemove(String imageUrl) {
+    public String skillImageLight(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Light image is required");
+        }
+        if (file.getSize() > MAX_SIZE) {
+            throw new IllegalArgumentException("Image must be under 5MB");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("File must be an image");
+        }
+
+        String publicId = "skill_" + UUID.randomUUID() + "_light";
+
+        try {
+            Map<?, ?> result = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "public_id", publicId,
+                            "folder", "skills",
+                            "overwrite", true,
+                            "resource_type", "image"));
+
+            return (String) result.get("secure_url");
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload image", e);
+        }
+    }
+
+    public String skillDarkImage(MultipartFile file) {
+        // optional
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
+        if (file.getSize() > MAX_SIZE) {
+            throw new IllegalArgumentException("Image must be under 5MB");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("File must be an image");
+        }
+
+        String publicId = "skill_" + UUID.randomUUID() + "_dark";
+
+        try {
+            Map<?, ?> result = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "public_id", publicId,
+                            "folder", "skills",
+                            "overwrite", true,
+                            "resource_type", "image"));
+
+            return (String) result.get("secure_url");
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload image", e);
+        }
+    }
+
+    public String setupImageLight(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Light image is required");
+        }
+        if (file.getSize() > MAX_SIZE) {
+            throw new IllegalArgumentException("Image must be under 5MB");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("File must be an image");
+        }
+
+        String publicId = "setup_" + UUID.randomUUID() + "_light";
+
+        try {
+            Map<?, ?> result = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "public_id", publicId,
+                            "folder", "setup",
+                            "overwrite", true,
+                            "resource_type", "image"));
+
+            return (String) result.get("secure_url");
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload image", e);
+        }
+    }
+
+    public String setupDarkImage(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
+        if (file.getSize() > MAX_SIZE) {
+            throw new IllegalArgumentException("Image must be under 5MB");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("File must be an image");
+        }
+
+        String publicId = "setup_" + UUID.randomUUID() + "_dark";
+
+        try {
+            Map<?, ?> result = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "public_id", publicId,
+                            "folder", "setup",
+                            "overwrite", true,
+                            "resource_type", "image"));
+
+            return (String) result.get("secure_url");
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload image", e);
+        }
+    }
+
+    public void imageRemove(String imageUrl) {
         if (imageUrl == null || imageUrl.isBlank()) {
             throw new IllegalArgumentException("Image URL is required");
         }
@@ -89,8 +185,7 @@ public class CloudinaryService {
                     .execute();
 
             @SuppressWarnings("unchecked")
-            List<Map<String, Object>> resources =
-                    (List<Map<String, Object>>) searchResult.get("resources");
+            List<Map<String, Object>> resources = (List<Map<String, Object>>) searchResult.get("resources");
 
             if (resources == null || resources.isEmpty()) {
                 throw new RuntimeException("No Cloudinary asset found for filename: " + filename);
@@ -104,12 +199,11 @@ public class CloudinaryService {
                             "resource_type", "image",
                             "invalidate", true));
 
-            return (String) destroyResult.get("result");
+            destroyResult.get("result");
         } catch (Exception e) {
             throw new RuntimeException("Failed to remove image", e);
         }
     }
-
 
     private String extractFilename(String imageUrl) {
         int uploadIndex = imageUrl.indexOf(UPLOAD_MARKER);

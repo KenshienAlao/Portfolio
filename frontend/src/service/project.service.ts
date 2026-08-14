@@ -1,6 +1,15 @@
-import { Project } from "@/hooks/admin/use-project-admin";
 import api from "@/lib/api";
 import { ApiReponse } from "@/lib/ApiResponse";
+
+export interface Project {
+  id: number;
+  title: string;
+  image: string;
+  description: string;
+  tags: string[];
+  github: string;
+  demo: string | null;
+}
 
 export const projectService = {
   getPublic: async (): Promise<ApiReponse<Project[]>> => {
