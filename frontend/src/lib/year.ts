@@ -1,10 +1,7 @@
-const CURRENT_YEAR = new Date().getFullYear();
-export const YEARS = Array.from(
-  { length: CURRENT_YEAR - 1980 + 1 },
-  (_, i) => CURRENT_YEAR - i,
-);
-
-export function parseYears(years?: string) {
-  const [start, end] = (years ?? "").split(/—|-/).map((s) => s.trim());
-  return { start: start || "", end: end || "Present" };
+export function getYears(startYear = 1980): number[] {
+  const currentYear = new Date().getFullYear();
+  return Array.from(
+    { length: currentYear - startYear + 1 },
+    (_, i) => currentYear - i,
+  );
 }

@@ -10,14 +10,7 @@ import {
   FaTerminal,
   FaWrench,
 } from "react-icons/fa";
-
-export type Tab =
-  | "overview"
-  | "projects"
-  | "education"
-  | "skills"
-  | "setup"
-  | "messages";
+import { Tab } from "@/types/dashboard";
 
 interface props {
   activeTab: Tab;

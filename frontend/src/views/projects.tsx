@@ -40,12 +40,9 @@ export function Projects() {
                   <ProjectCardSkeleton key={idx} />
                 ))
               : projects?.map(
-                  (
-                    { id, title, description, image, tags, github, demo },
-                    idx,
-                  ) => (
+                  ({ id, title, description, image, tags, github, demo }) => (
                     <article
-                      key={`${id}-${title}-${idx}`}
+                      key={id}
                       className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface hover:border-accent/40"
                     >
                       <div className="relative aspect-video overflow-hidden border-b border-border">
@@ -69,9 +66,9 @@ export function Projects() {
                         </p>
 
                         <div className="flex flex-wrap gap-1.5">
-                          {tags.map((tag, idx) => (
+                          {tags.map((tag) => (
                             <span
-                              key={`${title}-${idx}-${tag}`}
+                              key={tag}
                               className="rounded-md bg-accent/10 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-accent"
                             >
                               {tag}

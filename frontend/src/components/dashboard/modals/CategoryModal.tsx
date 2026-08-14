@@ -96,8 +96,12 @@ export function CategoryModal({
         className="space-y-4 font-mono text-xs text-text-primary"
       >
         <div className="space-y-1">
-          <label className="block text-text-secondary">Category Name</label>
+          <label htmlFor="category" className="block text-text-secondary">
+            Category Name
+          </label>
           <input
+            id="category"
+            aria-label="Category Name"
             required
             name="category"
             defaultValue={categoryForm.category || ""}
@@ -117,8 +121,12 @@ export function CategoryModal({
         </div>
 
         <div className="space-y-1">
-          <label className="block text-text-secondary">Description</label>
+          <label htmlFor="description" className="block text-text-secondary">
+            Description
+          </label>
           <textarea
+            id="description"
+            aria-label="Description"
             required
             name="description"
             rows={3}

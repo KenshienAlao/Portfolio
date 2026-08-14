@@ -11,14 +11,7 @@ import { EducationTab } from "@/components/dashboard/EducationTab";
 import { SkillsTab } from "@/components/dashboard/SkillsTab";
 import { SetupTab } from "@/components/dashboard/SetupTab";
 import { MessagesTab } from "@/components/dashboard/MessagesTab";
-
-type Tab =
-  | "overview"
-  | "projects"
-  | "education"
-  | "skills"
-  | "setup"
-  | "messages";
+import { Tab } from "@/types/dashboard";
 
 export function DashboardView() {
   const [activeTab, setActiveTab] = useState<Tab>("overview");

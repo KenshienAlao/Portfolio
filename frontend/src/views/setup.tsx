@@ -7,6 +7,7 @@ import { SectionHeader } from "@/components/section-header";
 import { useSetupPublic } from "@/hooks/admin/use-setup-admin";
 import { SetupCardSkeleton } from "@/components/ui/skeleton";
 import { FiArrowUpRight } from "react-icons/fi";
+import { ReactNode } from "react";
 
 export function Setup() {
   const { data: setups, isPending } = useSetupPublic();
@@ -36,24 +37,49 @@ export function Setup() {
                 ))
               : categories.map((cat: SetupCategory) => {
                   const items = cat.items ?? [];
+                  const subButtons: ReactNode[] = [];
+                  for (const tool of items) {
+                    if (tool.subValue && tool.subDownload) {
+                      subButtons.push(
+                        <Button
+                          type="button"
+                          key={tool.id}
+                          asChild
+                          size="sm"
+                          className="self-start rounded-lg bg-accent text-on-accent hover:bg-accent/90 shadow-sm shadow-accent/10 text-xs font-mono"
+                        >
+                          <a
+                            href={tool.subDownload}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {tool.subValue}
+                          </a>
+                        </Button>,
+                      );
+                    }
+                  }
 
                   return (
                     <div
                       key={cat.id}
-                      className="flex flex-col justify-between gap-4 rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-accent/40"
+                      className="group flex flex-col justify-between gap-4 rounded-2xl border border-border bg-surface p-6 transition-all hover:border-accent/40"
                     >
-                      <div className="flex flex-col gap-3">
-                        <p className="font-mono text-[11px] uppercase tracking-widest text-text-secondary">
-                          {cat.category}
-                        </p>
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <span className="font-mono text-xs font-bold text-accent">
+                            {cat.category}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                           {items.map((tool: SetupItem, i: number) => (
                             <span
                               key={tool.id}
                               className="inline-flex items-center gap-1.5"
                             >
                               {tool.imageLight && (
-                                <span className="relative h-5 w-5 shrink-0 inline-block">
+                                <span className="relative inline-flex h-5 w-5 shrink-0 items-center justify-center">
                                   <Image
                                     src={tool.imageLight}
                                     alt={tool.value}
@@ -112,29 +138,9 @@ export function Setup() {
                           {cat.description}
                         </p>
                       </div>
-                      {items.some(
-                        (tool) => tool.subValue && tool.subDownload,
-                      ) && (
+                      {subButtons.length > 0 && (
                         <div className="flex flex-wrap gap-2 pt-1">
-                          {items
-                            .filter((tool) => tool.subValue && tool.subDownload)
-                            .map((tool) => (
-                              <Button
-                                type="button"
-                                key={tool.id}
-                                asChild
-                                size="sm"
-                                className="self-start rounded-lg bg-accent text-on-accent hover:bg-accent/90 shadow-sm shadow-accent/10 text-xs font-mono"
-                              >
-                                <a
-                                  href={tool.subDownload}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {tool.subValue}
-                                </a>
-                              </Button>
-                            ))}
+                          {subButtons}
                         </div>
                       )}
                     </div>

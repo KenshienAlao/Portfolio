@@ -17,10 +17,12 @@ interface PropsQuery {
   staleTime?: number;
 }
 
+const DEFAULT_STALE_TIME = 1000 * 60 * 5;
+
 function useSetup({
   queryKey,
   queryFn,
-  staleTime = 1000 * 60 * 5,
+  staleTime = DEFAULT_STALE_TIME,
 }: PropsQuery) {
   return useQuery<ApiReponse<SetupCategory[]>, Error, SetupCategory[]>({
     queryKey,
@@ -282,12 +284,14 @@ export const useEditItem = () => {
       let currentCategoryId: number | undefined;
 
       if (prevData?.data) {
-        for (const cat of prevData.data) {
-          const found = cat.items?.find((item) => item.id === id);
-          if (found) {
-            existingItem = found;
-            currentCategoryId = cat.id;
-            break;
+        searchItem: for (const cat of prevData.data) {
+          if (!cat.items) continue;
+          for (const item of cat.items) {
+            if (item.id === id) {
+              existingItem = item;
+              currentCategoryId = cat.id;
+              break searchItem;
+            }
           }
         }
       }
@@ -306,8 +310,7 @@ export const useEditItem = () => {
           imageDarkField instanceof File && imageDarkField.size > 0
             ? URL.createObjectURL(imageDarkField)
             : existingItem?.imageDark,
-        subValue:
-          (data.get("subValue") as string) || existingItem?.subValue,
+        subValue: (data.get("subValue") as string) || existingItem?.subValue,
         subDownload:
           (data.get("subDownload") as string) || existingItem?.subDownload,
       };

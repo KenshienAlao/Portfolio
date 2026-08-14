@@ -11,8 +11,13 @@ interface props {
 }
 
 const projectKey = ["project"];
+const DEFAULT_STALE_TIME = 1000 * 60 * 5;
 
-function useProject({ queryKey, queryFn, staleTime = 1000 * 60 * 5 }: props) {
+function useProject({
+  queryKey,
+  queryFn,
+  staleTime = DEFAULT_STALE_TIME,
+}: props) {
   return useQuery<ApiReponse<Project[]>, Error, Project[]>({
     queryKey,
     queryFn,

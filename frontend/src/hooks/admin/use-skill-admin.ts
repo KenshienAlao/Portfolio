@@ -12,10 +12,12 @@ interface propsQuery {
   staleTime?: number;
 }
 
+const DEFAULT_STALE_TIME = 1000 * 60 * 5;
+
 function useSkill({
   queryKey,
   queryFn,
-  staleTime = 1000 * 60 * 5,
+  staleTime = DEFAULT_STALE_TIME,
 }: propsQuery) {
   return useQuery<ApiReponse<Skill[]>, Error, Skill[]>({
     queryKey,

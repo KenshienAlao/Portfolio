@@ -1,14 +1,15 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
-
+import { ChangeEvent, FormEvent, useEffect, useReducer, useRef } from "react";
 import { BaseModal } from "./BaseModal";
 import z, { ZodError } from "zod";
 import { useAddProject, useEditProject } from "@/hooks/admin/use-project-admin";
-import Image from "next/image";
-import { LuImagePlus } from "react-icons/lu";
 import { FiAlertCircle, FiLoader } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
+import { ProjectTitle } from "./project/Project-Title";
+import { ProjectImage } from "./project/Project-Image";
+import { ProjectDescription } from "./project/Project-Description";
+import { ProjectLinks } from "./project/Project-Links";
 
 const MAX_IMAGE_SIZE = 25 * 1024 * 1024;
 
@@ -29,8 +30,8 @@ const projectFormSchema = z.object({
     z.string().min(1, "Image is required"),
   ]),
   description: z.string().min(1, "Description is required"),
-  github: z.string().url("Invalid URL").min(1, "GitHub URL is required"),
-  demo: z.union([z.string().url("Invalid URL"), z.literal("")]).optional(),
+  github: z.url({ message: "Invalid URL" }).min(1, "GitHub URL is required"),
+  demo: z.union([z.url({ message: "Invalid URL" }), z.literal("")]).optional(),
   tags: z
     .string()
     .min(1, "Tags is required")
@@ -38,11 +39,14 @@ const projectFormSchema = z.object({
       val
         ? val
             .split(",")
-            .map((t) => t.trim())
-            .filter(Boolean)
+            .flatMap((t) => {
+              const trimmed = t.trim();
+              return trimmed ? [trimmed] : [];
+            })
         : [],
     ),
 });
+
 interface Project {
   id: number;
   title: string;
@@ -57,6 +61,41 @@ interface ProjectModalProps {
   projectForm: Partial<Project>;
   projects: Project[];
   setProjectForm: (project: Partial<Project> | null) => void;
+}
+
+interface ProjectModalState {
+  validateError: ZodError | null;
+  imagePreview: string | null;
+  imageFileName: string | null;
+}
+
+type ProjectModalAction =
+  | { type: "SET_VALIDATE_ERROR"; payload: ZodError | null }
+  | { type: "SET_IMAGE"; preview: string; fileName: string }
+  | { type: "REMOVE_IMAGE" };
+
+function projectModalReducer(
+  state: ProjectModalState,
+  action: ProjectModalAction,
+): ProjectModalState {
+  switch (action.type) {
+    case "SET_VALIDATE_ERROR":
+      return { ...state, validateError: action.payload };
+    case "SET_IMAGE":
+      return {
+        ...state,
+        imagePreview: action.preview,
+        imageFileName: action.fileName,
+      };
+    case "REMOVE_IMAGE":
+      return {
+        ...state,
+        imagePreview: null,
+        imageFileName: null,
+      };
+    default:
+      return state;
+  }
 }
 
 export function ProjectModal({
@@ -76,25 +115,22 @@ export function ProjectModal({
     error: errorEdit,
   } = useEditProject();
 
-  const [validateError, setValidateError] = useState<ZodError | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    projectForm.image || null,
-  );
-  const [imageFileName, setImageFileName] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const imagePreviewRef = useRef<string | null>(imagePreview);
+  const [state, dispatch] = useReducer(projectModalReducer, undefined, () => ({
+    validateError: null,
+    imagePreview: projectForm.image || null,
+    imageFileName: null,
+  }));
 
-  useEffect(() => {
-    imagePreviewRef.current = imagePreview;
-  }, [imagePreview]);
+  const { validateError, imagePreview, imageFileName } = state;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     return () => {
-      if (imagePreviewRef.current?.startsWith("blob:")) {
-        URL.revokeObjectURL(imagePreviewRef.current);
+      if (imagePreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview);
       }
     };
-  }, []);
+  }, [imagePreview]);
 
   const error = validateError?.issues[0] || errorAdd || errorEdit;
   const titleError =
@@ -114,11 +150,11 @@ export function ProjectModal({
 
   const hasFieldError = Boolean(
     titleError ||
-    imageError ||
-    descriptionError ||
-    githubError ||
-    demoError ||
-    tagsError,
+      imageError ||
+      descriptionError ||
+      githubError ||
+      demoError ||
+      tagsError,
   );
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -126,25 +162,26 @@ export function ProjectModal({
     if (!file) return;
 
     const nextPreview = URL.createObjectURL(file);
-    setImagePreview((prev) => {
-      if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
-      return nextPreview;
+    dispatch({
+      type: "SET_IMAGE",
+      preview: nextPreview,
+      fileName: file.name,
     });
-    setImageFileName(file.name);
   };
 
   const handleRemoveImage = () => {
-    setImagePreview((prev) => {
-      if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
-      return null;
-    });
-    setImageFileName(null);
+    dispatch({ type: "REMOVE_IMAGE" });
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const isEdit =
+    projectForm.id && projects.some((p) => p.id === projectForm.id);
+
+  const isLoading = isLoadingAdd || isLoadingEdit;
+
   const handleSubmitProject = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isLoadingAdd) return;
+    if (isLoading) return;
 
     const formData = new FormData(e.currentTarget);
 
@@ -161,11 +198,11 @@ export function ProjectModal({
     const result = projectFormSchema.safeParse(dataToValidate);
 
     if (!result.success) {
-      setValidateError(result.error);
+      dispatch({ type: "SET_VALIDATE_ERROR", payload: result.error });
       return;
     }
 
-    setValidateError(null);
+    dispatch({ type: "SET_VALIDATE_ERROR", payload: null });
     if (isEdit && !hasNewFile) {
       formData.delete("image");
     }
@@ -181,9 +218,6 @@ export function ProjectModal({
     handleRemoveImage();
   };
 
-  const isEdit =
-    projectForm.id && projects.some((p) => p.id === projectForm.id);
-
   return (
     <BaseModal
       title={isEdit ? "Edit Project" : "Add Project"}
@@ -196,171 +230,37 @@ export function ProjectModal({
         className="space-y-3 font-mono text-xs text-text-primary"
         autoComplete="off"
       >
-        <div className="space-y-1">
-          <label className="text-text-secondary block">Title</label>
-          <input
-            name="title"
-            defaultValue={projectForm.title}
-            disabled={isLoadingAdd || isLoadingEdit}
-            aria-invalid={titleError ? "true" : "false"}
-            className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
-              titleError
-                ? "border-destructive/60 focus:border-destructive"
-                : "border-border focus:border-accent"
-            }`}
-          />
-          {titleError && (
-            <p role="alert" className="text-destructive">
-              {titleError.message}
-            </p>
-          )}
-        </div>
+        <ProjectTitle
+          defaultValue={projectForm.title}
+          disabled={isLoading}
+          titleError={titleError}
+        />
 
-        <div className="space-y-1">
-          <label className="text-text-secondary block">Image</label>
-          <label
-            htmlFor="image"
-            className={`flex flex-col items-center justify-center gap-2 overflow-hidden rounded-md border border-dashed bg-background px-3 py-4 text-center transition-colors ${
-              isLoadingAdd || isLoadingEdit
-                ? "cursor-not-allowed opacity-60"
-                : "cursor-pointer hover:border-accent/60"
-            } ${imageError ? "border-destructive/60" : "border-border"}`}
-          >
-            {imagePreview ? (
-              <div className="relative h-28 w-full overflow-hidden rounded">
-                <Image
-                  src={imagePreview}
-                  alt={imageFileName || "Project preview"}
-                  fill
-                  sizes="(max-width: 640px) 100vw, 512px"
-                  unoptimized={imagePreview.startsWith("blob:")}
-                  className="object-cover"
-                />
-              </div>
-            ) : (
-              <>
-                <LuImagePlus
-                  className="h-5 w-5 text-text-secondary"
-                  aria-hidden="true"
-                />
-                <span className="text-text-secondary">
-                  Click to upload (max 25MB)
-                </span>
-              </>
-            )}
-          </label>
-          <input
-            ref={fileInputRef}
-            id="image"
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={handleImageChange}
-            disabled={isLoadingAdd || isLoadingEdit}
-            aria-invalid={imageError ? "true" : "false"}
-            className="hidden"
-          />
-          {imagePreview && (
-            <div className="flex items-center justify-between text-text-secondary">
-              <span className="truncate">
-                {imageFileName ?? "Current image"}
-              </span>
-              <button
-                type="button"
-                onClick={handleRemoveImage}
-                disabled={isLoadingAdd || isLoadingEdit}
-                className="text-destructive hover:underline disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:no-underline"
-              >
-                Remove
-              </button>
-            </div>
-          )}
-          {imageError && (
-            <p role="alert" className="text-destructive">
-              {imageError.message}
-            </p>
-          )}
-        </div>
+        <ProjectImage
+          imagePreview={imagePreview}
+          imageFileName={imageFileName}
+          fileInputRef={fileInputRef}
+          disabled={isLoading}
+          imageError={imageError}
+          onImageChange={handleImageChange}
+          onRemoveImage={handleRemoveImage}
+        />
 
-        <div className="space-y-1">
-          <label className="text-text-secondary block">Description</label>
-          <textarea
-            name="description"
-            rows={3}
-            defaultValue={projectForm.description}
-            disabled={isLoadingAdd || isLoadingEdit}
-            aria-invalid={descriptionError ? "true" : "false"}
-            className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
-              descriptionError
-                ? "border-destructive/60 focus:border-destructive"
-                : "border-border focus:border-accent"
-            }`}
-          />
-          {descriptionError && (
-            <p role="alert" className="text-destructive">
-              {descriptionError.message}
-            </p>
-          )}
-        </div>
-        <div className="space-y-1">
-          <label className="text-text-secondary block">GitHub URL</label>
-          <input
-            type="url"
-            name="github"
-            defaultValue={projectForm.github}
-            disabled={isLoadingAdd || isLoadingEdit}
-            aria-invalid={githubError ? "true" : "false"}
-            className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
-              githubError
-                ? "border-destructive/60 focus:border-destructive"
-                : "border-border focus:border-accent"
-            }`}
-          />
-          {githubError && (
-            <p role="alert" className="text-destructive">
-              {githubError.message}
-            </p>
-          )}
-        </div>
-        <div className="space-y-1">
-          <label className="text-text-secondary block">
-            Demo URL (optional)
-          </label>
-          <input
-            type="url"
-            name="demo"
-            defaultValue={projectForm.demo || ""}
-            disabled={isLoadingAdd || isLoadingEdit}
-            aria-invalid={demoError ? "true" : "false"}
-            className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
-              demoError
-                ? "border-destructive/60 focus:border-destructive"
-                : "border-border focus:border-accent"
-            }`}
-          />
-          {demoError && (
-            <p role="alert" className="text-destructive">
-              {demoError.message}
-            </p>
-          )}
-        </div>
-        <div className="space-y-1">
-          <label className="text-text-secondary block">
-            Tags (comma separated)
-          </label>
-          <input
-            name="tags"
-            defaultValue={projectForm.tags?.join(", ")}
-            placeholder="React, NextJS, Supabase"
-            disabled={isLoadingAdd || isLoadingEdit}
-            className="w-full rounded-md border border-border bg-background px-3 py-2 outline-none focus:border-accent disabled:cursor-not-allowed disabled:opacity-60"
-          />
-          {tagsError && (
-            <p role="alert" className="text-destructive">
-              {tagsError.message}
-            </p>
-          )}
-        </div>
+        <ProjectDescription
+          defaultValue={projectForm.description}
+          disabled={isLoading}
+          descriptionError={descriptionError}
+        />
+
+        <ProjectLinks
+          githubDefault={projectForm.github}
+          demoDefault={projectForm.demo || ""}
+          tagsDefault={projectForm.tags?.join(", ")}
+          disabled={isLoading}
+          githubError={githubError}
+          demoError={demoError}
+          tagsError={tagsError}
+        />
 
         {error && !hasFieldError && (
           <div
@@ -377,10 +277,10 @@ export function ProjectModal({
 
         <button
           type="submit"
-          disabled={isLoadingAdd || isLoadingEdit}
+          disabled={isLoading}
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-2.5 font-semibold text-on-accent hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {isLoadingAdd || isLoadingEdit ? (
+          {isLoading ? (
             <>
               <FiLoader className="h-4 w-4 animate-spin" aria-hidden="true" />
               Saving...

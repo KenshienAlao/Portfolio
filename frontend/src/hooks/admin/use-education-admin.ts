@@ -12,8 +12,13 @@ interface propsQuery {
   staleTime?: number;
 }
 
+const DEFAULT_STALE_TIME = 1000 * 60 * 5;
 
-function useEducation({ queryKey, queryFn, staleTime = 1000 * 60 * 5 }: propsQuery) {
+function useEducation({
+  queryKey,
+  queryFn,
+  staleTime = DEFAULT_STALE_TIME,
+}: propsQuery) {
   return useQuery<ApiReponse<Education[]>, Error, Education[]>({
     queryKey,
     queryFn,
@@ -38,7 +43,6 @@ export const useEducationAdmin = () => {
     queryFn: educationService.getAdmin,
   });
 };
-
 
 export const useAddEducation = () => {
   const queryClient = useQueryClient();
@@ -179,5 +183,3 @@ export const useEditEducation = () => {
     },
   });
 };
-
-

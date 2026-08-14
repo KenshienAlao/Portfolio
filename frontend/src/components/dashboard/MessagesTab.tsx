@@ -44,7 +44,12 @@ export function MessagesTab() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
   const hasMessages = (messages?.length ?? 0) > 0;
-  const unreadCount = messages?.filter((m) => !m.isRead).length ?? 0;
+  let unreadCount = 0;
+  if (messages) {
+    for (const m of messages) {
+      if (!m.isRead) unreadCount++;
+    }
+  }
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">

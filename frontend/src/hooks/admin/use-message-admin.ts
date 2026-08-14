@@ -11,9 +11,14 @@ export type { Message, SendMessagePayload };
 const messageKey = ["message"];
 
 export const useSendMessageMutation = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (payload: SendMessagePayload) =>
       messageService.sendMessage(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: messageKey });
+    },
   });
 };
 
@@ -32,8 +37,7 @@ export const useDeleteMessageById = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (messageId: number) =>
-      messageService.deleteMessage(messageId),
+    mutationFn: (messageId: number) => messageService.deleteMessage(messageId),
 
     onMutate: async (deletedId: number) => {
       await queryClient.cancelQueries({ queryKey: [...messageKey, "admin"] });

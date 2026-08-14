@@ -1,6 +1,6 @@
 import { ApiReponse } from "@/lib/ApiResponse";
 import { AuthService } from "@/service/auth.service";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 interface props<TData, TVariables> {
@@ -13,10 +13,12 @@ function useAuthMutation<TData, TVariables>({
   redirect,
 }: props<TData, TVariables>) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn,
     onSuccess: () => {
+      queryClient.invalidateQueries();
       router.push(redirect);
     },
     onError: (err) => console.error(err),

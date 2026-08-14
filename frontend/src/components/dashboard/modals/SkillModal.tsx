@@ -6,23 +6,16 @@ import {
   useAddSkill,
   useEditSkill,
 } from "@/hooks/admin/use-skill-admin";
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useReducer, useRef } from "react";
 import z, { ZodError } from "zod";
-import Image from "next/image";
-import { LuImagePlus } from "react-icons/lu";
 import { FiAlertCircle, FiLoader } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
+import { SkillCategory } from "./skill/Skill-Category";
+import { SkillName } from "./skill/Skill-Name";
+import { SkillImageLight } from "./skill/Skill-ImageLight";
+import { SkillImageDark } from "./skill/Skill-ImageDark";
 
 const MAX_IMAGE_SIZE = 25 * 1024 * 1024;
-
-const SKILL_CATEGORIES = [
-  "Languages",
-  "Frontend",
-  "Backend",
-  "Database",
-  "Tools",
-  "Platforms",
-];
 
 const skillFormSchema = z.object({
   name: z.string().min(1, "Skill name is required"),
@@ -64,6 +57,57 @@ interface SkillModalProps {
   setSkillForm: (skill: Partial<Skill> | null) => void;
 }
 
+interface SkillModalState {
+  validateError: ZodError | null;
+  lightPreview: string | null;
+  lightFileName: string | null;
+  darkPreview: string | null;
+  darkFileName: string | null;
+}
+
+type SkillModalAction =
+  | { type: "SET_VALIDATE_ERROR"; payload: ZodError | null }
+  | { type: "SET_LIGHT_IMAGE"; preview: string; fileName: string }
+  | { type: "REMOVE_LIGHT_IMAGE" }
+  | { type: "SET_DARK_IMAGE"; preview: string; fileName: string }
+  | { type: "REMOVE_DARK_IMAGE" };
+
+function skillModalReducer(
+  state: SkillModalState,
+  action: SkillModalAction,
+): SkillModalState {
+  switch (action.type) {
+    case "SET_VALIDATE_ERROR":
+      return { ...state, validateError: action.payload };
+    case "SET_LIGHT_IMAGE":
+      return {
+        ...state,
+        lightPreview: action.preview,
+        lightFileName: action.fileName,
+      };
+    case "REMOVE_LIGHT_IMAGE":
+      return {
+        ...state,
+        lightPreview: null,
+        lightFileName: null,
+      };
+    case "SET_DARK_IMAGE":
+      return {
+        ...state,
+        darkPreview: action.preview,
+        darkFileName: action.fileName,
+      };
+    case "REMOVE_DARK_IMAGE":
+      return {
+        ...state,
+        darkPreview: null,
+        darkFileName: null,
+      };
+    default:
+      return state;
+  }
+}
+
 export function SkillModal({
   skillForm,
   skills,
@@ -81,40 +125,35 @@ export function SkillModal({
     error: errorEdit,
   } = useEditSkill();
 
-  const [validateError, setValidateError] = useState<ZodError | null>(null);
+  const [state, dispatch] = useReducer(skillModalReducer, undefined, () => ({
+    validateError: null,
+    lightPreview: skillForm.imageLight || null,
+    lightFileName: null,
+    darkPreview: skillForm.imageDark || null,
+    darkFileName: null,
+  }));
 
-  const [lightPreview, setLightPreview] = useState<string | null>(
-    skillForm.imageLight || null,
-  );
-  const [lightFileName, setLightFileName] = useState<string | null>(null);
+  const {
+    validateError,
+    lightPreview,
+    lightFileName,
+    darkPreview,
+    darkFileName,
+  } = state;
+
   const lightInputRef = useRef<HTMLInputElement>(null);
-  const lightPreviewRef = useRef<string | null>(lightPreview);
-
-  const [darkPreview, setDarkPreview] = useState<string | null>(
-    skillForm.imageDark || null,
-  );
-  const [darkFileName, setDarkFileName] = useState<string | null>(null);
   const darkInputRef = useRef<HTMLInputElement>(null);
-  const darkPreviewRef = useRef<string | null>(darkPreview);
-
-  useEffect(() => {
-    lightPreviewRef.current = lightPreview;
-  }, [lightPreview]);
-
-  useEffect(() => {
-    darkPreviewRef.current = darkPreview;
-  }, [darkPreview]);
 
   useEffect(() => {
     return () => {
-      if (lightPreviewRef.current?.startsWith("blob:")) {
-        URL.revokeObjectURL(lightPreviewRef.current);
+      if (lightPreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(lightPreview);
       }
-      if (darkPreviewRef.current?.startsWith("blob:")) {
-        URL.revokeObjectURL(darkPreviewRef.current);
+      if (darkPreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(darkPreview);
       }
     };
-  }, []);
+  }, [lightPreview, darkPreview]);
 
   const error = validateError?.issues[0] || errorAdd || errorEdit;
   const nameError =
@@ -142,19 +181,15 @@ export function SkillModal({
     const file = e.target.files?.[0];
     if (!file) return;
     const nextPreview = URL.createObjectURL(file);
-    setLightPreview((prev) => {
-      if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
-      return nextPreview;
+    dispatch({
+      type: "SET_LIGHT_IMAGE",
+      preview: nextPreview,
+      fileName: file.name,
     });
-    setLightFileName(file.name);
   };
 
   const handleRemoveLightImage = () => {
-    setLightPreview((prev) => {
-      if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
-      return null;
-    });
-    setLightFileName(null);
+    dispatch({ type: "REMOVE_LIGHT_IMAGE" });
     if (lightInputRef.current) lightInputRef.current.value = "";
   };
 
@@ -162,19 +197,15 @@ export function SkillModal({
     const file = e.target.files?.[0];
     if (!file) return;
     const nextPreview = URL.createObjectURL(file);
-    setDarkPreview((prev) => {
-      if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
-      return nextPreview;
+    dispatch({
+      type: "SET_DARK_IMAGE",
+      preview: nextPreview,
+      fileName: file.name,
     });
-    setDarkFileName(file.name);
   };
 
   const handleRemoveDarkImage = () => {
-    setDarkPreview((prev) => {
-      if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
-      return null;
-    });
-    setDarkFileName(null);
+    dispatch({ type: "REMOVE_DARK_IMAGE" });
     if (darkInputRef.current) darkInputRef.current.value = "";
   };
 
@@ -207,11 +238,11 @@ export function SkillModal({
     const result = skillFormSchema.safeParse(dataToValidate);
 
     if (!result.success) {
-      setValidateError(result.error);
+      dispatch({ type: "SET_VALIDATE_ERROR", payload: result.error });
       return;
     }
 
-    setValidateError(null);
+    dispatch({ type: "SET_VALIDATE_ERROR", payload: null });
 
     if (isEdit && !hasNewLightFile) {
       formData.delete("imageLight");
@@ -249,194 +280,37 @@ export function SkillModal({
         autoComplete="off"
         className="space-y-3 font-mono text-xs text-text-primary"
       >
-        <div className="space-y-1">
-          <label className="block text-text-secondary">Category</label>
-          <select
-            name="category"
-            defaultValue={skillForm.category || ""}
-            disabled={isLoading}
-            aria-invalid={categoryError ? "true" : "false"}
-            className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
-              categoryError
-                ? "border-destructive/60 focus:border-destructive"
-                : "border-border focus:border-accent"
-            }`}
-          >
-            <option value="" disabled>
-              Select category
-            </option>
-            {SKILL_CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-          {categoryError && (
-            <p role="alert" className="text-destructive">
-              {categoryError.message}
-            </p>
-          )}
-        </div>
+        <SkillCategory
+          defaultValue={skillForm.category || ""}
+          disabled={isLoading}
+          categoryError={categoryError}
+        />
 
-        <div className="space-y-1">
-          <label className="block text-text-secondary">Skill Name</label>
-          <input
-            name="name"
-            defaultValue={skillForm.name}
-            disabled={isLoading}
-            aria-invalid={nameError ? "true" : "false"}
-            className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
-              nameError
-                ? "border-destructive/60 focus:border-destructive"
-                : "border-border focus:border-accent"
-            }`}
-          />
-          {nameError && (
-            <p role="alert" className="text-destructive">
-              {nameError.message}
-            </p>
-          )}
-        </div>
+        <SkillName
+          defaultValue={skillForm.name}
+          disabled={isLoading}
+          nameError={nameError}
+        />
 
-        <div className="space-y-1">
-          <label className="block text-text-secondary">
-            Image (Light Mode)
-          </label>
-          <label
-            htmlFor="imageLight"
-            className={`flex flex-col items-center justify-center gap-2 overflow-hidden rounded-md border border-dashed bg-background px-3 py-4 text-center transition-colors ${
-              isLoading
-                ? "cursor-not-allowed opacity-60"
-                : "cursor-pointer hover:border-accent/60"
-            } ${imageLightError ? "border-destructive/60" : "border-border"}`}
-          >
-            {lightPreview ? (
-              <div className="relative h-20 w-full overflow-hidden rounded">
-                <Image
-                  src={lightPreview}
-                  alt={lightFileName || "Light mode preview"}
-                  fill
-                  sizes="(max-width: 640px) 100vw, 448px"
-                  unoptimized={lightPreview.startsWith("blob:")}
-                  className="object-contain"
-                />
-              </div>
-            ) : (
-              <>
-                <LuImagePlus
-                  className="h-5 w-5 text-text-secondary"
-                  aria-hidden="true"
-                />
-                <span className="text-text-secondary">
-                  Click to upload (max 25MB)
-                </span>
-              </>
-            )}
-          </label>
-          <input
-            ref={lightInputRef}
-            id="imageLight"
-            type="file"
-            name="imageLight"
-            accept="image/*"
-            onChange={handleLightImageChange}
-            disabled={isLoading}
-            aria-invalid={imageLightError ? "true" : "false"}
-            className="hidden"
-          />
-          {lightPreview && (
-            <div className="flex items-center justify-between text-text-secondary">
-              <span className="truncate">
-                {lightFileName ?? "Current image"}
-              </span>
-              <button
-                type="button"
-                onClick={handleRemoveLightImage}
-                disabled={isLoading}
-                className="text-destructive hover:underline disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:no-underline"
-              >
-                Remove
-              </button>
-            </div>
-          )}
-          {imageLightError && (
-            <p role="alert" className="text-destructive">
-              {imageLightError.message}
-            </p>
-          )}
-        </div>
+        <SkillImageLight
+          lightPreview={lightPreview}
+          lightFileName={lightFileName}
+          lightInputRef={lightInputRef}
+          disabled={isLoading}
+          imageLightError={imageLightError}
+          onLightImageChange={handleLightImageChange}
+          onRemoveLightImage={handleRemoveLightImage}
+        />
 
-        <div className="space-y-1">
-          <label className="block text-text-secondary">
-            Image (Dark Mode){" "}
-            <span className="text-text-secondary/50">— optional</span>
-          </label>
-          <label
-            htmlFor="imageDark"
-            className={`flex flex-col items-center justify-center gap-2 overflow-hidden rounded-md border border-dashed bg-background px-3 py-4 text-center transition-colors ${
-              isLoading
-                ? "cursor-not-allowed opacity-60"
-                : "cursor-pointer hover:border-accent/60"
-            } ${imageDarkError ? "border-destructive/60" : "border-border"}`}
-          >
-            {darkPreview ? (
-              <div className="relative h-20 w-full overflow-hidden rounded">
-                <Image
-                  src={darkPreview}
-                  alt={darkFileName || "Dark mode preview"}
-                  fill
-                  sizes="(max-width: 640px) 100vw, 448px"
-                  unoptimized={darkPreview.startsWith("blob:")}
-                  className="object-contain"
-                />
-              </div>
-            ) : (
-              <>
-                <LuImagePlus
-                  className="h-5 w-5 text-text-secondary"
-                  aria-hidden="true"
-                />
-                <span className="text-text-secondary">
-                  Click to upload (max 25MB)
-                </span>
-              </>
-            )}
-          </label>
-          <input
-            ref={darkInputRef}
-            id="imageDark"
-            type="file"
-            name="imageDark"
-            accept="image/*"
-            onChange={handleDarkImageChange}
-            disabled={isLoading}
-            aria-invalid={imageDarkError ? "true" : "false"}
-            className="hidden"
-          />
-          {darkPreview && (
-            <div className="flex items-center justify-between text-text-secondary">
-              <span className="truncate">
-                {darkFileName ?? "Current image"}
-              </span>
-              <button
-                type="button"
-                onClick={handleRemoveDarkImage}
-                disabled={isLoading}
-                className="text-destructive hover:underline disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:no-underline"
-              >
-                Remove
-              </button>
-            </div>
-          )}
-          {imageDarkError && (
-            <p role="alert" className="text-destructive">
-              {imageDarkError.message}
-            </p>
-          )}
-          <p className="text-[10px] text-text-secondary/60">
-            Falls back to the light mode image if left empty.
-          </p>
-        </div>
+        <SkillImageDark
+          darkPreview={darkPreview}
+          darkFileName={darkFileName}
+          darkInputRef={darkInputRef}
+          disabled={isLoading}
+          imageDarkError={imageDarkError}
+          onDarkImageChange={handleDarkImageChange}
+          onRemoveDarkImage={handleRemoveDarkImage}
+        />
 
         {error && !hasFieldError && (
           <div

@@ -7,12 +7,16 @@ import {
   type SetupCategory,
   type SetupItem,
 } from "@/hooks/admin/use-setup-admin";
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useReducer, useRef } from "react";
 import z, { ZodError } from "zod";
-import Image from "next/image";
-import { LuImagePlus } from "react-icons/lu";
 import { FiAlertCircle, FiLoader } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
+import { Category } from "./item/Item-Category";
+import { Name } from "./item/Item-Name";
+import { WebsiteUrl } from "./item/Item-WebsiteUrl";
+import { SubName } from "./item/Item-SubName";
+import { ImageLight } from "./item/item-ImageLight";
+import { ImageDark } from "./item/Item-ImageDark";
 
 const MAX_IMAGE_SIZE = 25 * 1024 * 1024;
 
@@ -62,6 +66,61 @@ interface ItemModalProps {
   ) => void;
 }
 
+interface ItemModalState {
+  validateError: ZodError | null;
+  selectedCategoryId: string;
+  lightPreview: string | null;
+  lightFileName: string | null;
+  darkPreview: string | null;
+  darkFileName: string | null;
+}
+
+type ItemModalAction =
+  | { type: "SET_CATEGORY_ID"; payload: string }
+  | { type: "SET_VALIDATE_ERROR"; payload: ZodError | null }
+  | { type: "SET_LIGHT_IMAGE"; preview: string; fileName: string }
+  | { type: "REMOVE_LIGHT_IMAGE" }
+  | { type: "SET_DARK_IMAGE"; preview: string; fileName: string }
+  | { type: "REMOVE_DARK_IMAGE" };
+
+function itemModalReducer(
+  state: ItemModalState,
+  action: ItemModalAction,
+): ItemModalState {
+  switch (action.type) {
+    case "SET_CATEGORY_ID":
+      return { ...state, selectedCategoryId: action.payload };
+    case "SET_VALIDATE_ERROR":
+      return { ...state, validateError: action.payload };
+    case "SET_LIGHT_IMAGE":
+      return {
+        ...state,
+        lightPreview: action.preview,
+        lightFileName: action.fileName,
+      };
+    case "REMOVE_LIGHT_IMAGE":
+      return {
+        ...state,
+        lightPreview: null,
+        lightFileName: null,
+      };
+    case "SET_DARK_IMAGE":
+      return {
+        ...state,
+        darkPreview: action.preview,
+        darkFileName: action.fileName,
+      };
+    case "REMOVE_DARK_IMAGE":
+      return {
+        ...state,
+        darkPreview: null,
+        darkFileName: null,
+      };
+    default:
+      return state;
+  }
+}
+
 export function ItemModal({
   categories,
   itemForm,
@@ -81,25 +140,29 @@ export function ItemModal({
   const isEdit = typeof itemForm.id === "number" && itemForm.id > 0;
   const isLoading = isLoadingAdd || isLoadingEdit;
 
-  const [validateError, setValidateError] = useState<ZodError | null>(null);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>(
-    itemForm.categoryId
+  const [state, dispatch] = useReducer(itemModalReducer, undefined, () => ({
+    validateError: null,
+    selectedCategoryId: itemForm.categoryId
       ? String(itemForm.categoryId)
       : categories[0]?.id
         ? String(categories[0].id)
         : "",
-  );
+    lightPreview: itemForm.imageLight || null,
+    lightFileName: null,
+    darkPreview: itemForm.imageDark || null,
+    darkFileName: null,
+  }));
 
-  const [lightPreview, setLightPreview] = useState<string | null>(
-    itemForm.imageLight || null,
-  );
-  const [lightFileName, setLightFileName] = useState<string | null>(null);
+  const {
+    validateError,
+    selectedCategoryId,
+    lightPreview,
+    lightFileName,
+    darkPreview,
+    darkFileName,
+  } = state;
+
   const lightInputRef = useRef<HTMLInputElement>(null);
-
-  const [darkPreview, setDarkPreview] = useState<string | null>(
-    itemForm.imageDark || null,
-  );
-  const [darkFileName, setDarkFileName] = useState<string | null>(null);
   const darkInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -137,17 +200,23 @@ export function ItemModal({
     imageDarkError,
   );
 
+  const setSelectedCategoryId = (id: string) => {
+    dispatch({ type: "SET_CATEGORY_ID", payload: id });
+  };
+
   const handleLightImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const nextPreview = URL.createObjectURL(file);
-    setLightPreview(nextPreview);
-    setLightFileName(file.name);
+    dispatch({
+      type: "SET_LIGHT_IMAGE",
+      preview: nextPreview,
+      fileName: file.name,
+    });
   };
 
   const handleRemoveLightImage = () => {
-    setLightPreview(null);
-    setLightFileName(null);
+    dispatch({ type: "REMOVE_LIGHT_IMAGE" });
     if (lightInputRef.current) lightInputRef.current.value = "";
   };
 
@@ -155,13 +224,15 @@ export function ItemModal({
     const file = e.target.files?.[0];
     if (!file) return;
     const nextPreview = URL.createObjectURL(file);
-    setDarkPreview(nextPreview);
-    setDarkFileName(file.name);
+    dispatch({
+      type: "SET_DARK_IMAGE",
+      preview: nextPreview,
+      fileName: file.name,
+    });
   };
 
   const handleRemoveDarkImage = () => {
-    setDarkPreview(null);
-    setDarkFileName(null);
+    dispatch({ type: "REMOVE_DARK_IMAGE" });
     if (darkInputRef.current) darkInputRef.current.value = "";
   };
 
@@ -191,11 +262,11 @@ export function ItemModal({
 
     const result = itemFormSchema.safeParse(dataToValidate);
     if (!result.success) {
-      setValidateError(result.error);
+      dispatch({ type: "SET_VALIDATE_ERROR", payload: result.error });
       return;
     }
 
-    setValidateError(null);
+    dispatch({ type: "SET_VALIDATE_ERROR", payload: null });
 
     if (isEdit && !hasNewLightFile) {
       formData.delete("imageLight");
@@ -230,249 +301,44 @@ export function ItemModal({
         autoComplete="off"
         className="space-y-3 font-mono text-xs text-text-primary"
       >
-        <div className="space-y-1">
-          <label className="block text-text-secondary">Category</label>
-          <select
-            required
-            name="categoryId"
-            value={selectedCategoryId}
-            onChange={(e) => setSelectedCategoryId(e.target.value)}
-            disabled={isLoading}
-            className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
-              categoryError
-                ? "border-destructive/60 focus:border-destructive"
-                : "border-border focus:border-accent"
-            }`}
-          >
-            <option value="" disabled>
-              Select a category
-            </option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.category}
-              </option>
-            ))}
-          </select>
-          {categoryError && (
-            <p role="alert" className="text-destructive">
-              {categoryError.message}
-            </p>
-          )}
-        </div>
+        <Category
+          selectedCategoryId={selectedCategoryId}
+          setSelectedCategoryId={setSelectedCategoryId}
+          isLoading={isLoading}
+          categoryError={categoryError}
+          categories={categories}
+        />
+        <Name
+          itemForm={itemForm}
+          valueError={valueError}
+          isLoading={isLoading}
+        />
+        <WebsiteUrl
+          itemForm={itemForm}
+          downloadError={downloadError}
+          isLoading={isLoading}
+        />
 
-        <div className="space-y-1">
-          <label className="block text-text-secondary">Tool / Item Name</label>
-          <input
-            required
-            name="value"
-            defaultValue={itemForm.value || ""}
-            disabled={isLoading}
-            placeholder="VS Codium, Arch Linux, Alacritty..."
-            className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
-              valueError
-                ? "border-destructive/60 focus:border-destructive"
-                : "border-border focus:border-accent"
-            }`}
-          />
-          {valueError && (
-            <p role="alert" className="text-destructive">
-              {valueError.message}
-            </p>
-          )}
-        </div>
+        <SubName itemForm={itemForm} isLoading={isLoading} />
+        <ImageLight
+          imageLightError={imageLightError}
+          isLoading={isLoading}
+          handleLightImageChange={handleLightImageChange}
+          handleRemoveLightImage={handleRemoveLightImage}
+          lightInputRef={lightInputRef}
+          lightPreview={lightPreview}
+          lightFileName={lightFileName}
+        />
 
-        <div className="space-y-1">
-          <label className="block text-text-secondary">
-            Download / Website URL
-          </label>
-          <input
-            required
-            name="download"
-            defaultValue={itemForm.download || ""}
-            disabled={isLoading}
-            placeholder="https://vscodium.com"
-            className={`w-full rounded-md border bg-background px-3 py-2 outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
-              downloadError
-                ? "border-destructive/60 focus:border-destructive"
-                : "border-border focus:border-accent"
-            }`}
-          />
-          {downloadError && (
-            <p role="alert" className="text-destructive">
-              {downloadError.message}
-            </p>
-          )}
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
-          <div className="space-y-1">
-            <label className="block text-text-secondary">
-              Sub-Button Text{" "}
-              <span className="text-text-secondary/50">(optional)</span>
-            </label>
-            <input
-              name="subValue"
-              defaultValue={itemForm.subValue || ""}
-              disabled={isLoading}
-              placeholder="Download my Config"
-              className="w-full rounded-md border border-border bg-background px-3 py-2 outline-none focus:border-accent disabled:opacity-60"
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="block text-text-secondary">
-              Sub-Button URL{" "}
-              <span className="text-text-secondary/50">(optional)</span>
-            </label>
-            <input
-              name="subDownload"
-              defaultValue={itemForm.subDownload || ""}
-              disabled={isLoading}
-              placeholder="https://github.com/..."
-              className="w-full rounded-md border border-border bg-background px-3 py-2 outline-none focus:border-accent disabled:opacity-60"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-1">
-          <label className="block text-text-secondary">
-            Logo / Icon (Light Mode)
-          </label>
-          <label
-            htmlFor="itemImageLight"
-            className={`flex flex-col items-center justify-center gap-2 overflow-hidden rounded-md border border-dashed bg-background px-3 py-3 text-center transition-colors ${
-              isLoading
-                ? "cursor-not-allowed opacity-60"
-                : "cursor-pointer hover:border-accent/60"
-            } ${imageLightError ? "border-destructive/60" : "border-border"}`}
-          >
-            {lightPreview ? (
-              <div className="relative h-14 w-full overflow-hidden rounded">
-                <Image
-                  src={lightPreview}
-                  alt={lightFileName || "Light mode preview"}
-                  fill
-                  sizes="(max-width: 640px) 100vw, 448px"
-                  unoptimized={
-                    lightPreview.startsWith("blob:") ||
-                    lightPreview.startsWith("http")
-                  }
-                  className="object-contain"
-                />
-              </div>
-            ) : (
-              <>
-                <LuImagePlus
-                  className="h-4 w-4 text-text-secondary"
-                  aria-hidden="true"
-                />
-                <span className="text-text-secondary">
-                  Click to upload light icon (max 25MB)
-                </span>
-              </>
-            )}
-          </label>
-          <input
-            ref={lightInputRef}
-            id="itemImageLight"
-            type="file"
-            name="imageLight"
-            accept="image/*"
-            onChange={handleLightImageChange}
-            disabled={isLoading}
-            className="hidden"
-          />
-          {lightPreview && (
-            <div className="flex items-center justify-between text-text-secondary">
-              <span className="truncate">
-                {lightFileName ?? "Current image"}
-              </span>
-              <button
-                type="button"
-                onClick={handleRemoveLightImage}
-                disabled={isLoading}
-                className="text-destructive hover:underline disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                Remove
-              </button>
-            </div>
-          )}
-          {imageLightError && (
-            <p role="alert" className="text-destructive">
-              {imageLightError.message}
-            </p>
-          )}
-        </div>
-
-        <div className="space-y-1">
-          <label className="block text-text-secondary">
-            Logo / Icon (Dark Mode){" "}
-            <span className="text-text-secondary/50">— optional</span>
-          </label>
-          <label
-            htmlFor="itemImageDark"
-            className={`flex flex-col items-center justify-center gap-2 overflow-hidden rounded-md border border-dashed bg-background px-3 py-3 text-center transition-colors ${
-              isLoading
-                ? "cursor-not-allowed opacity-60"
-                : "cursor-pointer hover:border-accent/60"
-            } ${imageDarkError ? "border-destructive/60" : "border-border"}`}
-          >
-            {darkPreview ? (
-              <div className="relative h-14 w-full overflow-hidden rounded">
-                <Image
-                  src={darkPreview}
-                  alt={darkFileName || "Dark mode preview"}
-                  fill
-                  sizes="(max-width: 640px) 100vw, 448px"
-                  unoptimized={
-                    darkPreview.startsWith("blob:") ||
-                    darkPreview.startsWith("http")
-                  }
-                  className="object-contain"
-                />
-              </div>
-            ) : (
-              <>
-                <LuImagePlus
-                  className="h-4 w-4 text-text-secondary"
-                  aria-hidden="true"
-                />
-                <span className="text-text-secondary">
-                  Click to upload dark icon (optional)
-                </span>
-              </>
-            )}
-          </label>
-          <input
-            ref={darkInputRef}
-            id="itemImageDark"
-            type="file"
-            name="imageDark"
-            accept="image/*"
-            onChange={handleDarkImageChange}
-            disabled={isLoading}
-            className="hidden"
-          />
-          {darkPreview && (
-            <div className="flex items-center justify-between text-text-secondary">
-              <span className="truncate">
-                {darkFileName ?? "Current image"}
-              </span>
-              <button
-                type="button"
-                onClick={handleRemoveDarkImage}
-                disabled={isLoading}
-                className="text-destructive hover:underline disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                Remove
-              </button>
-            </div>
-          )}
-          {imageDarkError && (
-            <p role="alert" className="text-destructive">
-              {imageDarkError.message}
-            </p>
-          )}
-        </div>
+        <ImageDark
+          imageDarkError={imageDarkError}
+          isLoading={isLoading}
+          handleDarkImageChange={handleDarkImageChange}
+          handleRemoveDarkImage={handleRemoveDarkImage}
+          darkInputRef={darkInputRef}
+          darkPreview={darkPreview}
+          darkFileName={darkFileName}
+        />
 
         {error && !hasFieldError && (
           <div

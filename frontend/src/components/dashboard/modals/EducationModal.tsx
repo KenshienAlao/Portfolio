@@ -8,7 +8,7 @@ import {
 } from "@/hooks/admin/use-education-admin";
 import { FormEvent, useState } from "react";
 import z, { ZodError } from "zod";
-import { YEARS } from "@/lib/year";
+import { getYears } from "@/lib/year";
 import { FiAlertCircle, FiLoader } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 
@@ -18,7 +18,7 @@ const educationFormSchema = z.object({
   yearStart: z.string().min(1, "Start year is required"),
   yearEnd: z.string().min(1, "End year is required"),
   description: z.string().min(1, "Description is required"),
-  location: z.string().url("Invalid URL").min(1, "Location is required"),
+  location: z.url("Invalid URL").min(1, "Location is required"),
 });
 
 interface EducationModalProps {
@@ -45,6 +45,7 @@ export function EducationModal({
   } = useEditEducation();
 
   const [validateError, setValidateError] = useState<ZodError | null>(null);
+  const years = getYears();
 
   const error = validateError?.issues[0] || errorAdd || errorEdit;
   const schoolError =
@@ -116,10 +117,12 @@ export function EducationModal({
         className="space-y-3 font-mono text-xs text-text-primary"
       >
         <div className="space-y-1">
-          <label className="block text-text-secondary">
+          <label htmlFor="school" className="block text-text-secondary">
             School / Institution
           </label>
           <input
+            id="school"
+            aria-label="School / Institution"
             name="school"
             defaultValue={educationForm.school}
             disabled={isLoadingAdd || isLoadingEdit}
@@ -138,8 +141,12 @@ export function EducationModal({
         </div>
 
         <div className="space-y-1">
-          <label className="block text-text-secondary">Degree / Course</label>
+          <label htmlFor="degree" className="block text-text-secondary">
+            Degree / Course
+          </label>
           <input
+            id="degree"
+            aria-label="Degree / Course"
             name="degree"
             defaultValue={educationForm.degree}
             disabled={isLoadingAdd || isLoadingEdit}
@@ -159,8 +166,12 @@ export function EducationModal({
 
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
-            <label className="block text-text-secondary">Start Year</label>
+            <label htmlFor="yearStart" className="block text-text-secondary">
+              Start Year
+            </label>
             <select
+              id="yearStart"
+              aria-label="Start Year"
               name="yearStart"
               defaultValue={educationForm.yearStart || ""}
               disabled={isLoadingAdd || isLoadingEdit}
@@ -174,7 +185,7 @@ export function EducationModal({
               <option value="" disabled>
                 Select year
               </option>
-              {YEARS.map((y) => (
+              {years.map((y) => (
                 <option key={y} value={y}>
                   {y}
                 </option>
@@ -187,8 +198,12 @@ export function EducationModal({
             )}
           </div>
           <div className="space-y-1">
-            <label className="block text-text-secondary">End Year</label>
+            <label htmlFor="yearEnd" className="block text-text-secondary">
+              End Year
+            </label>
             <select
+              id="yearEnd"
+              aria-label="End Year"
               name="yearEnd"
               defaultValue={educationForm.yearEnd || "Present"}
               disabled={isLoadingAdd || isLoadingEdit}
@@ -200,7 +215,7 @@ export function EducationModal({
               }`}
             >
               <option value="Present">Present</option>
-              {YEARS.map((y) => (
+              {years.map((y) => (
                 <option key={y} value={y}>
                   {y}
                 </option>
@@ -215,8 +230,12 @@ export function EducationModal({
         </div>
 
         <div className="space-y-1">
-          <label className="block text-text-secondary">Description</label>
+          <label htmlFor="description" className="block text-text-secondary">
+            Description
+          </label>
           <textarea
+            id="description"
+            aria-label="Description"
             name="description"
             rows={3}
             defaultValue={educationForm.description}
@@ -236,10 +255,12 @@ export function EducationModal({
         </div>
 
         <div className="space-y-1">
-          <label className="block text-text-secondary">
+          <label htmlFor="location" className="block text-text-secondary">
             Google Maps Location Link
           </label>
           <input
+            id="location"
+            aria-label="Google Maps Location Link"
             type="url"
             name="location"
             defaultValue={educationForm.location}
