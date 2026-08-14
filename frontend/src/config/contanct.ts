@@ -1,6 +1,28 @@
+import { IconType } from "react-icons";
 import { FaFacebook, FaGithub, FaLinkedin } from "react-icons/fa";
+import { PiMicrosoftOutlookLogo } from "react-icons/pi";
+import { SiGmail } from "react-icons/si";
 
-export const CONTACT_LINKS = [
+type props = {
+  label: string;
+  value: string;
+  href: string;
+  icon: IconType;
+};
+
+export const CONTACT_LINKS: props[] = [
+  {
+    label: "Gmail",
+    value: "gmail.com/kenshienworkacc",
+    href: "mailto:kenshienworkacc@gmail.com",
+    icon: SiGmail,
+  },
+  {
+    label: "Outlook",
+    value: "outlook.com/kenshienworkacc",
+    href: "mailto:kenshienworkacc@outlook.com",
+    icon: PiMicrosoftOutlookLogo,
+  },
   {
     label: "Facebook",
     value: "facebook.com/kenshien.alao",

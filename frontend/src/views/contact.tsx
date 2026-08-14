@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Download, Mail } from "lucide-react";
 import { CONTACT_LINKS } from "@/config/contanct";
 import { SectionHeader } from "@/components/section-header";
 import { ContactForm } from "@/components/contact-form";
 import Link from "next/link";
+import { FiDownload, FiExternalLink } from "react-icons/fi";
 
 export function Contact() {
   return (
@@ -23,24 +23,6 @@ export function Contact() {
 
         <div className="mt-14 grid gap-4 md:grid-cols-2 items-start">
           <div className="flex flex-col gap-3">
-            <a
-              href="mailto:kenshienworkacc@gmail.com"
-              className="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4 hover:border-accent/40"
-            >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
-                <Mail className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="mb-0.5 font-mono text-[11px] uppercase tracking-widest text-text-secondary">
-                  Email
-                </p>
-                <p className="truncate text-sm font-semibold text-text-primary">
-                  kenshienworkacc@gmail.com
-                </p>
-              </div>
-              <ExternalLink className="h-3.5 w-3.5 shrink-0 text-text-secondary" />
-            </a>
-
             {CONTACT_LINKS.map((link) => {
               const Icon = link.icon;
               return (
@@ -62,7 +44,7 @@ export function Contact() {
                       {link.value}
                     </p>
                   </div>
-                  <ExternalLink className="h-3.5 w-3.5 shrink-0 text-text-secondary" />
+                  <FiExternalLink className="h-3.5 w-3.5 shrink-0 text-text-secondary" />
                 </a>
               );
             })}
@@ -75,7 +57,7 @@ export function Contact() {
               className="w-full gap-2 rounded-2xl border-border text-text-primary hover:border-accent/50 hover:bg-surface active:scale-95"
             >
               <Link href="/resume.pdf" download>
-                <Download className="h-4 w-4" />
+                <FiDownload className="h-4 w-4" />
                 Download Resume
               </Link>
             </Button>

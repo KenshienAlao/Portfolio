@@ -1,6 +1,5 @@
 "use client";
 
-import { AlertCircle, Loader2, Save } from "lucide-react";
 import { BaseModal } from "./BaseModal";
 import {
   useAddCategory,
@@ -8,6 +7,8 @@ import {
   type SetupCategory,
 } from "@/hooks/admin/use-setup-admin";
 import { FormEvent, useState } from "react";
+import { FaSave } from "react-icons/fa";
+import { FiAlertCircle, FiLoader } from "react-icons/fi";
 import z, { ZodError } from "zod";
 
 const categorySchema = z.object({
@@ -142,7 +143,7 @@ export function CategoryModal({
             role="alert"
             className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-destructive"
           >
-            <AlertCircle
+            <FiAlertCircle
               className="mt-0.5 h-3.5 w-3.5 shrink-0"
               aria-hidden="true"
             />
@@ -157,12 +158,12 @@ export function CategoryModal({
         >
           {isLoading ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              <FiLoader className="h-4 w-4 animate-spin" aria-hidden="true" />
               Saving...
             </>
           ) : (
             <>
-              <Save className="h-4 w-4" />
+              <FaSave className="h-4 w-4" />
               {isEdit ? "Save Changes" : "Create Category"}
             </>
           )}

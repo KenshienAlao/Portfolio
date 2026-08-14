@@ -1,9 +1,10 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { AlertCircle, Eye, EyeOff, Key, Loader2, Lock } from "lucide-react";
 import z, { ZodError } from "zod";
 import { useLoginMutation } from "@/hooks/use-auth";
+import { FaKey, FaLock } from "react-icons/fa";
+import { FiAlertCircle, FiEye, FiEyeOff, FiLoader } from "react-icons/fi";
 
 const validate = z.object({
   code: z.string().min(1, "Code is required").trim(),
@@ -88,7 +89,7 @@ export function Login() {
                 code
               </label>
               <div className="relative">
-                <Key
+                <FaKey
                   className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary"
                   aria-hidden="true"
                 />
@@ -125,7 +126,7 @@ export function Login() {
                 </label>
               </div>
               <div className="relative">
-                <Lock
+                <FaLock
                   className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary"
                   aria-hidden="true"
                 />
@@ -150,9 +151,9 @@ export function Login() {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
+                    <FiEyeOff className="h-4 w-4" />
                   ) : (
-                    <Eye className="h-4 w-4" />
+                    <FiEye className="h-4 w-4" />
                   )}
                 </button>
               </div>
@@ -171,7 +172,7 @@ export function Login() {
                 role="alert"
                 className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2.5 font-mono text-xs text-destructive"
               >
-                <AlertCircle
+                <FiAlertCircle
                   className="mt-0.5 h-3.5 w-3.5 shrink-0"
                   aria-hidden="true"
                 />
@@ -186,7 +187,7 @@ export function Login() {
             >
               {isLoadingLogin ? (
                 <>
-                  <Loader2
+                  <FiLoader
                     className="h-4 w-4 animate-spin"
                     aria-hidden="true"
                   />

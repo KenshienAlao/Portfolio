@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { NAV_PAGES } from "@/config/navigation.config";
-import { ArrowRight, Code2, Zap, Layers, Accessibility } from "lucide-react";
+import { FaCode } from "react-icons/fa";
+import { FiArrowRight, FiZap } from "react-icons/fi";
+import { IoAccessibility, IoLayers } from "react-icons/io5";
 
 const CAPABILITIES = [
-  { icon: Code2, label: "Develop" },
-  { icon: Layers, label: "Design" },
-  { icon: Zap, label: "Optimize" },
-  { icon: Accessibility, label: "Accessible" },
+  { icon: FaCode, label: "Develop" },
+  { icon: IoLayers, label: "Design" },
+  { icon: FiZap, label: "Optimize" },
+  { icon: IoAccessibility, label: "Accessible" },
 ];
 
 export function Hero({ changePage }: { changePage: (page: string) => void }) {
@@ -57,7 +59,7 @@ export function Hero({ changePage }: { changePage: (page: string) => void }) {
               className="w-full rounded-full bg-accent px-8 font-semibold text-on-accent hover:bg-accent/90 active:scale-95 sm:w-auto"
             >
               View Projects
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <FiArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Button
               type="button"

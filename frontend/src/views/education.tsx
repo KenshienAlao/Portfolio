@@ -1,8 +1,8 @@
-import { MapPin } from "lucide-react";
 import { SectionHeader } from "@/components/section-header";
 import Link from "next/link";
 import { useEducationPublic } from "@/hooks/admin/use-education-admin";
 import { EducationCardSkeleton } from "@/components/ui/skeleton";
+import { FiMapPin } from "react-icons/fi";
 
 export function Education() {
   const { data: education, isPending } = useEducationPublic();
@@ -59,7 +59,7 @@ export function Education() {
                       rel="noopener noreferrer"
                       className="absolute -left-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-surface text-accent"
                     >
-                      <MapPin className="h-3.5 w-3.5" />
+                      <FiMapPin className="h-3.5 w-3.5" />
                     </Link>
 
                     <Link

@@ -1,9 +1,9 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { Moon, Sun } from "lucide-react";
 import { useSyncExternalStore } from "react";
 import { cn } from "@/lib/utils";
+import { FaMoon, FaSun } from "react-icons/fa";
 
 function ThemeTogglerButton({ className }: { className?: string }) {
   const { resolvedTheme, setTheme } = useTheme();
@@ -36,9 +36,9 @@ function ThemeTogglerButton({ className }: { className?: string }) {
       {mounted && (
         <div>
           {resolvedTheme === "dark" ? (
-            <Sun className="h-4 w-4 text-accent" />
+            <FaSun className="h-4 w-4 text-accent" />
           ) : (
-            <Moon className="h-4 w-4 text-accent" />
+            <FaMoon className="h-4 w-4 text-accent" />
           )}
         </div>
       )}

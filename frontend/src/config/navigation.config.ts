@@ -1,12 +1,11 @@
 import {
-  Home,
-  User,
-  Folder,
-  Mail,
-  MonitorCog,
-  GraduationCap,
-} from "lucide-react";
-import { FaCog } from "react-icons/fa";
+  FaCog,
+  FaFolder,
+  FaGraduationCap,
+  FaHome,
+  FaUser,
+} from "react-icons/fa";
+import { LuContactRound, LuMonitorCog } from "react-icons/lu";
 
 export const NAV_PAGES = {
   LINKS: {
@@ -19,12 +18,12 @@ export const NAV_PAGES = {
     CONTACT: "Contact",
   },
   ICONS: {
-    HOME: Home,
-    ABOUT: User,
-    PROJECTS: Folder,
-    EDUCATION: GraduationCap,
+    HOME: FaHome,
+    ABOUT: FaUser,
+    PROJECTS: FaFolder,
+    EDUCATION: FaGraduationCap,
     SKILLS: FaCog,
-    SETUP: MonitorCog,
-    CONTACT: Mail,
+    SETUP: LuMonitorCog,
+    CONTACT: LuContactRound,
   },
 } as const;

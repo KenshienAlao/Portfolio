@@ -1,6 +1,5 @@
 "use client";
 
-import { AlertCircle, ImagePlus, Loader2, Save } from "lucide-react";
 import { BaseModal } from "./BaseModal";
 import {
   useAddItem,
@@ -11,6 +10,9 @@ import {
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import z, { ZodError } from "zod";
 import Image from "next/image";
+import { LuImagePlus } from "react-icons/lu";
+import { FiAlertCircle, FiLoader } from "react-icons/fi";
+import { FaSave } from "react-icons/fa";
 
 const MAX_IMAGE_SIZE = 25 * 1024 * 1024;
 
@@ -359,7 +361,7 @@ export function ItemModal({
               </div>
             ) : (
               <>
-                <ImagePlus
+                <LuImagePlus
                   className="h-4 w-4 text-text-secondary"
                   aria-hidden="true"
                 />
@@ -430,7 +432,7 @@ export function ItemModal({
               </div>
             ) : (
               <>
-                <ImagePlus
+                <LuImagePlus
                   className="h-4 w-4 text-text-secondary"
                   aria-hidden="true"
                 />
@@ -477,7 +479,7 @@ export function ItemModal({
             role="alert"
             className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-destructive"
           >
-            <AlertCircle
+            <FiAlertCircle
               className="mt-0.5 h-3.5 w-3.5 shrink-0"
               aria-hidden="true"
             />
@@ -492,12 +494,12 @@ export function ItemModal({
         >
           {isLoading ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              <FiLoader className="h-4 w-4 animate-spin" aria-hidden="true" />
               Saving...
             </>
           ) : (
             <>
-              <Save className="h-4 w-4" />
+              <FaSave className="h-4 w-4" />
               {isEdit ? "Save Changes" : "Save Item"}
             </>
           )}

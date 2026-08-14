@@ -1,16 +1,23 @@
 import { useState } from "react";
-import {
-  GraduationCap,
-  Layers,
-  LayoutDashboard,
-  Wrench,
-  ChevronLeft,
-  ChevronRight,
-  Terminal,
-  Inbox,
-} from "lucide-react";
 import { ThemeTogglerButton } from "../theme-toggle";
-import { Tab } from "@/views/dashboard";
+import { LuLayoutDashboard } from "react-icons/lu";
+import { FiLayers } from "react-icons/fi";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaGraduationCap,
+  FaInbox,
+  FaTerminal,
+  FaWrench,
+} from "react-icons/fa";
+
+export type Tab =
+  | "overview"
+  | "projects"
+  | "education"
+  | "skills"
+  | "setup"
+  | "messages";
 
 interface props {
   activeTab: Tab;
@@ -21,12 +28,12 @@ export function Navbar({ activeTab, setActiveTab }: props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const NAV_ITEMS = [
-    { id: "overview", label: "Overview", icon: LayoutDashboard },
-    { id: "projects", label: "Projects", icon: Layers },
-    { id: "education", label: "Education", icon: GraduationCap },
-    { id: "skills", label: "Skills", icon: Wrench },
-    { id: "setup", label: "Setup", icon: Terminal },
-    { id: "messages", label: "Messages", icon: Inbox },
+    { id: "overview", label: "Overview", icon: LuLayoutDashboard },
+    { id: "projects", label: "Projects", icon: FiLayers },
+    { id: "education", label: "Education", icon: FaGraduationCap },
+    { id: "skills", label: "Skills", icon: FaWrench },
+    { id: "setup", label: "Setup", icon: FaTerminal },
+    { id: "messages", label: "Messages", icon: FaInbox },
   ] as const;
 
   const [isMobileCollapsed, setIsMobileCollapsed] = useState(false);
@@ -53,9 +60,9 @@ export function Navbar({ activeTab, setActiveTab }: props) {
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {isCollapsed ? (
-              <ChevronRight className="h-4 w-4" />
+              <FaChevronRight className="h-4 w-4" />
             ) : (
-              <ChevronLeft className="h-4 w-4" />
+              <FaChevronLeft className="h-4 w-4" />
             )}
           </button>
         </div>
@@ -115,7 +122,7 @@ export function Navbar({ activeTab, setActiveTab }: props) {
           }`}
           aria-label="Hide Navigation"
         >
-          <ChevronLeft className="h-3.5 w-3.5 -rotate-90" />
+          <FaChevronLeft className="h-3.5 w-3.5 -rotate-90" />
           <span>Hide</span>
         </button>
 
@@ -148,7 +155,7 @@ export function Navbar({ activeTab, setActiveTab }: props) {
         }`}
         aria-label="Expand Menu"
       >
-        <LayoutDashboard className="h-5 w-5 animate-pulse" />
+        <LuLayoutDashboard className="h-5 w-5 animate-pulse" />
       </button>
     </>
   );

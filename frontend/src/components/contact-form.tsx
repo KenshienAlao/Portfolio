@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, Check, Loader2, Send } from "lucide-react";
 import { useSendMessageMutation } from "@/hooks/admin/use-message-admin";
+import { FiAlertCircle, FiCheck, FiLoader, FiSend } from "react-icons/fi";
 
 interface FormState {
   name: string;
@@ -143,7 +143,7 @@ export function ContactForm() {
           role="alert"
           className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs font-mono text-destructive"
         >
-          <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+          <FiAlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
@@ -156,17 +156,17 @@ export function ContactForm() {
       >
         {isSending ? (
           <>
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <FiLoader className="h-4 w-4 animate-spin" />
             Sending...
           </>
         ) : sent ? (
           <>
-            <Check className="h-4 w-4" />
+            <FiCheck className="h-4 w-4" />
             Message Sent!
           </>
         ) : (
           <>
-            <Send className="h-4 w-4" />
+            <FiSend className="h-4 w-4" />
             Send Message
           </>
         )}

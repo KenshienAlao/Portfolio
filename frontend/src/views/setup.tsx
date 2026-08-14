@@ -1,12 +1,12 @@
 "use client";
 
 import { type SetupCategory, type SetupItem } from "@/service/setup.service";
-import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/section-header";
 import { useSetupPublic } from "@/hooks/admin/use-setup-admin";
 import { SetupCardSkeleton } from "@/components/ui/skeleton";
+import { FiArrowUpRight } from "react-icons/fi";
 
 export function Setup() {
   const { data: setups, isPending } = useSetupPublic();
@@ -91,7 +91,7 @@ export function Setup() {
                                   className="inline-flex items-center gap-0.5 text-base font-bold tracking-tight text-text-primary transition-colors hover:text-accent"
                                 >
                                   {tool.value}
-                                  <ArrowUpRight className="w-3 h-3 text-text-secondary" />
+                                  <FiArrowUpRight className="w-3 h-3 text-text-secondary" />
                                 </a>
                               ) : (
                                 <span className="text-base font-bold tracking-tight text-text-primary">

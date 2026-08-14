@@ -1,6 +1,8 @@
 import { SectionHeader } from "@/components/section-header";
 import { useProjectPublic } from "@/hooks/admin/use-project-admin";
-import { Astroid, FolderBookmark, Layers } from "lucide-react";
+import { FaStar } from "react-icons/fa";
+import { FiLayers } from "react-icons/fi";
+import { PiFolderOpenFill } from "react-icons/pi";
 
 const STACK = ["React", "Next.js", "TypeScript", "Spring Boot", "PostgreSQL"];
 
@@ -21,7 +23,7 @@ export function About() {
       },
       { label: "Tech Stack Focus", value: "NextJS" },
     ],
-    ICONS: [Astroid, FolderBookmark, Layers],
+    ICONS: [FaStar, PiFolderOpenFill, FiLayers],
   } as const;
 
   return (

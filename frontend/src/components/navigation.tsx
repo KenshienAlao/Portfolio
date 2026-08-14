@@ -1,10 +1,11 @@
 import { NAV_PAGES } from "@/config/navigation.config";
 import { cn } from "@/lib/utils";
-import { Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ThemeTogglerButton } from "./theme-toggle";
 import { ROUTES } from "@/config/routes";
+import { FiMenu } from "react-icons/fi";
+import { FaX } from "react-icons/fa6";
 
 type NavProps = {
   currentPath: string;
@@ -161,7 +162,7 @@ export function Navigation({
                 aria-label="Toggle menu"
               >
                 <span className="absolute">
-                  <Menu className="h-4 w-4" />
+                  <FiMenu className="h-4 w-4" />
                 </span>
               </button>
             </div>
@@ -198,7 +199,7 @@ export function Navigation({
             className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface/60 text-text-secondary hover:bg-surface hover:text-text-primary"
             aria-label="Close menu"
           >
-            <X className="h-4 w-4" />
+            <FaX className="h-4 w-4" />
           </button>
         </div>
 

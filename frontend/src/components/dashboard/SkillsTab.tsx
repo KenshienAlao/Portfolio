@@ -1,6 +1,5 @@
 "use client";
 
-import { AlertCircle, Edit3, Loader2, Plus, Trash2, Zap } from "lucide-react";
 import { useState } from "react";
 import { SkillModal } from "@/components/dashboard/modals/SkillModal";
 import {
@@ -10,6 +9,14 @@ import {
 } from "@/hooks/admin/use-skill-admin";
 import { DashboardSkillCategorySkeleton } from "../ui/skeleton";
 import Image from "next/image";
+import { FaPlus } from "react-icons/fa";
+import {
+  FiAlertCircle,
+  FiEdit3,
+  FiLoader,
+  FiTrash2,
+  FiZap,
+} from "react-icons/fi";
 
 export function SkillsTab() {
   const {
@@ -59,14 +66,14 @@ export function SkillsTab() {
           onClick={() => setSkillForm({})}
           className="flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-on-accent hover:opacity-90 font-mono transition-opacity"
         >
-          <Plus className="h-4 w-4" /> Add Skill
+          <FaPlus className="h-4 w-4" /> Add Skill
         </button>
       </div>
 
       {skillsError ? (
         <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-destructive/30 bg-destructive/5 px-6 py-16 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
-            <AlertCircle className="h-6 w-6 text-destructive" />
+            <FiAlertCircle className="h-6 w-6 text-destructive" />
           </div>
           <div className="space-y-1">
             <h3 className="font-mono text-sm font-bold text-text-primary">
@@ -93,7 +100,7 @@ export function SkillsTab() {
       ) : !hasSkills ? (
         <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border bg-surface px-6 py-16 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10">
-            <Zap className="h-6 w-6 text-accent" />
+            <FiZap className="h-6 w-6 text-accent" />
           </div>
           <div className="space-y-1">
             <h3 className="font-mono text-sm font-bold text-text-primary">
@@ -105,7 +112,7 @@ export function SkillsTab() {
             onClick={() => setSkillForm({})}
             className="mt-2 flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 font-mono text-xs font-semibold text-on-accent transition-opacity hover:opacity-90"
           >
-            <Plus className="h-4 w-4" /> Add Skill
+            <FaPlus className="h-4 w-4" /> Add Skill
           </button>
         </div>
       ) : (
@@ -179,7 +186,7 @@ export function SkillsTab() {
                       <div className="flex gap-1">
                         {isPendingCreate ? (
                           <span className="flex items-center gap-1 font-mono text-[10px] font-medium text-accent">
-                            <Loader2 className="h-3 w-3 animate-spin" />
+                            <FiLoader className="h-3 w-3 animate-spin" />
                             Saving
                           </span>
                         ) : isConfirmingDelete ? (
@@ -215,7 +222,7 @@ export function SkillsTab() {
                               disabled={actionsDisabled}
                               className="p-1 hover:bg-background rounded text-text-secondary hover:text-accent transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                             >
-                              <Edit3 className="h-3.5 w-3.5" />
+                              <FiEdit3 className="h-3.5 w-3.5" />
                             </button>
                             <button
                               type="button"
@@ -224,9 +231,9 @@ export function SkillsTab() {
                               className="p-1 hover:bg-destructive/10 rounded text-text-secondary hover:text-destructive transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                             >
                               {isDeletingThis ? (
-                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                <FiLoader className="h-3.5 w-3.5 animate-spin" />
                               ) : (
-                                <Trash2 className="h-3.5 w-3.5" />
+                                <FiTrash2 className="h-3.5 w-3.5" />
                               )}
                             </button>
                           </>

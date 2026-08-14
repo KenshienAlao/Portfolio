@@ -1,13 +1,5 @@
 "use client";
 
-import {
-  AlertCircle,
-  Edit3,
-  FolderOpen,
-  Loader2,
-  Plus,
-  Trash2,
-} from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { ProjectModal } from "@/components/dashboard/modals/ProjectModal";
@@ -17,6 +9,8 @@ import {
   useProjectAdmin,
 } from "@/hooks/admin/use-project-admin";
 import { DashboardProjectCardSkeleton } from "../ui/skeleton";
+import { FaFolderOpen, FaPlus, FaTrash } from "react-icons/fa";
+import { FiAlertCircle, FiEdit3, FiLoader } from "react-icons/fi";
 
 const MAX_VISIBLE_TAGS = 3;
 
@@ -57,14 +51,14 @@ export function ProjectsTab() {
           onClick={() => setProjectForm({})}
           className="flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-on-accent hover:opacity-90 font-mono transition-opacity"
         >
-          <Plus className="h-4 w-4" /> Add Project
+          <FaPlus className="h-4 w-4" /> Add Project
         </button>
       </div>
 
       {projectError ? (
         <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-destructive/30 bg-destructive/5 px-6 py-16 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
-            <AlertCircle className="h-6 w-6 text-destructive" />
+            <FiAlertCircle className="h-6 w-6 text-destructive" />
           </div>
           <div className="space-y-1">
             <h3 className="font-mono text-sm font-bold text-text-primary">
@@ -92,7 +86,7 @@ export function ProjectsTab() {
       ) : !hasProjects ? (
         <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border bg-surface px-6 py-16 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10">
-            <FolderOpen className="h-6 w-6 text-accent" />
+            <FaFolderOpen className="h-6 w-6 text-accent" />
           </div>
           <div className="space-y-1">
             <h3 className="font-mono text-sm font-bold text-text-primary">
@@ -104,7 +98,7 @@ export function ProjectsTab() {
             onClick={() => setProjectForm({})}
             className="mt-2 flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-on-accent hover:opacity-90 font-mono transition-opacity"
           >
-            <Plus className="h-4 w-4" /> Add Project
+            <FaPlus className="h-4 w-4" /> Add Project
           </button>
         </div>
       ) : (
@@ -135,13 +129,13 @@ export function ProjectsTab() {
                       />
                       {isPendingCreate && (
                         <div className="absolute inset-0 flex items-center justify-center bg-background/20 backdrop-blur-[1px]">
-                          <Loader2 className="h-6 w-6 text-accent animate-spin" />
+                          <FiLoader className="h-6 w-6 text-accent animate-spin" />
                         </div>
                       )}
                     </div>
                   ) : isPendingCreate ? (
                     <div className="w-full h-full bg-accent/20 animate-pulse flex items-center justify-center">
-                      <Loader2 className="h-6 w-6 text-accent animate-spin opacity-50" />
+                      <FiLoader className="h-6 w-6 text-accent animate-spin opacity-50" />
                     </div>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-text-secondary font-mono text-xs">
@@ -184,7 +178,7 @@ export function ProjectsTab() {
                             aria-label="Edit project"
                             className="p-1.5 hover:bg-background rounded-md text-text-secondary hover:text-accent transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:text-text-secondary"
                           >
-                            <Edit3 className="h-3.5 w-3.5" />
+                            <FiEdit3 className="h-3.5 w-3.5" />
                           </button>
                           <button
                             type="button"
@@ -194,9 +188,9 @@ export function ProjectsTab() {
                             className="p-1.5 hover:bg-destructive/10 rounded-md text-text-secondary hover:text-destructive transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:text-text-secondary"
                           >
                             {isDeletingThis ? (
-                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                              <FiLoader className="h-3.5 w-3.5 animate-spin" />
                             ) : (
-                              <Trash2 className="h-3.5 w-3.5" />
+                              <FaTrash className="h-3.5 w-3.5" />
                             )}
                           </button>
                         </>

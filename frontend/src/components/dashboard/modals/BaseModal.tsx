@@ -1,7 +1,7 @@
 "use client";
 
-import React, { ReactNode } from "react";
-import { X } from "lucide-react";
+import { ReactNode } from "react";
+import { FaX } from "react-icons/fa6";
 
 interface BaseModalProps {
   title: string;
@@ -27,7 +27,7 @@ export function BaseModal({
           className="absolute right-4 top-4 text-text-secondary hover:text-text-primary transition-colors"
           aria-label="Close modal"
         >
-          <X className="h-5 w-5" />
+          <FaX className="h-5 w-5" />
         </button>
         <h3 className="font-mono text-base font-bold text-text-primary">
           {title}

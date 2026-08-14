@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 import Image from "next/image";
 import { SectionHeader } from "@/components/section-header";
 import { useProjectPublic } from "@/hooks/admin/use-project-admin";
 import { ProjectCardSkeleton } from "@/components/ui/skeleton";
+import { FiArrowUpRight } from "react-icons/fi";
 
 export function Projects() {
   const { data: projects, isPending: projectIsPending } = useProjectPublic();
@@ -109,7 +109,7 @@ export function Projects() {
                                 rel="noopener noreferrer"
                                 className="gap-1.5"
                               >
-                                Demo <ArrowUpRight className="h-4 w-4" />
+                                Demo <FiArrowUpRight className="h-4 w-4" />
                               </a>
                             </Button>
                           )}

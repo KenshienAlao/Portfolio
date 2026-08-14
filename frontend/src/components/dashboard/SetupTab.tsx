@@ -1,17 +1,17 @@
 "use client";
 
 import {
-  AlertCircle,
-  ArrowUpRight,
-  Edit3,
-  ExternalLink,
-  FolderPlus,
-  Loader2,
-  PackagePlus,
-  Plus,
-  Terminal,
-  Trash2,
-} from "lucide-react";
+  FiAlertCircle,
+  FiArrowUpRight,
+  FiEdit3,
+  FiExternalLink,
+  FiFolderPlus,
+  FiLoader,
+  FiPlus,
+  FiTerminal,
+  FiTrash2,
+} from "react-icons/fi";
+import { LuPackagePlus } from "react-icons/lu";
 import { useState } from "react";
 import {
   useDeleteCategory,
@@ -84,7 +84,7 @@ export function SetupTab() {
             onClick={() => setCategoryForm({})}
             className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-xs font-semibold text-text-primary transition-colors hover:border-accent/50 hover:bg-surface"
           >
-            <FolderPlus className="h-4 w-4 text-accent" /> Add Category
+            <FiFolderPlus className="h-4 w-4 text-accent" /> Add Category
           </button>
 
           <button
@@ -98,7 +98,7 @@ export function SetupTab() {
             }}
             className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-xs font-semibold text-on-accent transition-opacity hover:opacity-90"
           >
-            <Plus className="h-4 w-4" /> Add Item
+            <FiPlus className="h-4 w-4" /> Add Item
           </button>
         </div>
       </div>
@@ -106,7 +106,7 @@ export function SetupTab() {
       {setupError ? (
         <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-destructive/30 bg-destructive/5 px-6 py-16 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
-            <AlertCircle className="h-6 w-6 text-destructive" />
+            <FiAlertCircle className="h-6 w-6 text-destructive" />
           </div>
           <div className="space-y-1">
             <h3 className="text-sm font-semibold text-text-primary">
@@ -139,7 +139,7 @@ export function SetupTab() {
         /* Empty State */
         <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border px-6 py-20 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-surface">
-            <Terminal className="h-6 w-6 text-text-secondary" />
+            <FiTerminal className="h-6 w-6 text-text-secondary" />
           </div>
           <div className="space-y-1">
             <h3 className="text-sm font-semibold text-text-primary">
@@ -155,7 +155,7 @@ export function SetupTab() {
             onClick={() => setCategoryForm({})}
             className="mt-2 flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-on-accent transition-opacity hover:opacity-90"
           >
-            <FolderPlus className="h-4 w-4" /> Create First Category
+            <FiFolderPlus className="h-4 w-4" /> Create First Category
           </button>
         </div>
       ) : (
@@ -191,7 +191,7 @@ export function SetupTab() {
                       </span>
                       {isPendingCategory && (
                         <span className="flex items-center gap-1 text-[10px] text-accent">
-                          <Loader2 className="h-3 w-3 animate-spin" /> Saving
+                          <FiLoader className="h-3 w-3 animate-spin" /> Saving
                         </span>
                       )}
                     </div>
@@ -208,7 +208,7 @@ export function SetupTab() {
                       className="flex items-center gap-1 rounded-md border border-border bg-background px-2.5 py-1 text-[11px] font-medium text-text-primary transition-colors hover:border-accent/50 hover:bg-accent/10 disabled:opacity-50"
                       title="Add item to this category"
                     >
-                      <Plus className="h-3 w-3 text-accent" /> Add Item
+                      <FiPlus className="h-3 w-3 text-accent" /> Add Item
                     </button>
 
                     <button
@@ -218,7 +218,7 @@ export function SetupTab() {
                       className="rounded-md border border-border bg-background p-1.5 text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-50"
                       title="Edit Category"
                     >
-                      <Edit3 className="h-3.5 w-3.5" />
+                      <FiEdit3 className="h-3.5 w-3.5" />
                     </button>
 
                     {isConfirmingDeleteCategory ? (
@@ -249,7 +249,7 @@ export function SetupTab() {
                         className="rounded-md border border-border bg-background p-1.5 text-text-secondary transition-colors hover:border-destructive hover:text-destructive disabled:opacity-50"
                         title="Delete Category"
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
+                        <FiTrash2 className="h-3.5 w-3.5" />
                       </button>
                     )}
                   </div>
@@ -264,7 +264,7 @@ export function SetupTab() {
                         onClick={() => setItemForm({ categoryId: cat.id })}
                         className="flex items-center gap-1 font-semibold text-accent hover:underline"
                       >
-                        <PackagePlus className="h-3.5 w-3.5" /> Add first item
+                        <LuPackagePlus className="h-3.5 w-3.5" /> Add first item
                       </button>
                     </div>
                   ) : (
@@ -279,48 +279,38 @@ export function SetupTab() {
                         return (
                           <div
                             key={item.id}
-                            className={`group relative flex flex-col justify-between gap-3 rounded-xl border bg-background p-3.5 transition-all ${
-                              isPendingItem
-                                ? "border-accent/30 bg-accent/5 opacity-70"
-                                : isDeletingThisItem
-                                  ? "border-destructive/30 opacity-50"
-                                  : "border-border hover:border-accent/40"
-                            }`}
+                            className="group flex flex-col justify-between gap-3 rounded-xl border border-border/60 bg-background/60 p-3.5 transition-all hover:border-accent/40 hover:bg-background"
                           >
-                            <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-center justify-between gap-2">
                               <div className="flex items-center gap-2.5 min-w-0">
-                                {item.imageLight ? (
-                                  <div className="relative h-8 w-8 shrink-0 rounded-lg border border-border bg-surface p-1 flex items-center justify-center">
-                                    <Image
-                                      src={item.imageLight}
-                                      alt={item.value}
-                                      fill
-                                      sizes="32px"
-                                      unoptimized={
-                                        item.imageLight.startsWith("blob:") ||
-                                        item.imageLight.startsWith("http")
-                                      }
-                                      className={`object-contain p-0.5 ${
-                                        item.imageDark ? "dark:hidden" : ""
-                                      }`}
-                                    />
+                                {item.imageLight || item.imageDark ? (
+                                  <div className="relative h-8 w-8 shrink-0 rounded-lg border border-border/70 bg-surface overflow-hidden">
+                                    {item.imageLight && (
+                                      <Image
+                                        src={item.imageLight}
+                                        alt={item.value}
+                                        fill
+                                        unoptimized={item.imageLight.startsWith(
+                                          "http",
+                                        )}
+                                        className="object-contain p-0.5 dark:hidden"
+                                      />
+                                    )}
                                     {item.imageDark && (
                                       <Image
                                         src={item.imageDark}
                                         alt={item.value}
                                         fill
-                                        sizes="32px"
-                                        unoptimized={
-                                          item.imageDark.startsWith("blob:") ||
-                                          item.imageDark.startsWith("http")
-                                        }
+                                        unoptimized={item.imageDark.startsWith(
+                                          "http",
+                                        )}
                                         className="object-contain p-0.5 hidden dark:block"
                                       />
                                     )}
                                   </div>
                                 ) : (
                                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-surface text-text-secondary">
-                                    <Terminal className="h-4 w-4" />
+                                    <FiTerminal className="h-4 w-4" />
                                   </div>
                                 )}
 
@@ -335,7 +325,7 @@ export function SetupTab() {
                                     <span className="truncate">
                                       {item.value}
                                     </span>
-                                    <ArrowUpRight className="h-3 w-3 shrink-0 text-text-secondary" />
+                                    <FiArrowUpRight className="h-3 w-3 shrink-0 text-text-secondary" />
                                   </a>
                                 </div>
                               </div>
@@ -343,7 +333,7 @@ export function SetupTab() {
                               <div className="flex items-center gap-1 shrink-0">
                                 {isPendingItem ? (
                                   <span className="flex items-center gap-1 text-[10px] text-accent font-medium">
-                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                    <FiLoader className="h-3 w-3 animate-spin" />
                                   </span>
                                 ) : (
                                   <>
@@ -359,7 +349,7 @@ export function SetupTab() {
                                       className="rounded border border-transparent p-1 text-text-secondary transition-colors hover:border-border hover:text-accent"
                                       title="Edit Item"
                                     >
-                                      <Edit3 className="h-3 w-3" />
+                                      <FiEdit3 className="h-3 w-3" />
                                     </button>
 
                                     {isConfirmingDeleteItem ? (
@@ -394,7 +384,7 @@ export function SetupTab() {
                                         className="rounded border border-transparent p-1 text-text-secondary transition-colors hover:border-border hover:text-destructive"
                                         title="Delete Item"
                                       >
-                                        <Trash2 className="h-3 w-3" />
+                                        <FiTrash2 className="h-3 w-3" />
                                       </button>
                                     )}
                                   </>
@@ -410,7 +400,7 @@ export function SetupTab() {
                                   rel="noopener noreferrer"
                                   className="inline-flex items-center gap-1 rounded-md border border-accent/30 bg-accent/5 px-2 py-0.5 text-[10px] text-accent transition-colors hover:bg-accent/10"
                                 >
-                                  <ExternalLink className="h-2.5 w-2.5" />
+                                  <FiExternalLink className="h-2.5 w-2.5" />
                                   <span className="truncate">
                                     {item.subValue}
                                   </span>

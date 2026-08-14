@@ -12,7 +12,7 @@ import { SkillsTab } from "@/components/dashboard/SkillsTab";
 import { SetupTab } from "@/components/dashboard/SetupTab";
 import { MessagesTab } from "@/components/dashboard/MessagesTab";
 
-export type Tab =
+type Tab =
   | "overview"
   | "projects"
   | "education"

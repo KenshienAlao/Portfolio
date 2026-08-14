@@ -1,6 +1,5 @@
 "use client";
 
-import { AlertCircle, ImagePlus, Loader2, Save } from "lucide-react";
 import { BaseModal } from "./BaseModal";
 import {
   Skill,
@@ -10,6 +9,9 @@ import {
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import z, { ZodError } from "zod";
 import Image from "next/image";
+import { LuImagePlus } from "react-icons/lu";
+import { FiAlertCircle, FiLoader } from "react-icons/fi";
+import { FaSave } from "react-icons/fa";
 
 const MAX_IMAGE_SIZE = 25 * 1024 * 1024;
 
@@ -321,7 +323,7 @@ export function SkillModal({
               </div>
             ) : (
               <>
-                <ImagePlus
+                <LuImagePlus
                   className="h-5 w-5 text-text-secondary"
                   aria-hidden="true"
                 />
@@ -390,7 +392,7 @@ export function SkillModal({
               </div>
             ) : (
               <>
-                <ImagePlus
+                <LuImagePlus
                   className="h-5 w-5 text-text-secondary"
                   aria-hidden="true"
                 />
@@ -441,7 +443,7 @@ export function SkillModal({
             role="alert"
             className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-destructive"
           >
-            <AlertCircle
+            <FiAlertCircle
               className="mt-0.5 h-3.5 w-3.5 shrink-0"
               aria-hidden="true"
             />
@@ -456,16 +458,16 @@ export function SkillModal({
         >
           {isLoading ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              <FiLoader className="h-4 w-4 animate-spin" aria-hidden="true" />
               Saving...
             </>
           ) : isEdit ? (
             <>
-              <Save className="h-4 w-4" /> Save changes
+              <FaSave className="h-4 w-4" /> Save changes
             </>
           ) : (
             <>
-              <Save className="h-4 w-4" /> Save Skill
+              <FaSave className="h-4 w-4" /> Save Skill
             </>
           )}
         </button>

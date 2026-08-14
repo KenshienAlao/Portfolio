@@ -1,23 +1,30 @@
 "use client";
 
-import {
-  ArrowRight,
-  CheckCircle2,
-  Circle,
-  ExternalLink,
-  GraduationCap,
-  Inbox,
-  Layers,
-  Mail,
-  Terminal,
-  Wrench,
-} from "lucide-react";
 import { useProjectAdmin } from "@/hooks/admin/use-project-admin";
 import { useEducationAdmin } from "@/hooks/admin/use-education-admin";
 import { useSkillAdmin } from "@/hooks/admin/use-skill-admin";
 import { useSetupAdmin } from "@/hooks/admin/use-setup-admin";
 import { useMessagesAdmin } from "@/hooks/admin/use-message-admin";
-import { Tab } from "@/views/dashboard";
+import { IoLayers } from "react-icons/io5";
+import {
+  FaArrowRight,
+  FaCheckCircle,
+  FaCircle,
+  FaExternalLinkAlt,
+  FaGraduationCap,
+  FaInbox,
+  FaTerminal,
+  FaWrench,
+} from "react-icons/fa";
+import Link from "next/link";
+
+export type Tab =
+  | "overview"
+  | "projects"
+  | "education"
+  | "skills"
+  | "setup"
+  | "messages";
 
 interface OverviewTabProps {
   setActiveTab: (tab: Tab) => void;
@@ -51,43 +58,40 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
     {
       label: "Projects",
       value: projects.length,
-      icon: Layers,
+      icon: IoLayers,
       tab: "projects" as Tab,
       color: "bg-chart-1/10 text-chart-1 border-chart-1/20",
     },
     {
       label: "Skills",
       value: skills.length,
-      icon: Wrench,
+      icon: FaWrench,
       tab: "skills" as Tab,
-      color: "bg-chart-2/10 text-chart-2 border-chart-2/20",
+      color: "bg-chart-1/10 text-chart-1 border-chart-1/20",
     },
     {
       label: "Setup Tools",
       value: totalSetupItems,
       subtitle: `${setupCategories.length} categories`,
-      icon: Terminal,
+      icon: FaTerminal,
       tab: "setup" as Tab,
-      color: "bg-chart-3/10 text-chart-3 border-chart-3/20",
+      color: "bg-chart-1/10 text-chart-1 border-chart-1/20",
     },
     {
       label: "Education",
       value: education.length,
-      icon: GraduationCap,
+      icon: FaGraduationCap,
       tab: "education" as Tab,
-      color: "bg-chart-4/10 text-chart-4 border-chart-4/20",
+      color: "bg-chart-1/10 text-chart-1 border-chart-1/20",
     },
     {
       label: "Messages",
       value: messages.length,
       subtitle:
         unreadMessagesCount > 0 ? `${unreadMessagesCount} unread` : "All read",
-      icon: Inbox,
+      icon: FaInbox,
       tab: "messages" as Tab,
-      color:
-        unreadMessagesCount > 0
-          ? "bg-accent/15 text-accent border-accent/30"
-          : "bg-surface text-text-secondary border-border",
+      color: "bg-chart-1/10 text-chart-1 border-chart-1/20",
     },
   ];
 
@@ -115,14 +119,13 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
             "All caught up — no unread messages."
           )}
         </p>
-        <a
-          href="/"
-          target="_blank"
+        <Link
+          href="/?clear=session"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-text-primary transition-colors hover:border-accent hover:text-accent"
         >
-          View Public Portfolio <ExternalLink className="h-3 w-3" />
-        </a>
+          View Public Portfolio <FaExternalLinkAlt className="h-3 w-3" />
+        </Link>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -154,19 +157,18 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
                 </p>
               )}
               <span className="mt-1.5 flex items-center gap-1 text-[10px] font-semibold text-accent opacity-0 transition-opacity group-hover:opacity-100">
-                Manage <ArrowRight className="h-2.5 w-2.5" />
+                Manage <FaArrowRight className="h-2.5 w-2.5" />
               </span>
             </div>
           </button>
         ))}
       </div>
-
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="rounded-2xl border border-border bg-surface p-6">
             <div className="flex items-center justify-between border-b border-border/60 pb-4">
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-accent" />
+                <FaInbox className="h-4 w-4 text-accent" />
                 <h3 className="text-sm font-bold text-text-primary">
                   Recent Messages
                 </h3>
@@ -181,29 +183,30 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
                 onClick={() => setActiveTab("messages")}
                 className="inline-flex items-center gap-1 text-xs text-text-secondary transition-colors hover:text-accent"
               >
-                View all <ArrowRight className="h-3 w-3" />
+                View all <FaArrowRight className="h-3 w-3" />
               </button>
             </div>
 
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center text-text-secondary">
-                <Inbox className="h-8 w-8 text-text-secondary/40" />
+                <FaInbox className="h-8 w-8 text-text-secondary/40" />
                 <p className="mt-2 text-xs">No messages received yet.</p>
               </div>
             ) : (
               <div className="mt-4 space-y-3">
                 {messages.slice(0, 4).map((msg) => (
-                  <div
+                  <button
+                    type="button"
                     key={msg.id}
                     onClick={() => setActiveTab("messages")}
-                    className="cursor-pointer rounded-xl border border-border bg-background p-4 transition-colors hover:border-accent/40"
+                    className="flex items-start gap-2 cursor-pointer rounded-xl border border-border bg-background p-4 transition-colors hover:border-accent/40"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2">
                         {msg.isRead ? (
-                          <CheckCircle2 className="h-3.5 w-3.5 text-text-secondary/40 shrink-0" />
+                          <FaCheckCircle className="h-3.5 w-3.5 text-text-secondary/40 shrink-0" />
                         ) : (
-                          <Circle className="h-3.5 w-3.5 fill-accent text-accent shrink-0" />
+                          <FaCircle className="h-3.5 w-3.5 fill-accent text-accent shrink-0" />
                         )}
                         <span className="text-xs font-bold text-text-primary">
                           {msg.name}
@@ -223,13 +226,12 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
                     <p className="mt-1 text-[11px] text-text-secondary line-clamp-2 leading-relaxed">
                       {msg.message}
                     </p>
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
           </div>
         </div>
-
         <div className="space-y-6">
           <div className="rounded-2xl border border-border bg-surface p-6">
             <h3 className="mb-4 flex items-center justify-between text-sm font-bold text-text-primary">
@@ -266,7 +268,6 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
               </div>
             )}
           </div>
-
           <div className="rounded-2xl border border-border bg-surface p-6">
             <div className="mb-4 flex items-center gap-1.5">
               <span className="h-3 w-3 rounded-full bg-destructive/70" />
