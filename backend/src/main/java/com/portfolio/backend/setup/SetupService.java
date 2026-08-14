@@ -1,9 +1,9 @@
 package com.portfolio.backend.setup;
 
+import com.portfolio.backend.auth.AuthModel;
 import com.portfolio.backend.auth.AuthRepository;
 import com.portfolio.backend.cloudinary.CloudinaryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,119 +19,182 @@ import java.util.Optional;
 public class SetupService {
 
     private final SetupRepository setupRepository;
+    private final SetupItemRepository setupItemRepository;
     private final AuthRepository authRepository;
     private final CloudinaryService cloudinaryService;
 
     @Transactional(readOnly = true)
-    public List<SetupDto.response> getSetupPublic() {
-        return setupRepository.findAll().stream()
-                .map(this::mapToResponse)
+    public List<SetupDto.CategoryResponse> getSetupPublic() {
+        return setupRepository.findAllWithItems().stream()
+                .map(this::mapToCategoryResponse)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<SetupDto.response> getAdminSetup() {
-        var code = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
-        return setupRepository.findAllByUserCode(code).stream()
-                .map(this::mapToResponse)
+    public List<SetupDto.CategoryResponse> getAdminSetup() {
+        var user = getAuthenticatedUser();
+        return setupRepository.findAllByUserCodeWithItems(user.getCode()).stream()
+                .map(this::mapToCategoryResponse)
                 .toList();
     }
 
-    public SetupDto.response addSetup(SetupDto entity) {
-        var code = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
-        var user = authRepository.findByCode(code)
-                .orElseThrow(() -> new IllegalArgumentException("User not Found"));
+    public SetupDto.CategoryResponse addCategory(SetupDto.CategoryRequest request) {
+        var user = getAuthenticatedUser();
 
-        if (setupRepository.existsByUserCodeAndCategory(code, entity.category())) {
-            throw new IllegalArgumentException("Setup item for this category already exists");
+        if (setupRepository.existsByUserCodeAndCategory(user.getCode(), request.category().trim())) {
+            throw new IllegalArgumentException("Category '" + request.category() + "' already exists");
         }
 
-        String lightImage = cloudinaryService.setupImageLight(entity.imageLight());
-        String darkImage = cloudinaryService.setupDarkImage(entity.imageDark());
-
-        var result = setupRepository.save(SetupModel.builder()
+        var entity = SetupModel.builder()
                 .user(user)
-                .category(entity.category())
+                .category(request.category().trim())
+                .description(request.description().trim())
+                .build();
+
+        var saved = setupRepository.save(entity);
+        return mapToCategoryResponse(saved);
+    }
+
+    public SetupDto.CategoryResponse editCategory(Long categoryId, SetupDto.CategoryRequest request) {
+        var user = getAuthenticatedUser();
+        var category = setupRepository.findByUserAndId(user, categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        if (StringUtils.hasText(request.category())) {
+            category.setCategory(request.category().trim());
+        }
+        if (StringUtils.hasText(request.description())) {
+            category.setDescription(request.description().trim());
+        }
+
+        var updated = setupRepository.save(category);
+        return mapToCategoryResponse(updated);
+    }
+
+    public void deleteCategory(Long categoryId) {
+        var user = getAuthenticatedUser();
+        var category = setupRepository.findByUserAndId(user, categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        // Cleanup images for all child items
+        if (category.getItems() != null) {
+            for (var item : category.getItems()) {
+                cleanupItemImages(item);
+            }
+        }
+
+        setupRepository.deleteByUserAndId(user, categoryId);
+    }
+
+    public SetupDto.ItemResponse addItem(SetupDto.ItemRequest request) {
+        var user = getAuthenticatedUser();
+        var category = setupRepository.findByUserAndId(user, request.categoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        String lightImage = cloudinaryService.setupImageLight(request.imageLight());
+        String darkImage = cloudinaryService.setupDarkImage(request.imageDark());
+
+        var item = SetupItemModel.builder()
+                .setup(category)
+                .value(request.value().trim())
+                .download(request.download().trim())
                 .imageLight(lightImage)
                 .imageDark(darkImage)
-                .values(entity.values())
-                .description(entity.description())
-                .downloads(entity.downloads())
-                .subValue(StringUtils.hasText(entity.subValue()) ? entity.subValue() : null)
-                .subDownload(StringUtils.hasText(entity.subDownload()) ? entity.subDownload() : null)
-                .build());
+                .subValue(StringUtils.hasText(request.subValue()) ? request.subValue().trim() : null)
+                .subDownload(StringUtils.hasText(request.subDownload()) ? request.subDownload().trim() : null)
+                .build();
 
-        return mapToResponse(result);
+        var saved = setupItemRepository.save(item);
+        return mapToItemResponse(saved);
     }
 
-    public SetupDto.response editSetup(Integer setupId, SetupDto entity) {
-        var code = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
-        var user = authRepository.findByCode(code)
-                .orElseThrow(() -> new IllegalArgumentException("User not Found"));
-        var setup = setupRepository.findByUserAndId(user, setupId)
-                .orElseThrow(() -> new IllegalArgumentException("Setup not found"));
+    public SetupDto.ItemResponse editItem(Long itemId, SetupDto.ItemRequest request) {
+        var user = getAuthenticatedUser();
+        var item = setupItemRepository.findByIdAndUser(itemId, user)
+                .orElseThrow(() -> new IllegalArgumentException("Item not found"));
 
-        Optional.ofNullable(entity.category()).ifPresent(setup::setCategory);
-        Optional.ofNullable(entity.description()).ifPresent(setup::setDescription);
-        Optional.ofNullable(entity.values()).ifPresent(setup::setValues);
-        Optional.ofNullable(entity.downloads()).ifPresent(setup::setDownloads);
-        Optional.ofNullable(entity.subValue()).ifPresent(setup::setSubValue);
-        Optional.ofNullable(entity.subDownload()).ifPresent(setup::setSubDownload);
-
-        if (entity.imageLight() != null && !entity.imageLight().isEmpty()) {
-            cloudinaryService.imageRemove(setup.getImageLight());
-            String image = cloudinaryService.setupImageLight(entity.imageLight());
-            setup.setImageLight(image);
+        if (request.categoryId() != null && !request.categoryId().equals(item.getSetup().getId())) {
+            var newCategory = setupRepository.findByUserAndId(user, request.categoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+            item.setSetup(newCategory);
         }
-        if (entity.imageDark() != null && !entity.imageDark().isEmpty()) {
-            if (setup.getImageDark() != null) {
-                cloudinaryService.imageRemove(setup.getImageDark());
+
+        Optional.ofNullable(request.value()).filter(StringUtils::hasText).ifPresent(v -> item.setValue(v.trim()));
+        Optional.ofNullable(request.download()).filter(StringUtils::hasText).ifPresent(d -> item.setDownload(d.trim()));
+        Optional.ofNullable(request.subValue())
+                .ifPresent(sv -> item.setSubValue(StringUtils.hasText(sv) ? sv.trim() : null));
+        Optional.ofNullable(request.subDownload())
+                .ifPresent(sd -> item.setSubDownload(StringUtils.hasText(sd) ? sd.trim() : null));
+
+        if (request.imageLight() != null && !request.imageLight().isEmpty()) {
+            cloudinaryService.imageRemove(item.getImageLight());
+            String newLight = cloudinaryService.setupImageLight(request.imageLight());
+            item.setImageLight(newLight);
+        }
+
+        if (request.imageDark() != null && !request.imageDark().isEmpty()) {
+            if (item.getImageDark() != null) {
+                cloudinaryService.imageRemove(item.getImageDark());
             }
-            String image = cloudinaryService.setupDarkImage(entity.imageDark());
-            setup.setImageDark(image);
+            String newDark = cloudinaryService.setupDarkImage(request.imageDark());
+            item.setImageDark(newDark);
         }
 
-        var result = setupRepository.save(setup);
-        return mapToResponse(result);
+        var saved = setupItemRepository.save(item);
+        return mapToItemResponse(saved);
     }
 
-    public void deleteSetup(Integer setupId) {
+    public void deleteItem(Long itemId) {
+        var user = getAuthenticatedUser();
+        var item = setupItemRepository.findByIdAndUser(itemId, user)
+                .orElseThrow(() -> new IllegalArgumentException("Item not found"));
+
+        cleanupItemImages(item);
+        setupItemRepository.delete(item);
+    }
+
+    private void cleanupItemImages(SetupItemModel item) {
+        if (item.getImageLight() != null) {
+            try {
+                cloudinaryService.imageRemove(item.getImageLight());
+            } catch (Exception ignored) {
+            }
+        }
+        if (item.getImageDark() != null) {
+            try {
+                cloudinaryService.imageRemove(item.getImageDark());
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    private AuthModel getAuthenticatedUser() {
         var code = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
-        var user = authRepository.findByCode(code)
+        return authRepository.findByCode(code)
                 .orElseThrow(() -> new IllegalArgumentException("User not Found"));
-
-        var setup = setupRepository.findByUserAndId(user, setupId)
-                .orElseThrow(() -> new IllegalArgumentException("Setup not found"));
-
-        if (setup.getImageLight() != null) {
-            try {
-                cloudinaryService.imageRemove(setup.getImageLight());
-            } catch (Exception ignored) {}
-        }
-        if (setup.getImageDark() != null) {
-            try {
-                cloudinaryService.imageRemove(setup.getImageDark());
-            } catch (Exception ignored) {}
-        }
-
-        try {
-            setupRepository.deleteByUserAndId(user, setupId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("Setup not found");
-        }
     }
 
-    private SetupDto.response mapToResponse(SetupModel s) {
-        return new SetupDto.response(
+    private SetupDto.CategoryResponse mapToCategoryResponse(SetupModel s) {
+        var items = s.getItems() != null
+                ? s.getItems().stream().map(this::mapToItemResponse).toList()
+                : List.<SetupDto.ItemResponse>of();
+
+        return new SetupDto.CategoryResponse(
                 s.getId(),
                 s.getCategory(),
-                s.getImageLight(),
-                s.getImageDark(),
-                s.getValues(),
                 s.getDescription(),
-                s.getDownloads(),
-                s.getSubValue(),
-                s.getSubDownload()
-        );
+                items);
+    }
+
+    private SetupDto.ItemResponse mapToItemResponse(SetupItemModel i) {
+        return new SetupDto.ItemResponse(
+                i.getId(),
+                i.getSetup() != null ? i.getSetup().getId() : null,
+                i.getValue(),
+                i.getDownload(),
+                i.getImageLight(),
+                i.getImageDark(),
+                i.getSubValue(),
+                i.getSubDownload());
     }
 }

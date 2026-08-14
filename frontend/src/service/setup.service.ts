@@ -1,45 +1,68 @@
 import api from "@/lib/api";
 import { ApiReponse } from "@/lib/ApiResponse";
 
-export interface Setup {
+export interface SetupItem {
   id: number;
-  category: string;
+  categoryId?: number;
+  value: string;
+  download: string;
   imageLight: string;
   imageDark?: string;
-  values: string[];
-  description: string;
-  downloads: string[];
   subValue?: string;
   subDownload?: string;
 }
 
+export interface SetupCategory {
+  id: number;
+  category: string;
+  description: string;
+  items: SetupItem[];
+}
+
+export type Setup = SetupCategory;
+
 export const setupService = {
-  getPublic: async (): Promise<ApiReponse<Setup[]>> => {
+  getPublic: async (): Promise<ApiReponse<SetupCategory[]>> => {
     const res = await api.get("/api/setup");
     return res.data;
   },
 
-  getAdmin: async (): Promise<ApiReponse<Setup[]>> => {
+  getAdmin: async (): Promise<ApiReponse<SetupCategory[]>> => {
     const res = await api.get("/api/setup/admin");
     return res.data;
   },
 
-  addSetup: async (data: FormData): Promise<ApiReponse<Setup>> => {
-    const res = await api.post("/api/setup/admin/add-setup", data);
+  addCategory: async (data: { category: string; description: string }): Promise<ApiReponse<SetupCategory>> => {
+    const res = await api.post("/api/setup/admin/category", data);
     return res.data;
   },
 
-  deleteSetupById: async (setupId: number): Promise<ApiReponse> => {
-    const res = await api.delete(`/api/setup/admin/delete-setup/${setupId}`);
+  editCategory: async (
+    categoryId: number,
+    data: { category: string; description: string },
+  ): Promise<ApiReponse<SetupCategory>> => {
+    const res = await api.patch(`/api/setup/admin/category/${categoryId}`, data);
     return res.data;
   },
 
-  editSetupById: async (
-    setupId: number,
-    data: FormData,
-  ): Promise<ApiReponse<Setup>> => {
+  deleteCategory: async (categoryId: number): Promise<ApiReponse<void>> => {
+    const res = await api.delete(`/api/setup/admin/category/${categoryId}`);
+    return res.data;
+  },
+
+  addItem: async (data: FormData): Promise<ApiReponse<SetupItem>> => {
+    const res = await api.post("/api/setup/admin/item", data);
+    return res.data;
+  },
+
+  editItem: async (itemId: number, data: FormData): Promise<ApiReponse<SetupItem>> => {
     data.delete("id");
-    const res = await api.patch(`/api/setup/admin/edit-setup/${setupId}`, data);
+    const res = await api.patch(`/api/setup/admin/item/${itemId}`, data);
+    return res.data;
+  },
+
+  deleteItem: async (itemId: number): Promise<ApiReponse<void>> => {
+    const res = await api.delete(`/api/setup/admin/item/${itemId}`);
     return res.data;
   },
 };

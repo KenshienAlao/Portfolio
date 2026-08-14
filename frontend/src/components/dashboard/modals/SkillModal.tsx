@@ -364,7 +364,6 @@ export function SkillModal({
           )}
         </div>
 
-        {/* Dark Mode Image (Optional) */}
         <div className="space-y-1">
           <label className="block text-text-secondary">
             Image (Dark Mode){" "}

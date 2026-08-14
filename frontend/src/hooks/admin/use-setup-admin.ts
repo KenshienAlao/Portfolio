@@ -1,13 +1,18 @@
 import { ApiReponse } from "@/lib/ApiResponse";
-import { setupService, type Setup } from "@/service/setup.service";
+import {
+  setupService,
+  type SetupCategory,
+  type SetupItem,
+} from "@/service/setup.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const setupKey = ["setup"];
 
-export type { Setup };
+export type { SetupCategory, SetupItem };
+export type Setup = SetupCategory;
 
 interface PropsQuery {
-  queryFn: () => Promise<ApiReponse<Setup[]>>;
+  queryFn: () => Promise<ApiReponse<SetupCategory[]>>;
   queryKey: string[];
   staleTime?: number;
 }
@@ -17,7 +22,7 @@ function useSetup({
   queryFn,
   staleTime = 1000 * 60 * 5,
 }: PropsQuery) {
-  return useQuery<ApiReponse<Setup[]>, Error, Setup[]>({
+  return useQuery<ApiReponse<SetupCategory[]>, Error, SetupCategory[]>({
     queryKey,
     queryFn,
     select: (res) => res.data ?? [],
@@ -42,38 +47,170 @@ export const useSetupAdmin = () => {
   });
 };
 
-export const useAddSetup = () => {
+export const useAddCategory = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: setupService.addSetup,
+    mutationFn: setupService.addCategory,
 
-    onMutate: async (formData: FormData) => {
+    onMutate: async (newCategoryData) => {
       await queryClient.cancelQueries({ queryKey: [...setupKey, "admin"] });
 
-      const prevData = queryClient.getQueryData<ApiReponse<Setup[]>>([
+      const prevData = queryClient.getQueryData<ApiReponse<SetupCategory[]>>([
         ...setupKey,
         "admin",
       ]);
 
+      const tempCategory: SetupCategory = {
+        id: -Date.now(),
+        category: newCategoryData.category,
+        description: newCategoryData.description,
+        items: [],
+      };
+
+      queryClient.setQueryData<ApiReponse<SetupCategory[]>>(
+        [...setupKey, "admin"],
+        (old) => {
+          if (!old || !old.data) return old;
+          return {
+            ...old,
+            data: [...old.data, tempCategory],
+          };
+        },
+      );
+
+      return { prevData };
+    },
+
+    onError: (_err, _data, context) => {
+      if (context?.prevData) {
+        queryClient.setQueryData([...setupKey, "admin"], context.prevData);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: setupKey });
+    },
+  });
+};
+
+export const useEditCategory = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: number;
+      data: { category: string; description: string };
+    }) => setupService.editCategory(id, data),
+
+    onMutate: async ({ id, data }) => {
+      await queryClient.cancelQueries({ queryKey: [...setupKey, "admin"] });
+
+      const prevData = queryClient.getQueryData<ApiReponse<SetupCategory[]>>([
+        ...setupKey,
+        "admin",
+      ]);
+
+      queryClient.setQueryData<ApiReponse<SetupCategory[]>>(
+        [...setupKey, "admin"],
+        (old) => {
+          if (!old || !old.data) return old;
+          return {
+            ...old,
+            data: old.data.map((cat) =>
+              cat.id === id
+                ? {
+                    ...cat,
+                    category: data.category || cat.category,
+                    description: data.description || cat.description,
+                  }
+                : cat,
+            ),
+          };
+        },
+      );
+
+      return { prevData };
+    },
+
+    onError: (_err, _data, context) => {
+      if (context?.prevData) {
+        queryClient.setQueryData([...setupKey, "admin"], context.prevData);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: setupKey });
+    },
+  });
+};
+
+export const useDeleteCategory = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: setupService.deleteCategory,
+
+    onMutate: async (deletedCategoryId: number) => {
+      await queryClient.cancelQueries({ queryKey: [...setupKey, "admin"] });
+
+      const prevData = queryClient.getQueryData<ApiReponse<SetupCategory[]>>([
+        ...setupKey,
+        "admin",
+      ]);
+
+      queryClient.setQueryData<ApiReponse<SetupCategory[]>>(
+        [...setupKey, "admin"],
+        (old) => {
+          if (!old || !old.data) return old;
+          return {
+            ...old,
+            data: old.data.filter((cat) => cat.id !== deletedCategoryId),
+          };
+        },
+      );
+
+      return { prevData };
+    },
+
+    onError: (_err, _data, context) => {
+      if (context?.prevData) {
+        queryClient.setQueryData([...setupKey, "admin"], context.prevData);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: setupKey });
+    },
+  });
+};
+
+export const useAddItem = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: setupService.addItem,
+
+    onMutate: async (formData: FormData) => {
+      await queryClient.cancelQueries({ queryKey: [...setupKey, "admin"] });
+
+      const prevData = queryClient.getQueryData<ApiReponse<SetupCategory[]>>([
+        ...setupKey,
+        "admin",
+      ]);
+
+      const categoryId = Number(formData.get("categoryId"));
       const imageLightField = formData.get("imageLight");
       const imageDarkField = formData.get("imageDark");
 
-      const valuesRaw = (formData.get("values") as string) || "";
-      const downloadsRaw = (formData.get("downloads") as string) || "";
-
-      const tempSetup: Setup = {
+      const tempItem: SetupItem = {
         id: -Date.now(),
-        category: (formData.get("category") as string) ?? "Untitled",
-        description: (formData.get("description") as string) ?? "",
-        values: valuesRaw
-          ? valuesRaw.split(",").map((s) => s.trim()).filter(Boolean)
-          : [],
-        downloads: downloadsRaw
-          ? downloadsRaw.split(",").map((s) => s.trim()).filter(Boolean)
-          : [],
-        subValue: (formData.get("subValue") as string) || undefined,
-        subDownload: (formData.get("subDownload") as string) || undefined,
+        categoryId,
+        value: (formData.get("value") as string) || "Untitled Item",
+        download: (formData.get("download") as string) || "",
         imageLight:
           imageLightField instanceof File && imageLightField.size > 0
             ? URL.createObjectURL(imageLightField)
@@ -82,15 +219,24 @@ export const useAddSetup = () => {
           imageDarkField instanceof File && imageDarkField.size > 0
             ? URL.createObjectURL(imageDarkField)
             : undefined,
+        subValue: (formData.get("subValue") as string) || undefined,
+        subDownload: (formData.get("subDownload") as string) || undefined,
       };
 
-      queryClient.setQueryData<ApiReponse<Setup[]>>(
+      queryClient.setQueryData<ApiReponse<SetupCategory[]>>(
         [...setupKey, "admin"],
         (old) => {
           if (!old || !old.data) return old;
           return {
             ...old,
-            data: [...old.data, tempSetup],
+            data: old.data.map((cat) =>
+              cat.id === categoryId
+                ? {
+                    ...cat,
+                    items: [...(cat.items ?? []), tempItem],
+                  }
+                : cat,
+            ),
           };
         },
       );
@@ -110,99 +256,147 @@ export const useAddSetup = () => {
   });
 };
 
-export const useDeleteSetupById = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: setupService.deleteSetupById,
-
-    onMutate: async (deletedId: number) => {
-      await queryClient.cancelQueries({ queryKey: [...setupKey, "admin"] });
-
-      const prevData = queryClient.getQueryData<ApiReponse<Setup[]>>([
-        ...setupKey,
-        "admin",
-      ]);
-
-      queryClient.setQueryData<ApiReponse<Setup[]>>(
-        [...setupKey, "admin"],
-        (old) => {
-          if (!old || !old.data) return old;
-          return {
-            ...old,
-            data: old.data.filter((e) => e.id !== deletedId),
-          };
-        },
-      );
-
-      return { prevData };
-    },
-
-    onError: (_err, _data, context) => {
-      if (context?.prevData) {
-        queryClient.setQueryData([...setupKey, "admin"], context.prevData);
-      }
-    },
-
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: setupKey });
-    },
-  });
-};
-
-export const useEditSetup = () => {
+export const useEditItem = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: FormData }) =>
-      setupService.editSetupById(id, data),
+      setupService.editItem(id, data),
 
-    onMutate: async ({ id, data }: { id: number; data: FormData }) => {
+    onMutate: async ({ id, data }) => {
       await queryClient.cancelQueries({ queryKey: [...setupKey, "admin"] });
 
-      const prevData = queryClient.getQueryData<ApiReponse<Setup[]>>([
+      const prevData = queryClient.getQueryData<ApiReponse<SetupCategory[]>>([
         ...setupKey,
         "admin",
       ]);
 
-      const imageFileLight = data.get("imageLight");
-      const imageFileDark = data.get("imageDark");
-      const existSetup = prevData?.data?.find((s) => s.id === id);
+      const targetCategoryId = data.get("categoryId")
+        ? Number(data.get("categoryId"))
+        : undefined;
+      const imageLightField = data.get("imageLight");
+      const imageDarkField = data.get("imageDark");
 
-      const valuesRaw = data.get("values") as string;
-      const downloadsRaw = data.get("downloads") as string;
+      // Find existing item to preserve images if not updated
+      let existingItem: SetupItem | undefined;
+      let currentCategoryId: number | undefined;
 
-      const tempSetupEdit: Setup = {
+      if (prevData?.data) {
+        for (const cat of prevData.data) {
+          const found = cat.items?.find((item) => item.id === id);
+          if (found) {
+            existingItem = found;
+            currentCategoryId = cat.id;
+            break;
+          }
+        }
+      }
+
+      const tempItemEdit: SetupItem = {
         id,
-        category: (data.get("category") as string) || existSetup?.category || "",
-        description:
-          (data.get("description") as string) || existSetup?.description || "",
-        values: valuesRaw
-          ? valuesRaw.split(",").map((s) => s.trim()).filter(Boolean)
-          : existSetup?.values || [],
-        downloads: downloadsRaw
-          ? downloadsRaw.split(",").map((s) => s.trim()).filter(Boolean)
-          : existSetup?.downloads || [],
-        subValue: (data.get("subValue") as string) || existSetup?.subValue,
-        subDownload:
-          (data.get("subDownload") as string) || existSetup?.subDownload,
+        categoryId: targetCategoryId ?? currentCategoryId,
+        value: (data.get("value") as string) || existingItem?.value || "",
+        download:
+          (data.get("download") as string) || existingItem?.download || "",
         imageLight:
-          imageFileLight instanceof File && imageFileLight.size > 0
-            ? URL.createObjectURL(imageFileLight)
-            : existSetup?.imageLight || "",
+          imageLightField instanceof File && imageLightField.size > 0
+            ? URL.createObjectURL(imageLightField)
+            : existingItem?.imageLight || "",
         imageDark:
-          imageFileDark instanceof File && imageFileDark.size > 0
-            ? URL.createObjectURL(imageFileDark)
-            : existSetup?.imageDark,
+          imageDarkField instanceof File && imageDarkField.size > 0
+            ? URL.createObjectURL(imageDarkField)
+            : existingItem?.imageDark,
+        subValue:
+          (data.get("subValue") as string) || existingItem?.subValue,
+        subDownload:
+          (data.get("subDownload") as string) || existingItem?.subDownload,
       };
 
-      queryClient.setQueryData<ApiReponse<Setup[]>>(
+      queryClient.setQueryData<ApiReponse<SetupCategory[]>>(
+        [...setupKey, "admin"],
+        (old) => {
+          if (!old || !old.data) return old;
+
+          // If moved to a different category
+          if (
+            targetCategoryId &&
+            currentCategoryId &&
+            targetCategoryId !== currentCategoryId
+          ) {
+            return {
+              ...old,
+              data: old.data.map((cat) => {
+                if (cat.id === currentCategoryId) {
+                  return {
+                    ...cat,
+                    items: (cat.items ?? []).filter((item) => item.id !== id),
+                  };
+                }
+                if (cat.id === targetCategoryId) {
+                  return {
+                    ...cat,
+                    items: [...(cat.items ?? []), tempItemEdit],
+                  };
+                }
+                return cat;
+              }),
+            };
+          }
+
+          // Same category edit
+          return {
+            ...old,
+            data: old.data.map((cat) => ({
+              ...cat,
+              items: (cat.items ?? []).map((item) =>
+                item.id === id ? tempItemEdit : item,
+              ),
+            })),
+          };
+        },
+      );
+
+      return { prevData };
+    },
+
+    onError: (_err, _data, context) => {
+      if (context?.prevData) {
+        queryClient.setQueryData([...setupKey, "admin"], context.prevData);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: setupKey });
+    },
+  });
+};
+
+export const useDeleteItem = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: setupService.deleteItem,
+
+    onMutate: async (deletedItemId: number) => {
+      await queryClient.cancelQueries({ queryKey: [...setupKey, "admin"] });
+
+      const prevData = queryClient.getQueryData<ApiReponse<SetupCategory[]>>([
+        ...setupKey,
+        "admin",
+      ]);
+
+      queryClient.setQueryData<ApiReponse<SetupCategory[]>>(
         [...setupKey, "admin"],
         (old) => {
           if (!old || !old.data) return old;
           return {
             ...old,
-            data: old.data.map((e) => (e.id === id ? tempSetupEdit : e)),
+            data: old.data.map((cat) => ({
+              ...cat,
+              items: (cat.items ?? []).filter(
+                (item) => item.id !== deletedItemId,
+              ),
+            })),
           };
         },
       );
