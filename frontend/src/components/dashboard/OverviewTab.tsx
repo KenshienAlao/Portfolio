@@ -9,7 +9,6 @@ import {
   Inbox,
   Layers,
   Mail,
-  Plus,
   Terminal,
   Wrench,
 } from "lucide-react";
@@ -25,17 +24,14 @@ interface OverviewTabProps {
 }
 
 function formatDate(isoString: string) {
-  try {
-    const date = new Date(isoString);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  } catch {
-    return isoString;
-  }
+  const date = new Date(isoString);
+  if (Number.isNaN(date.getTime())) return isoString;
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 export function OverviewTab({ setActiveTab }: OverviewTabProps) {
@@ -57,14 +53,14 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
       value: projects.length,
       icon: Layers,
       tab: "projects" as Tab,
-      color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+      color: "bg-chart-1/10 text-chart-1 border-chart-1/20",
     },
     {
       label: "Skills",
       value: skills.length,
       icon: Wrench,
       tab: "skills" as Tab,
-      color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+      color: "bg-chart-2/10 text-chart-2 border-chart-2/20",
     },
     {
       label: "Setup Tools",
@@ -72,14 +68,14 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
       subtitle: `${setupCategories.length} categories`,
       icon: Terminal,
       tab: "setup" as Tab,
-      color: "bg-purple-500/10 text-purple-500 border-purple-500/20",
+      color: "bg-chart-3/10 text-chart-3 border-chart-3/20",
     },
     {
       label: "Education",
       value: education.length,
       icon: GraduationCap,
       tab: "education" as Tab,
-      color: "bg-amber-500/10 text-amber-500 border-amber-500/20",
+      color: "bg-chart-4/10 text-chart-4 border-chart-4/20",
     },
     {
       label: "Messages",
@@ -95,16 +91,40 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
     },
   ];
 
-  // Skill category breakdown
   const skillsByCategory = skills.reduce<Record<string, number>>((acc, s) => {
     const cat = s.category || "General";
     acc[cat] = (acc[cat] || 0) + 1;
     return acc;
   }, {});
+  const maxCategoryCount = Math.max(1, ...Object.values(skillsByCategory));
 
   return (
     <div className="space-y-8 font-mono">
-      {/* ── Stat Cards ──────────────────────────────────────────────────────── */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-xs text-text-secondary">
+          {unreadMessagesCount > 0 ? (
+            <>
+              You have{" "}
+              <span className="font-bold text-accent">
+                {unreadMessagesCount} unread message
+                {unreadMessagesCount !== 1 ? "s" : ""}
+              </span>
+              .
+            </>
+          ) : (
+            "All caught up — no unread messages."
+          )}
+        </p>
+        <a
+          href="/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-text-primary transition-colors hover:border-accent hover:text-accent"
+        >
+          View Public Portfolio <ExternalLink className="h-3 w-3" />
+        </a>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {stats.map((stat) => (
           <button
@@ -133,16 +153,16 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
                   {stat.subtitle}
                 </p>
               )}
+              <span className="mt-1.5 flex items-center gap-1 text-[10px] font-semibold text-accent opacity-0 transition-opacity group-hover:opacity-100">
+                Manage <ArrowRight className="h-2.5 w-2.5" />
+              </span>
             </div>
           </button>
         ))}
       </div>
 
-      {/* ── Main Content Grid ───────────────────────────────────────────────── */}
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Left 2 Cols: Recent Messages & Quick Actions */}
-        <div className="space-y-6 lg:col-span-2">
-          {/* Recent Messages */}
+        <div className="lg:col-span-2">
           <div className="rounded-2xl border border-border bg-surface p-6">
             <div className="flex items-center justify-between border-b border-border/60 pb-4">
               <div className="flex items-center gap-2">
@@ -172,7 +192,7 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
               </div>
             ) : (
               <div className="mt-4 space-y-3">
-                {messages.slice(0, 3).map((msg) => (
+                {messages.slice(0, 4).map((msg) => (
                   <div
                     key={msg.id}
                     onClick={() => setActiveTab("messages")}
@@ -208,57 +228,11 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
               </div>
             )}
           </div>
-
-          {/* Quick Shortcuts */}
-          <div className="rounded-2xl border border-border bg-surface p-6">
-            <h3 className="text-sm font-bold text-text-primary mb-4 flex items-center gap-2">
-              <Plus className="h-4 w-4 text-accent" /> Quick Actions
-            </h3>
-            <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
-              <button
-                type="button"
-                onClick={() => setActiveTab("projects")}
-                className="flex items-center justify-between rounded-xl border border-border bg-background p-3.5 text-xs font-medium text-text-primary transition-all hover:border-accent/50 hover:bg-accent/5"
-              >
-                <span>Manage Projects</span>
-                <ArrowRight className="h-3.5 w-3.5 text-text-secondary" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab("skills")}
-                className="flex items-center justify-between rounded-xl border border-border bg-background p-3.5 text-xs font-medium text-text-primary transition-all hover:border-accent/50 hover:bg-accent/5"
-              >
-                <span>Add Skill</span>
-                <ArrowRight className="h-3.5 w-3.5 text-text-secondary" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab("setup")}
-                className="flex items-center justify-between rounded-xl border border-border bg-background p-3.5 text-xs font-medium text-text-primary transition-all hover:border-accent/50 hover:bg-accent/5"
-              >
-                <span>Setup Tools</span>
-                <ArrowRight className="h-3.5 w-3.5 text-text-secondary" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab("education")}
-                className="flex items-center justify-between rounded-xl border border-border bg-background p-3.5 text-xs font-medium text-text-primary transition-all hover:border-accent/50 hover:bg-accent/5"
-              >
-                <span>Education</span>
-                <ArrowRight className="h-3.5 w-3.5 text-text-secondary" />
-              </button>
-            </div>
-          </div>
         </div>
 
-        {/* Right Col: Skills Distribution & System Status */}
         <div className="space-y-6">
-          {/* Skills Breakdown */}
           <div className="rounded-2xl border border-border bg-surface p-6">
-            <h3 className="text-sm font-bold text-text-primary mb-3 flex items-center justify-between">
+            <h3 className="mb-4 flex items-center justify-between text-sm font-bold text-text-primary">
               <span>Skills by Category</span>
               <span className="text-xs font-normal text-text-secondary">
                 {skills.length} total
@@ -266,35 +240,46 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
             </h3>
 
             {Object.keys(skillsByCategory).length === 0 ? (
-              <p className="text-xs text-text-secondary py-4">
+              <p className="py-4 text-xs text-text-secondary">
                 No skills added yet.
               </p>
             ) : (
-              <div className="space-y-2.5 mt-4">
+              <div className="space-y-3">
                 {Object.entries(skillsByCategory).map(([category, count]) => (
-                  <div
-                    key={category}
-                    className="flex items-center justify-between rounded-lg border border-border/50 bg-background px-3 py-2 text-xs"
-                  >
-                    <span className="text-text-secondary">{category}</span>
-                    <span className="rounded-md bg-surface px-2 py-0.5 font-bold text-text-primary">
-                      {count}
-                    </span>
+                  <div key={category} className="space-y-1.5">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-text-secondary">{category}</span>
+                      <span className="font-bold text-text-primary">
+                        {count}
+                      </span>
+                    </div>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-background">
+                      <div
+                        className="h-full rounded-full bg-accent transition-all"
+                        style={{
+                          width: `${(count / maxCategoryCount) * 100}%`,
+                        }}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          {/* System Status */}
-          <div className="rounded-2xl border border-border bg-surface p-6 space-y-4">
-            <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+          <div className="rounded-2xl border border-border bg-surface p-6">
+            <div className="mb-4 flex items-center gap-1.5">
+              <span className="h-3 w-3 rounded-full bg-destructive/70" />
+              <span className="h-3 w-3 rounded-full bg-accent/40" />
+              <span className="h-3 w-3 rounded-full bg-accent/70" />
+              <span className="ml-3 flex items-center gap-1.5 text-xs text-text-secondary">
+                stack.json
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                </span>
               </span>
-              System Status
-            </h3>
+            </div>
 
             <div className="space-y-2 text-xs text-text-secondary">
               <div className="flex justify-between border-b border-border/40 pb-2">
@@ -322,16 +307,6 @@ export function OverviewTab({ setActiveTab }: OverviewTabProps) {
                 </span>
               </div>
             </div>
-
-            <a
-              href="/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-border bg-background py-2 text-xs font-semibold text-text-primary transition-colors hover:border-accent hover:text-accent"
-            >
-              <span>View Public Portfolio</span>
-              <ExternalLink className="h-3 w-3" />
-            </a>
           </div>
         </div>
       </div>
