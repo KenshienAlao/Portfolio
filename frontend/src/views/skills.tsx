@@ -78,26 +78,29 @@ export default function Skills() {
                       className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium text-text-primary"
                     >
                       <div className="relative flex h-4 w-4 shrink-0">
-                        {skill.imageLight && (
+                        {skill.imageLight ? (
                           <Image
                             src={skill.imageLight}
                             alt={skill.name}
                             fill
                             sizes="32px"
                             unoptimized={skill.imageLight.startsWith("http")}
-                            className="absolute inset-0 object-contain dark:opacity-0"
+                            className={cn(
+                              "absolute inset-0 object-contain",
+                              skill.imageDark ? "dark:hidden" : ""
+                            )}
                           />
-                        )}
-                        {skill.imageDark && (
+                        ) : null}
+                        {skill.imageDark ? (
                           <Image
                             src={skill.imageDark}
                             alt={skill.name}
                             fill
                             sizes="32px"
                             unoptimized={skill.imageDark.startsWith("http")}
-                            className="absolute inset-0 object-contain opacity-0 dark:opacity-100"
+                            className="absolute inset-0 object-contain hidden dark:block"
                           />
-                        )}
+                        ) : null}
                       </div>
                       {skill.name}
                     </div>

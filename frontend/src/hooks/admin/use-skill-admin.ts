@@ -12,7 +12,6 @@ interface propsQuery {
   staleTime?: number;
 }
 
-
 function useSkill({
   queryKey,
   queryFn,
@@ -198,5 +197,3 @@ export const useEditSkill = () => {
     },
   });
 };
-
-

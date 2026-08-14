@@ -147,7 +147,9 @@ export function SkillsTab() {
                               fill
                               sizes="16px"
                               priority
-                              unoptimized={String(skill.imageLight).startsWith("blob:")}
+                              unoptimized={String(skill.imageLight).startsWith(
+                                "blob:",
+                              )}
                               className="object-contain"
                             />
                           </div>
@@ -160,7 +162,9 @@ export function SkillsTab() {
                               fill
                               sizes="16px"
                               priority
-                              unoptimized={String(skill.imageDark).startsWith("blob:")}
+                              unoptimized={String(skill.imageDark).startsWith(
+                                "blob:",
+                              )}
                               className="object-contain"
                             />
                           </div>
