@@ -1,0 +1,18 @@
+{
+  "name": "Kenshien Alao — Web Developer",
+  "short_name": "Kenshien Alao",
+  "description": "Personal portfolio of Kenshien Alao, a web developer specializing in modern web applications.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
