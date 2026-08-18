@@ -46,6 +46,8 @@ export const metadata: Metadata = {
 
   keywords: [
     "Kenshien Alao",
+    "Clarenze Kenshien A. Alao",
+    "Clarenze Alao",
     "Kenshien",
     "Web Developer",
     "Full Stack Developer",
