@@ -79,7 +79,8 @@ export const metadata: Metadata = {
 
     images: [
       {
-        url: "/og-image.png",
+        url: `${siteUrl}/og-image.png`,
+        secureUrl: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
         alt: `${siteName} — Web Developer`,
@@ -95,7 +96,7 @@ export const metadata: Metadata = {
 
     images: [
       {
-        url: "/og-image.png",
+        url: `${siteUrl}/og-image.png`,
         alt: `${siteName} — Web Developer`,
       },
     ],
