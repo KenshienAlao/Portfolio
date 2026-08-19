@@ -36,9 +36,9 @@ function ThemeTogglerButton({ className }: { className?: string }) {
       {mounted && (
         <div>
           {resolvedTheme === "dark" ? (
-            <FaSun className="h-4 w-4 text-accent" />
+            <FaSun className="h-4 w-4 text-accent" aria-hidden="true" />
           ) : (
-            <FaMoon className="h-4 w-4 text-accent" />
+            <FaMoon className="h-4 w-4 text-accent" aria-hidden="true" />
           )}
         </div>
       )}

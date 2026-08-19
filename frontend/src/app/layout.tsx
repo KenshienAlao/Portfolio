@@ -3,18 +3,21 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/provider/theme-provider";
-import { QueryProvider } from "@/provider/query-provider";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 const siteUrl = "https://kenshien.is-a.dev";
@@ -276,10 +279,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col antialiased">
         <JsonLd />
-
-        <QueryProvider>
-          <ThemeProvider>{children}</ThemeProvider>
-        </QueryProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

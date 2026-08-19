@@ -41,7 +41,7 @@ export function Hero() {
             Web Developer | Helping Businesses Grow Online
           </p>
 
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-text-secondary md:text-lg text-pretty">
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-text-secondary md:text-lg">
             I help businesses grow their online presence by building modern web
             applications and high-converting landing pages that are fast,
             responsive, and designed to turn visitors into customers.

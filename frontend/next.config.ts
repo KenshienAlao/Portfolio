@@ -9,7 +9,16 @@ const nextConfig: NextConfig = {
   },
 
   experimental: {
-    optimizePackageImports: ["react-icons", "@tanstack/react-query"],
+    optimizePackageImports: [
+      "react-icons",
+      "react-icons/fa",
+      "react-icons/fa6",
+      "react-icons/fi",
+      "react-icons/lu",
+      "react-icons/io5",
+      "@tanstack/react-query",
+      "next-themes",
+    ],
   },
 
   images: {

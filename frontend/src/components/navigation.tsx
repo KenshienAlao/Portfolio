@@ -38,17 +38,19 @@ export function Navigation() {
     const indicator = indicatorRef.current;
     if (!nav || !indicator) return;
 
-    const activeEl = nav.querySelector<HTMLElement>('[aria-current="page"]');
-    if (!activeEl) {
-      indicator.style.opacity = "0";
-      return;
-    }
+    const frameId = requestAnimationFrame(() => {
+      const activeEl = nav.querySelector<HTMLElement>('[aria-current="page"]');
+      if (!activeEl) {
+        indicator.style.opacity = "0";
+        return;
+      }
 
-    Object.assign(indicator.style, {
-      width: `${activeEl.offsetWidth}px`,
-      left: `${activeEl.offsetLeft}px`,
-      opacity: "1",
+      indicator.style.width = `${activeEl.offsetWidth}px`;
+      indicator.style.left = `${activeEl.offsetLeft}px`;
+      indicator.style.opacity = "1";
     });
+
+    return () => cancelAnimationFrame(frameId);
   }, [pathname]);
 
   return (

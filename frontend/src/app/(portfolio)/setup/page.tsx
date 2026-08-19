@@ -1,4 +1,5 @@
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { QueryProvider } from "@/provider/query-provider";
 import { Setup } from "@/views/setup";
 import { apiUrl, fetchWithFallback, getQueryClient } from "@/lib/prefetch";
 import type { Metadata } from "next";
@@ -20,8 +21,10 @@ export default async function SetupPage() {
   });
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <Setup />
-    </HydrationBoundary>
+    <QueryProvider>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <Setup />
+      </HydrationBoundary>
+    </QueryProvider>
   );
 }

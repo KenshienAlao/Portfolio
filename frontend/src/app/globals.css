@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -305,20 +304,20 @@
 .bg-grid {
   background-image: radial-gradient(var(--border) 1px, transparent 1px);
   background-size: 22px 22px;
-  -webkit-mask-image: radial-gradient(
-    ellipse at center,
-    black 0%,
-    transparent 78%
-  );
-  mask-image: radial-gradient(ellipse at center, black 0%, transparent 78%);
+  mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+  pointer-events: none;
+  contain: strict;
 }
 
 .glow-accent {
   background: radial-gradient(
     circle at center,
-    color-mix(in srgb, var(--accent) 26%, transparent) 0%,
+    rgba(176, 137, 104, 0.22) 0%,
     transparent 70%
   );
+  pointer-events: none;
+  contain: strict;
 }
 
 .caret::after {
