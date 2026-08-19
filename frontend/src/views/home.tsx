@@ -48,7 +48,7 @@ export function Hero() {
           </p>
 
           <p className="mt-6 font-mono text-sm text-accent">
-            <span className="caret">&gt; building for the web</span>
+            <span>&gt; building for the web</span>
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
