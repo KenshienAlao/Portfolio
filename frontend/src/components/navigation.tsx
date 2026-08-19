@@ -1,32 +1,19 @@
-import { NAV_PAGES } from "@/config/navigation.config";
+"use client";
+
+import { NAV_ITEMS } from "@/config/navigation.config";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ThemeTogglerButton } from "./theme-toggle";
 import { ROUTES } from "@/config/routes";
 import { FiMenu } from "react-icons/fi";
 import { FaX } from "react-icons/fa6";
 
-type NavProps = {
-  currentPath: string;
-  setCurrentPage: (page: string) => void;
-  mobileMenuOpen: boolean;
-  setMobileMenuOpen: (open: boolean) => void;
-  theme: string | undefined;
-  setTheme: (theme: string) => void;
-};
-
-const navKeys = Object.keys(NAV_PAGES.LINKS) as Array<
-  keyof typeof NAV_PAGES.LINKS
->;
-
-export function Navigation({
-  currentPath,
-  setCurrentPage,
-  mobileMenuOpen,
-  setMobileMenuOpen,
-}: NavProps) {
+export function Navigation() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
 
@@ -36,9 +23,9 @@ export function Navigation({
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
     return () => {
@@ -52,19 +39,17 @@ export function Navigation({
     if (!nav || !indicator) return;
 
     const activeEl = nav.querySelector<HTMLElement>('[aria-current="page"]');
-    if (!activeEl) return;
+    if (!activeEl) {
+      indicator.style.opacity = "0";
+      return;
+    }
 
     Object.assign(indicator.style, {
       width: `${activeEl.offsetWidth}px`,
       left: `${activeEl.offsetLeft}px`,
       opacity: "1",
     });
-  }, [currentPath]);
-
-  const go = (page: string) => {
-    setCurrentPage(page);
-    setMobileMenuOpen(false);
-  };
+  }, [pathname]);
 
   return (
     <>
@@ -103,15 +88,13 @@ export function Navigation({
                 }}
               />
 
-              {navKeys.map((key, i) => {
-                const page = NAV_PAGES.LINKS[key];
-                const Icon = NAV_PAGES.ICONS[key];
-                const active = currentPath === page.toLowerCase();
+              {NAV_ITEMS.map(({ label, href, icon: Icon }) => {
+                const active =
+                  href === "/" ? pathname === "/" : pathname.startsWith(href);
                 return (
-                  <button
-                    type="button"
-                    key={page}
-                    onClick={() => go(page)}
+                  <Link
+                    key={href}
+                    href={href}
                     className={cn(
                       "group relative z-10 flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-semibold tracking-wide",
                       "rounded-xl",
@@ -120,9 +103,6 @@ export function Navigation({
                         : "text-text-secondary hover:text-text-primary",
                     )}
                     aria-current={active ? "page" : undefined}
-                    style={{
-                      animationDelay: `${i * 40}ms`,
-                    }}
                   >
                     {Icon && (
                       <Icon
@@ -132,9 +112,10 @@ export function Navigation({
                             ? "scale-110"
                             : "group-hover:scale-110 group-hover:-rotate-3",
                         )}
+                        aria-hidden="true"
                       />
                     )}
-                    <span>{page}</span>
+                    <span>{label}</span>
                     <span
                       className={cn(
                         "absolute -bottom-0.5 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-accent",
@@ -143,7 +124,7 @@ export function Navigation({
                           : "opacity-0 scale-x-0",
                       )}
                     />
-                  </button>
+                  </Link>
                 );
               })}
             </div>
@@ -204,15 +185,14 @@ export function Navigation({
         </div>
 
         <div className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
-          {navKeys.map((key, i) => {
-            const page = NAV_PAGES.LINKS[key];
-            const Icon = NAV_PAGES.ICONS[key];
-            const active = currentPath === page.toLowerCase();
+          {NAV_ITEMS.map(({ label, href, icon: Icon }, i) => {
+            const active =
+              href === "/" ? pathname === "/" : pathname.startsWith(href);
             return (
-              <button
-                type="button"
-                key={page}
-                onClick={() => go(page)}
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMobileMenuOpen(false)}
                 className={cn(
                   "group relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold",
                   active
@@ -239,10 +219,11 @@ export function Navigation({
                       "h-4.5 w-4.5 transition-transform duration-200",
                       active ? "" : "group-hover:scale-110",
                     )}
+                    aria-hidden="true"
                   />
                 )}
-                <span>{page}</span>
-              </button>
+                <span>{label}</span>
+              </Link>
             );
           })}
         </div>

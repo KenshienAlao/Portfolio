@@ -1,3 +1,5 @@
+"use client";
+
 import { SectionHeader } from "@/components/section-header";
 import { useProjectPublic } from "@/hooks/admin/use-project-admin";
 import { FaStar } from "react-icons/fa";

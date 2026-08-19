@@ -1,3 +1,5 @@
+"use client";
+
 import { SectionHeader } from "@/components/section-header";
 import Link from "next/link";
 import { useEducationPublic } from "@/hooks/admin/use-education-admin";

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { NAV_PAGES } from "@/config/navigation.config";
+import Link from "next/link";
 import { FaCode } from "react-icons/fa";
 import { FiArrowRight, FiZap } from "react-icons/fi";
 import { IoAccessibility, IoLayers } from "react-icons/io5";
@@ -11,7 +11,7 @@ const CAPABILITIES = [
   { icon: IoAccessibility, label: "Accessible" },
 ];
 
-export function Hero({ changePage }: { changePage: (page: string) => void }) {
+export function Hero() {
   return (
     <section
       id="hero"
@@ -53,22 +53,22 @@ export function Hero({ changePage }: { changePage: (page: string) => void }) {
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button
-              type="button"
-              onClick={() => changePage(NAV_PAGES.LINKS.PROJECTS)}
+              asChild
               size="lg"
               className="w-full rounded-full bg-accent px-8 font-semibold text-on-accent hover:bg-accent/90 active:scale-95 sm:w-auto"
             >
-              View Projects
-              <FiArrowRight className="ml-2 h-4 w-4" />
+              <Link href="/projects">
+                View Projects
+                <FiArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
             <Button
-              type="button"
-              onClick={() => changePage(NAV_PAGES.LINKS.CONTACT)}
+              asChild
               size="lg"
               variant="outline"
               className="w-full rounded-full border-border bg-transparent px-8 font-semibold text-text-primary hover:border-accent/50 hover:bg-surface active:scale-95 sm:w-auto"
             >
-              Get in Touch
+              <Link href="/contact">Get in Touch</Link>
             </Button>
           </div>
 
