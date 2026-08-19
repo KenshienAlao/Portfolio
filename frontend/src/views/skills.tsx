@@ -2,14 +2,11 @@
 
 import { useState } from "react";
 import { type Skill } from "@/service/skill.service";
-import { useSkillPublic } from "@/hooks/admin/use-skill-admin";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { SectionHeader } from "@/components/section-header";
 
-export default function Skills() {
-  const { data: skills } = useSkillPublic();
-
+export function Skills({ skills }: { skills: Skill[] | null }) {
   const groupedSkills = (() => {
     if (!skills) return {};
     return skills.reduce<Record<string, Skill[]>>((acc, skill) => {
@@ -51,7 +48,7 @@ export default function Skills() {
                 key={cat}
                 onClick={() => setActive(cat)}
                 className={cn(
-                  "rounded-full border px-4 py-1.5 font-mono text-xs font-semibold",
+                  "rounded-full border px-4 py-1.5 font-mono text-xs font-semibold transition-colors",
                   active === cat
                     ? "border-accent bg-accent text-on-accent"
                     : "border-border bg-transparent text-text-secondary hover:border-accent/50 hover:text-text-primary",
@@ -87,7 +84,7 @@ export default function Skills() {
                             unoptimized={skill.imageLight.startsWith("http")}
                             className={cn(
                               "absolute inset-0 object-contain",
-                              skill.imageDark ? "dark:hidden" : ""
+                              skill.imageDark ? "dark:hidden" : "",
                             )}
                           />
                         ) : null}

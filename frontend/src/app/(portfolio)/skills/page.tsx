@@ -1,7 +1,6 @@
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import { QueryProvider } from "@/provider/query-provider";
-import Skills from "@/views/skills";
-import { apiUrl, fetchWithFallback, getQueryClient } from "@/lib/prefetch";
+import { Skills } from "@/views/skills";
+import { apiUrl, fetchWithFallback } from "@/lib/prefetch";
+import { type Skill } from "@/service/skill.service";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -16,18 +15,6 @@ export const metadata: Metadata = {
 };
 
 export default async function SkillsPage() {
-  const queryClient = getQueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: ["skill", "public"],
-    queryFn: () => fetchWithFallback(`${apiUrl}/api/skill`),
-  });
-
-  return (
-    <QueryProvider>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Skills />
-      </HydrationBoundary>
-    </QueryProvider>
-  );
+  const skills = await fetchWithFallback<Skill[]>(`${apiUrl}/api/skill`);
+  return <Skills skills={skills} />;
 }

@@ -1,4 +1,3 @@
-import { QueryProvider } from "@/provider/query-provider";
 import { Contact } from "@/views/contact";
 import type { Metadata } from "next";
 
@@ -12,9 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  return (
-    <QueryProvider>
-      <Contact />
-    </QueryProvider>
-  );
+  return <Contact />;
 }

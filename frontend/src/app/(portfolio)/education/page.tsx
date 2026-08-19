@@ -1,7 +1,6 @@
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import { QueryProvider } from "@/provider/query-provider";
 import { Education } from "@/views/education";
-import { apiUrl, fetchWithFallback, getQueryClient } from "@/lib/prefetch";
+import { apiUrl, fetchWithFallback } from "@/lib/prefetch";
+import { type Education as EducationType } from "@/service/education.service";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -16,18 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default async function EducationPage() {
-  const queryClient = getQueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: ["education", "public"],
-    queryFn: () => fetchWithFallback(`${apiUrl}/api/education`),
-  });
-
-  return (
-    <QueryProvider>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Education />
-      </HydrationBoundary>
-    </QueryProvider>
+  const education = await fetchWithFallback<EducationType[]>(
+    `${apiUrl}/api/education`,
   );
+
+  return <Education education={education} />;
 }

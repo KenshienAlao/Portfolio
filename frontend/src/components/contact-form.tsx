@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useSendMessageMutation } from "@/hooks/admin/use-message-admin";
+import { messageService } from "@/service/message.service";
 import { FiAlertCircle, FiCheck, FiLoader, FiSend } from "react-icons/fi";
 
 interface FormState {
@@ -22,10 +22,8 @@ const INITIAL_STATE: FormState = {
 export function ContactForm() {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [sent, setSent] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
-  const { mutate: sendMessage, isPending: isSending } =
-    useSendMessageMutation();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -33,30 +31,31 @@ export function ContactForm() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSending) return;
     setErrorMsg(null);
+    setIsSending(true);
 
-    sendMessage(form, {
-      onSuccess: () => {
-        setSent(true);
-        setForm(INITIAL_STATE);
-        setTimeout(() => setSent(false), 5000);
-      },
-      onError: (err: unknown) => {
-        setErrorMsg(
-          (
-            err as {
-              response?: { data?: { message?: string } };
-              message?: string;
-            }
-          )?.response?.data?.message ||
-            (err as { message?: string })?.message ||
-            "Failed to send message. Please try again.",
-        );
-      },
-    });
+    try {
+      await messageService.sendMessage(form);
+      setSent(true);
+      setForm(INITIAL_STATE);
+      setTimeout(() => setSent(false), 5000);
+    } catch (err: unknown) {
+      setErrorMsg(
+        (
+          err as {
+            response?: { data?: { message?: string } };
+            message?: string;
+          }
+        )?.response?.data?.message ||
+          (err as { message?: string })?.message ||
+          "Failed to send message. Please try again.",
+      );
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const fieldClass =

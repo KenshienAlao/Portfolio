@@ -1,16 +1,11 @@
-"use client";
-
 import { SectionHeader } from "@/components/section-header";
-import { useProjectPublic } from "@/hooks/admin/use-project-admin";
 import { FaStar } from "react-icons/fa";
 import { FiLayers } from "react-icons/fi";
 import { PiFolderOpenFill } from "react-icons/pi";
 
 const STACK = ["React", "Next.js", "TypeScript", "Spring Boot", "PostgreSQL"];
 
-export function About() {
-  const { data: projects } = useProjectPublic();
-
+export function About({ projectCount = 0 }: { projectCount?: number }) {
   const HIGHLIGHTS = {
     STATS: [
       {
@@ -19,9 +14,7 @@ export function About() {
       },
       {
         label: "Projects Completed",
-        value: projects?.length ?? (
-          <div className="h-7 w-8 animate-pulse rounded-md bg-muted-foreground/15" />
-        ),
+        value: projectCount,
       },
       { label: "Tech Stack Focus", value: "NextJS" },
     ],
@@ -93,7 +86,7 @@ export function About() {
                 >
                   {Icon && (
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                      <Icon className="h-5 w-5" />
+                      <Icon className="h-5 w-5" aria-hidden="true" />
                     </div>
                   )}
                   <div>
