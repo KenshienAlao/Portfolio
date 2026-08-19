@@ -89,6 +89,7 @@ export function Setup() {
                                       tool.imageLight.startsWith("http") ||
                                       tool.imageLight.startsWith("blob:")
                                     }
+                                    style={{ width: "auto", height: "auto" }}
                                     className={`object-contain ${
                                       tool.imageDark ? "dark:hidden" : ""
                                     }`}
@@ -103,6 +104,7 @@ export function Setup() {
                                         tool.imageDark.startsWith("http") ||
                                         tool.imageDark.startsWith("blob:")
                                       }
+                                      style={{ width: "auto", height: "auto" }}
                                       className="object-contain hidden dark:block"
                                     />
                                   )}
