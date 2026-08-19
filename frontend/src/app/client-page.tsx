@@ -1,16 +1,24 @@
 "use client";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { Navigation } from "../components/navigation";
 import { Footer } from "../components/footer";
 import { NAV_PAGES } from "@/config/navigation.config";
 import { Hero } from "@/views/home";
-import { About } from "@/views/about";
-import { Projects } from "@/views/projects";
-import { Setup } from "@/views/setup";
-import { Contact } from "@/views/contact";
-import Skills from "@/views/skills";
-import { Education } from "@/views/education";
+
+const About = dynamic(() => import("@/views/about").then((mod) => mod.About));
+const Projects = dynamic(() =>
+  import("@/views/projects").then((mod) => mod.Projects),
+);
+const Setup = dynamic(() => import("@/views/setup").then((mod) => mod.Setup));
+const Contact = dynamic(() =>
+  import("@/views/contact").then((mod) => mod.Contact),
+);
+const Skills = dynamic(() => import("@/views/skills"));
+const Education = dynamic(() =>
+  import("@/views/education").then((mod) => mod.Education),
+);
 
 export function ClientPage() {
   const { theme, setTheme } = useTheme();

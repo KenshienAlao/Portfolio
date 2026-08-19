@@ -25,33 +25,33 @@ export function Hero({ changePage }: { changePage: (page: string) => void }) {
 
       <div className="container relative z-10 mx-auto px-4">
         <div className="mx-auto max-w-3xl">
-          <p className="slide-up flex items-center gap-2 font-mono text-xs text-accent sm:text-sm">
+          <p className="flex items-center gap-2 font-mono text-xs text-accent sm:text-sm">
             <span className="text-text-secondary">~/kenshien</span>
             <span className="text-text-secondary">$</span>
             <span>whoami</span>
           </p>
 
-          <h1 className="slide-up stagger-1 mt-4 text-5xl font-extrabold leading-[0.95] tracking-tight text-text-primary text-balance sm:text-6xl md:text-7xl">
+          <h1 className="mt-4 text-5xl font-extrabold leading-[0.95] tracking-tight text-text-primary text-balance sm:text-6xl md:text-7xl">
             Kenshien
             <br />
             <span className="text-accent">Alao</span>
           </h1>
 
-          <p className="slide-up stagger-2 mt-5 font-mono text-sm text-text-secondary sm:text-base">
+          <p className="mt-5 font-mono text-sm text-text-secondary sm:text-base">
             Web Developer | Helping Businesses Grow Online
           </p>
 
-          <p className="slide-up stagger-3 mt-6 max-w-xl text-base leading-relaxed text-text-secondary md:text-lg text-pretty">
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-text-secondary md:text-lg text-pretty">
             I help businesses grow their online presence by building modern web
             applications and high-converting landing pages that are fast,
             responsive, and designed to turn visitors into customers.
           </p>
 
-          <p className="slide-up stagger-4 mt-6 font-mono text-sm text-accent">
+          <p className="mt-6 font-mono text-sm text-accent">
             <span className="caret">&gt; building for the web</span>
           </p>
 
-          <div className="slide-up stagger-5 mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button
               type="button"
               onClick={() => changePage(NAV_PAGES.LINKS.PROJECTS)}
