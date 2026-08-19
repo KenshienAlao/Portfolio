@@ -1,11 +1,16 @@
 # Kenshien Alao
 
-> Web developer specializing in modern, performant, and scalable web applications using React, Next.js, TypeScript, Spring Boot, Java, and PostgreSQL.
+> Web developer focused on building performant, scalable, and maintainable web applications with modern frontend and backend technologies.
 
 ## About
-Full-stack developer building production web apps: React/Next.js/TypeScript on the frontend, Spring Boot/Java/PostgreSQL on the backend.
+
+Kenshien Alao is a web developer specializing in full-stack web application development. His work focuses on building production-ready systems with an emphasis on performance, scalability, maintainability, clean architecture, and reliable user experiences.
+
+His primary technology stack includes React, Next.js, TypeScript, Spring Boot, Java, PostgreSQL, and modern web development tooling. His projects span frontend applications, REST APIs, database-driven systems, authentication, caching, and full-stack application architecture.
 
 ## Links
-- Portfolio: https://kenshien.is-a.dev
-- GitHub: [TODO]
-- LinkedIn: [TODO]
+
+* [Portfolio](https://kenshien.is-a.dev/): Portfolio featuring projects, technical skills, and development experience.
+* [GitHub](https://github.com/KenshienAlao): Source code, projects, and technical implementations.
+* [LinkedIn](https://www.linkedin.com/in/KenshienAlao/): Professional profile and career information.
+* [Contact](https://kenshien.is-a.dev/#contact): Contact information for professional opportunities and collaboration.
