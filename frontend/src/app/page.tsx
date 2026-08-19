@@ -21,39 +21,26 @@ const getQueryClient = cache(
     }),
 );
 
-async function fetchWithFallback<T>(url: string, timeoutMs = 1500): Promise<T> {
+async function fetchWithFallback<T>(
+  url: string,
+  timeoutMs = 1500,
+): Promise<T | null> {
   try {
     const res = await fetch(url, {
       next: { revalidate: 3600 },
       signal: AbortSignal.timeout(timeoutMs),
     });
-    if (!res.ok) throw new Error(`Bad response: ${res.status}`);
+    if (!res.ok) return null;
     return res.json();
-  } catch (err) {
-    console.warn(
-      `[fetchWithFallback] Primary fetch failed for ${url}, trying cache:`,
-      err,
-    );
-
-    try {
-      const cachedRes = await fetch(url, { cache: "force-cache" });
-      if (!cachedRes.ok)
-        throw new Error(`Bad cached response: ${cachedRes.status}`);
-      return cachedRes.json();
-    } catch (fallbackErr) {
-      console.error(
-        `[fetchWithFallback] No cache available for ${url}:`,
-        fallbackErr,
-      );
-      throw err;
-    }
+  } catch {
+    return null;
   }
 }
 
 export default async function Page() {
   const queryClient = getQueryClient();
 
-  const results = await Promise.allSettled([
+  await Promise.allSettled([
     queryClient.prefetchQuery({
       queryKey: ["project", "public"],
       queryFn: () => fetchWithFallback(`${apiUrl}/api/project`),
@@ -71,13 +58,6 @@ export default async function Page() {
       queryFn: () => fetchWithFallback(`${apiUrl}/api/setup`),
     }),
   ]);
-
-  results.forEach((result, i) => {
-    if (result.status === "rejected") {
-      const keys = ["project", "education", "skill", "setup"];
-      console.error(`[Page] Failed to prefetch ${keys[i]}:`, result.reason);
-    }
-  });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
