@@ -25,16 +25,16 @@ export function Footer() {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-full text-text-secondary/60 hover:bg-surface/80 hover:text-accent"
+                className="flex h-9 w-9 items-center justify-center rounded-full text-text-secondary hover:bg-surface/80 hover:text-accent"
                 aria-label={value}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-4 w-4" aria-hidden="true" />
               </Link>
             ))}
           </div>
 
           <p
-            className="text-xs text-text-secondary/50"
+            className="text-xs text-text-secondary font-medium"
             suppressHydrationWarning
           >
             &copy; {currentYear} All rights reserved.

@@ -21,7 +21,7 @@ const getQueryClient = cache(
     }),
 );
 
-async function fetchWithFallback<T>(url: string, timeoutMs = 4000): Promise<T> {
+async function fetchWithFallback<T>(url: string, timeoutMs = 1500): Promise<T> {
   try {
     const res = await fetch(url, {
       next: { revalidate: 3600 },

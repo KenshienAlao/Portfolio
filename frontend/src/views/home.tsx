@@ -72,10 +72,10 @@ export function Hero({ changePage }: { changePage: (page: string) => void }) {
             </Button>
           </div>
 
-          <div className="slide-up stagger-6 mt-12 flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-border/60 pt-6">
+          <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-border/60 pt-6">
             {CAPABILITIES.map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-2">
-                <Icon className="h-4 w-4 text-accent" />
+                <Icon className="h-4 w-4 text-accent" aria-hidden="true" />
                 <span className="font-mono text-[11px] uppercase tracking-widest text-text-secondary">
                   {label}
                 </span>
