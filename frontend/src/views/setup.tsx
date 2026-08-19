@@ -88,10 +88,6 @@ export function Setup({ setups }: { setups?: SetupCategory[] | null }) {
                                   height={20}
                                   loading="lazy"
                                   decoding="async"
-                                  unoptimized={
-                                    tool.imageLight.startsWith("http") ||
-                                    tool.imageLight.startsWith("blob:")
-                                  }
                                   style={{ width: "auto", height: "auto" }}
                                   className={`object-contain ${
                                     tool.imageDark ? "dark:hidden" : ""
@@ -105,10 +101,6 @@ export function Setup({ setups }: { setups?: SetupCategory[] | null }) {
                                     height={20}
                                     loading="lazy"
                                     decoding="async"
-                                    unoptimized={
-                                      tool.imageDark.startsWith("http") ||
-                                      tool.imageDark.startsWith("blob:")
-                                    }
                                     style={{ width: "auto", height: "auto" }}
                                     className="object-contain hidden dark:block"
                                   />
