@@ -19,12 +19,12 @@ export function SectionHeader({
         <span>{command}</span>
       </p>
 
-      <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-text-primary md:text-5xl text-balance">
+      <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-text-primary md:text-5xl">
         {title}
       </h2>
 
       {description && (
-        <p className="mt-5 text-base leading-relaxed text-text-secondary md:text-lg text-pretty">
+        <p className="mt-5 text-base leading-relaxed text-text-secondary md:text-lg">
           {description}
         </p>
       )}
