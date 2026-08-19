@@ -1,5 +1,5 @@
 import { Setup } from "@/views/setup";
-import { apiUrl, fetchWithFallback } from "@/lib/prefetch";
+import { fetchPublicData } from "@/lib/prefetch";
 import { type SetupCategory } from "@/service/setup.service";
 import type { Metadata } from "next";
 
@@ -15,9 +15,6 @@ export const metadata: Metadata = {
 };
 
 export default async function SetupPage() {
-  const setups = await fetchWithFallback<SetupCategory[]>(
-    `${apiUrl}/api/setup`,
-  );
-
+  const setups = await fetchPublicData<SetupCategory>("/api/setup");
   return <Setup setups={setups} />;
 }

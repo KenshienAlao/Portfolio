@@ -1,5 +1,5 @@
 import { Skills } from "@/views/skills";
-import { apiUrl, fetchWithFallback } from "@/lib/prefetch";
+import { fetchPublicData } from "@/lib/prefetch";
 import { type Skill } from "@/service/skill.service";
 import type { Metadata } from "next";
 
@@ -15,6 +15,6 @@ export const metadata: Metadata = {
 };
 
 export default async function SkillsPage() {
-  const skills = await fetchWithFallback<Skill[]>(`${apiUrl}/api/skill`);
+  const skills = await fetchPublicData<Skill>("/api/skill");
   return <Skills skills={skills} />;
 }

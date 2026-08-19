@@ -6,7 +6,9 @@ import { FiArrowUpRight } from "react-icons/fi";
 import Link from "next/link";
 import { type Project } from "@/service/project.service";
 
-export function Projects({ projects }: { projects: Project[] | null }) {
+export function Projects({ projects }: { projects?: Project[] | null }) {
+  const projectList = Array.isArray(projects) ? projects : [];
+
   return (
     <section
       id="projects"
@@ -22,7 +24,7 @@ export function Projects({ projects }: { projects: Project[] | null }) {
           description="Selected work showcasing full-stack development, UI design, and problem solving."
         />
 
-        {!projects || projects.length === 0 ? (
+        {projectList.length === 0 ? (
           <div className="mt-14 flex flex-col items-center justify-center py-12 text-center rounded-2xl border border-dashed border-border bg-surface/50">
             <h3 className="font-mono text-base font-bold text-text-primary">
               No projects available
@@ -33,7 +35,7 @@ export function Projects({ projects }: { projects: Project[] | null }) {
           </div>
         ) : (
           <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map(
+            {projectList.map(
               ({ id, title, description, image, tags, github, demo }, idx) => (
                 <article
                   key={id}

@@ -1,5 +1,5 @@
 import { Education } from "@/views/education";
-import { apiUrl, fetchWithFallback } from "@/lib/prefetch";
+import { fetchPublicData } from "@/lib/prefetch";
 import { type Education as EducationType } from "@/service/education.service";
 import type { Metadata } from "next";
 
@@ -15,9 +15,6 @@ export const metadata: Metadata = {
 };
 
 export default async function EducationPage() {
-  const education = await fetchWithFallback<EducationType[]>(
-    `${apiUrl}/api/education`,
-  );
-
+  const education = await fetchPublicData<EducationType>("/api/education");
   return <Education education={education} />;
 }

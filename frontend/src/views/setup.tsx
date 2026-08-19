@@ -6,8 +6,8 @@ import { FiArrowUpRight } from "react-icons/fi";
 import { ReactNode } from "react";
 import Link from "next/link";
 
-export function Setup({ setups }: { setups: SetupCategory[] | null }) {
-  const categories = setups ?? [];
+export function Setup({ setups }: { setups?: SetupCategory[] | null }) {
+  const categories = Array.isArray(setups) ? setups : [];
 
   return (
     <section

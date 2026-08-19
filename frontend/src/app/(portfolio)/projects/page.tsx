@@ -1,5 +1,5 @@
 import { Projects } from "@/views/projects";
-import { apiUrl, fetchWithFallback } from "@/lib/prefetch";
+import { fetchPublicData } from "@/lib/prefetch";
 import { type Project } from "@/service/project.service";
 import type { Metadata } from "next";
 
@@ -15,7 +15,6 @@ export const metadata: Metadata = {
 };
 
 export default async function ProjectsPage() {
-  const projects = await fetchWithFallback<Project[]>(`${apiUrl}/api/project`);
-
+  const projects = await fetchPublicData<Project>("/api/project");
   return <Projects projects={projects} />;
 }

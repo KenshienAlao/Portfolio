@@ -6,10 +6,10 @@ import { type Education as EducationType } from "@/service/education.service";
 export function Education({
   education,
 }: {
-  education: EducationType[] | null;
+  education?: EducationType[] | null;
 }) {
   const sortedEducation = (() => {
-    if (!education) return [];
+    if (!Array.isArray(education)) return [];
     return education.toSorted((a, b) => {
       const getYearValue = (y: string) =>
         y === "Present" ? 9999 : parseInt(y) || 0;

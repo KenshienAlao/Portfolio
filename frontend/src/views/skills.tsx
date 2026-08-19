@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { SectionHeader } from "@/components/section-header";
 
-export function Skills({ skills }: { skills: Skill[] | null }) {
+export function Skills({ skills }: { skills?: Skill[] | null }) {
   const groupedSkills = (() => {
-    if (!skills) return {};
+    if (!Array.isArray(skills)) return {};
     return skills.reduce<Record<string, Skill[]>>((acc, skill) => {
       const cat = skill.category || "Uncategorized";
       if (!acc[cat]) acc[cat] = [];
