@@ -7,6 +7,7 @@ import { SectionHeader } from "@/components/section-header";
 import { useProjectPublic } from "@/hooks/admin/use-project-admin";
 import { ProjectCardSkeleton } from "@/components/ui/skeleton";
 import { FiArrowUpRight } from "react-icons/fi";
+import Link from "next/link";
 
 export function Projects() {
   const { data: projects, isPending: projectIsPending } = useProjectPublic();
@@ -91,14 +92,14 @@ export function Projects() {
                             variant="outline"
                             className="rounded-lg border-border text-text-primary hover:border-accent/50 hover:bg-background"
                           >
-                            <a
+                            <Link
                               href={github}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="gap-2"
                             >
                               <FaGithub className="h-4 w-4" /> Code
-                            </a>
+                            </Link>
                           </Button>
                           {demo && (
                             <Button
@@ -107,14 +108,14 @@ export function Projects() {
                               size="sm"
                               className="rounded-lg bg-accent text-on-accent hover:bg-accent/90"
                             >
-                              <a
+                              <Link
                                 href={demo}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="gap-1.5"
                               >
                                 Demo <FiArrowUpRight className="h-4 w-4" />
-                              </a>
+                              </Link>
                             </Button>
                           )}
                         </div>

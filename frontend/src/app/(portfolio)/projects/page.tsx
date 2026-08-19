@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "Projects | Kenshien Alao",
   description:
     "Selected projects showcasing full-stack development, UI design, and problem solving by Kenshien Alao.",
+  alternates: {
+    canonical: "/projects",
+  },
 };
 
 export default async function ProjectsPage() {

@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "Education | Kenshien Alao",
   description:
     "Academic journey and milestones that shaped Kenshien Alao's path in technology.",
+  alternates: {
+    canonical: "/education",
+  },
 };
 
 export default async function EducationPage() {
