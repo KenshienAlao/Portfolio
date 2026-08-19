@@ -86,6 +86,8 @@ export function Setup({ setups }: { setups?: SetupCategory[] | null }) {
                                   alt={tool.value}
                                   width={20}
                                   height={20}
+                                  loading="lazy"
+                                  decoding="async"
                                   unoptimized={
                                     tool.imageLight.startsWith("http") ||
                                     tool.imageLight.startsWith("blob:")
@@ -101,6 +103,8 @@ export function Setup({ setups }: { setups?: SetupCategory[] | null }) {
                                     alt={tool.value}
                                     width={20}
                                     height={20}
+                                    loading="lazy"
+                                    decoding="async"
                                     unoptimized={
                                       tool.imageDark.startsWith("http") ||
                                       tool.imageDark.startsWith("blob:")

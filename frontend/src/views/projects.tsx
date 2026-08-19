@@ -48,7 +48,9 @@ export function Projects({ projects }: { projects?: Project[] | null }) {
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 340px"
                       priority={idx === 0}
+                      loading={idx === 0 ? "eager" : "lazy"}
                       fetchPriority={idx === 0 ? "high" : "auto"}
+                      decoding="async"
                       className="h-full w-full object-cover"
                     />
                   </div>

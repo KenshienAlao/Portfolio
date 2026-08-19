@@ -81,6 +81,8 @@ export function Skills({ skills }: { skills?: Skill[] | null }) {
                             alt={skill.name}
                             fill
                             sizes="32px"
+                            loading="lazy"
+                            decoding="async"
                             unoptimized={skill.imageLight.startsWith("http")}
                             className={cn(
                               "absolute inset-0 object-contain",
@@ -94,6 +96,8 @@ export function Skills({ skills }: { skills?: Skill[] | null }) {
                             alt={skill.name}
                             fill
                             sizes="32px"
+                            loading="lazy"
+                            decoding="async"
                             unoptimized={skill.imageDark.startsWith("http")}
                             className="absolute inset-0 object-contain hidden dark:block"
                           />
