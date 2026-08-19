@@ -13,7 +13,7 @@ export function Footer() {
             <span className="font-bold tracking-tight text-text-primary">
               kenshien
             </span>
-            <span className="text-text-secondary/60">
+            <span className="text-text-secondary">
               | Developer &amp; Student
             </span>
           </div>

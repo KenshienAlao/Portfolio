@@ -86,6 +86,7 @@ export function Projects({ projects }: { projects?: Project[] | null }) {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="gap-2"
+                          aria-label={`View ${title} on GitHub`}
                         >
                           <FaGithub className="h-4 w-4" /> Code
                         </Link>
@@ -102,6 +103,7 @@ export function Projects({ projects }: { projects?: Project[] | null }) {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="gap-1.5"
+                            aria-label={`View ${title} demo`}
                           >
                             Demo <FiArrowUpRight className="h-4 w-4" />
                           </Link>
