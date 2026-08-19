@@ -1,8 +1,21 @@
 import type { Metadata, Viewport } from "next";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/provider/theme-provider";
 import { QueryProvider } from "@/provider/query-provider";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 const siteUrl = "https://kenshien.is-a.dev";
 const siteName = "Kenshien Alao";
@@ -256,7 +269,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-background" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${inter.variable} ${jetbrainsMono.variable} bg-background font-sans`}
+      suppressHydrationWarning
+    >
       <body className="min-h-full flex flex-col antialiased">
         <JsonLd />
 
