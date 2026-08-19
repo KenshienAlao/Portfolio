@@ -2,7 +2,7 @@
 
 import { NAV_ITEMS } from "@/config/navigation.config";
 import { cn } from "@/lib/utils";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeTogglerButton } from "./theme-toggle";
@@ -14,12 +14,17 @@ export function Navigation() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const navRef = useRef<HTMLDivElement>(null);
-  const indicatorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 10);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -33,38 +38,18 @@ export function Navigation() {
     };
   }, [mobileMenuOpen]);
 
-  useEffect(() => {
-    const nav = navRef.current;
-    const indicator = indicatorRef.current;
-    if (!nav || !indicator) return;
-
-    const frameId = requestAnimationFrame(() => {
-      const activeEl = nav.querySelector<HTMLElement>('[aria-current="page"]');
-      if (!activeEl) {
-        indicator.style.opacity = "0";
-        return;
-      }
-
-      indicator.style.width = `${activeEl.offsetWidth}px`;
-      indicator.style.left = `${activeEl.offsetLeft}px`;
-      indicator.style.opacity = "1";
-    });
-
-    return () => cancelAnimationFrame(frameId);
-  }, [pathname]);
-
   return (
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50",
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
           scrolled ? "py-2" : "py-4",
         )}
       >
         <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
           <nav
             className={cn(
-              "relative flex items-center justify-between rounded-2xl border px-3 py-2",
+              "relative flex items-center justify-between rounded-2xl border px-3 py-2 transition-colors duration-300",
               scrolled
                 ? "border-border/20 bg-background/80 shadow-lg shadow-black/4 backdrop-blur-2xl dark:shadow-black/15"
                 : "border-border/10 bg-surface/40 shadow-sm backdrop-blur-xl",
@@ -80,16 +65,7 @@ export function Navigation() {
               <span className="text-accent">_</span>
             </Link>
 
-            <div ref={navRef} className="relative hidden items-center md:flex">
-              <div
-                ref={indicatorRef}
-                className="absolute top-0 h-full rounded-xl bg-accent/10 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
-                style={{
-                  opacity: 0,
-                  transform: "translateZ(0)",
-                }}
-              />
-
+            <div className="hidden items-center gap-1 md:flex">
               {NAV_ITEMS.map(({ label, href, icon: Icon }) => {
                 const active =
                   href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -98,11 +74,10 @@ export function Navigation() {
                     key={href}
                     href={href}
                     className={cn(
-                      "group relative z-10 flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-semibold tracking-wide",
-                      "rounded-xl",
+                      "group relative flex items-center gap-1.5 px-3.5 py-1.5 text-[13px] font-semibold tracking-wide rounded-xl transition-all duration-200",
                       active
-                        ? "text-accent"
-                        : "text-text-secondary hover:text-text-primary",
+                        ? "bg-accent/10 text-accent"
+                        : "text-text-secondary hover:bg-surface/60 hover:text-text-primary",
                     )}
                     aria-current={active ? "page" : undefined}
                   >
@@ -118,14 +93,6 @@ export function Navigation() {
                       />
                     )}
                     <span>{label}</span>
-                    <span
-                      className={cn(
-                        "absolute -bottom-0.5 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-accent",
-                        active
-                          ? "opacity-100 scale-x-100"
-                          : "opacity-0 scale-x-0",
-                      )}
-                    />
                   </Link>
                 );
               })}
