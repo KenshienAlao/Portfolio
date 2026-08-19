@@ -42,7 +42,10 @@ export function Projects() {
                   <ProjectCardSkeleton key={idx} />
                 ))
               : projects?.map(
-                  ({ id, title, description, image, tags, github, demo }) => (
+                  (
+                    { id, title, description, image, tags, github, demo },
+                    idx,
+                  ) => (
                     <article
                       key={id}
                       className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface hover:border-accent/40"
@@ -51,9 +54,11 @@ export function Projects() {
                         <Image
                           src={image}
                           alt={title}
-                          width={500}
-                          height={500}
-                          priority
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
+                          priority={idx === 0}
+                          loading={idx === 0 ? "eager" : "lazy"}
+                          fetchPriority={idx === 0 ? "high" : "auto"}
                           className="h-full w-full object-cover"
                         />
                       </div>
