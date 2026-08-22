@@ -29,14 +29,6 @@ function useEducation({
   });
 }
 
-export const useEducationPublic = () => {
-  return useEducation({
-    queryKey: [...educationKey, "public"],
-    queryFn: educationService.getPublic,
-    staleTime: Infinity,
-  });
-};
-
 export const useEducationAdmin = () => {
   return useEducation({
     queryKey: [...educationKey, "admin"],

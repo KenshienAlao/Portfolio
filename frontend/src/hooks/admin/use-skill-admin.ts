@@ -29,14 +29,6 @@ function useSkill({
   });
 }
 
-export const useSkillPublic = () => {
-  return useSkill({
-    queryKey: [...skillKey, "public"],
-    queryFn: skillService.getPublic,
-    staleTime: Infinity,
-  });
-};
-
 export const useSkillAdmin = () => {
   return useSkill({
     queryKey: [...skillKey, "admin"],

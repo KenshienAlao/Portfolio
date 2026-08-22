@@ -10,18 +10,6 @@ export type { Message, SendMessagePayload };
 
 const messageKey = ["message"];
 
-export const useSendMessageMutation = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (payload: SendMessagePayload) =>
-      messageService.sendMessage(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: messageKey });
-    },
-  });
-};
-
 export const useMessagesAdmin = () => {
   return useQuery<ApiReponse<Message[]>, Error, Message[]>({
     queryKey: [...messageKey, "admin"],

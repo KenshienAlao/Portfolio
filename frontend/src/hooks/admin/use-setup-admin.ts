@@ -34,14 +34,6 @@ function useSetup({
   });
 }
 
-export const useSetupPublic = () => {
-  return useSetup({
-    queryKey: [...setupKey, "public"],
-    queryFn: setupService.getPublic,
-    staleTime: Infinity,
-  });
-};
-
 export const useSetupAdmin = () => {
   return useSetup({
     queryKey: [...setupKey, "admin"],

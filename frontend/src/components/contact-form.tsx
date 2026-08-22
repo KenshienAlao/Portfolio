@@ -41,6 +41,7 @@ export function ContactForm() {
       await messageService.sendMessage(form);
       setSent(true);
       setForm(INITIAL_STATE);
+      setIsSending(false);
       setTimeout(() => setSent(false), 5000);
     } catch (err: unknown) {
       setErrorMsg(
@@ -53,7 +54,6 @@ export function ContactForm() {
           (err as { message?: string })?.message ||
           "Failed to send message. Please try again.",
       );
-    } finally {
       setIsSending(false);
     }
   };

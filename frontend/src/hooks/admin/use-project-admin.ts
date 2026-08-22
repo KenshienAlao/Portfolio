@@ -28,13 +28,6 @@ function useProject({
   });
 }
 
-export function useProjectPublic() {
-  return useProject({
-    queryKey: [...projectKey, "public"],
-    queryFn: projectService.getPublic,
-    staleTime: Infinity,
-  });
-}
 export function useProjectAdmin() {
   return useProject({
     queryKey: [...projectKey, "admin"],
