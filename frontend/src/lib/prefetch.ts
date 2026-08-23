@@ -26,10 +26,6 @@ export async function fetchPublicData<T>(
     return [];
   } catch (error) {
     console.error(`[fetchPublicData] Request failed for ${endpoint}:`, error);
-
-    if (!isDev) {
-      throw error;
-    }
     return [];
   }
 }
