@@ -3,7 +3,7 @@ import { fetchPublicData } from "@/lib/prefetch";
 import { type Project } from "@/service/project.service";
 import type { Metadata } from "next";
 
-export const revalidate = 3600;
+export const revalidate = 31536000;
 
 export const metadata: Metadata = {
   title: "About | Kenshien Alao",

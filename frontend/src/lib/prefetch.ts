@@ -10,7 +10,10 @@ export async function fetchPublicData<T>(
 
   try {
     const res = await fetch(`${apiUrl}${endpoint}`, {
-      next: isDev ? { revalidate: 0 } : { revalidate: 3600, tags: [endpoint] },
+      next:
+        isDev
+          ? { revalidate: 0 }
+          : { revalidate: 31536000, tags: [endpoint] },
       cache: isDev ? "no-store" : "default",
       signal: AbortSignal.timeout(timeoutMs),
     });

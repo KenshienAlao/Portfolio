@@ -23,7 +23,7 @@ api.interceptors.response.use(
     if (res.data?.success === false) {
       throw new Error(res.data.message);
     }
-
+    12;
     return res;
   },
   async (error: AxiosError<{ message?: string }>) => {
